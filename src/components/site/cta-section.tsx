@@ -14,7 +14,7 @@ export function CtaSection() {
       <div className="relative isolate">
         <Image
           src="/images/hero-silkroad.png"
-          alt="Караван на Шёлковом пути"
+          alt="Caravan on the Silk Road"
           fill
           sizes="100vw"
           className="object-cover"
@@ -28,15 +28,15 @@ export function CtaSection() {
             transition={{ duration: 0.6 }}
           >
             <span className="text-xs font-semibold uppercase tracking-[0.25em] text-accent">
-              Ваш караван ждёт
+              Your caravan awaits
             </span>
             <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-white sm:text-4xl md:text-5xl">
-              Готовы отправиться по Шёлковому пути?
+              Ready to set off on the Silk Road?
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-base text-white/80 sm:text-lg">
-              Бронируйте место в малой группе или закажите индивидуальный
-              маршрут. Предоплата не требуется — оплатите после подтверждения
-              деталей с менеджером.
+              Book a spot in a small group or order a custom itinerary. No
+              prepayment required — pay after confirming the details with a
+              manager.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button
@@ -44,7 +44,7 @@ export function CtaSection() {
                 onClick={() => openBooking()}
                 className="gap-2 text-base"
               >
-                Забронировать тур <ArrowRight className="h-4 w-4" />
+                Book a Tour <ArrowRight className="h-4 w-4" />
               </Button>
               <Button
                 asChild
@@ -52,7 +52,7 @@ export function CtaSection() {
                 variant="outline"
                 className="border-white/40 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 hover:text-white text-base"
               >
-                <a href="#contact">Задать вопрос</a>
+                <a href="#contact">Ask a Question</a>
               </Button>
             </div>
           </motion.div>

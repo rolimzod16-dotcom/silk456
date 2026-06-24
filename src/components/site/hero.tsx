@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 import { useUiStore } from "@/lib/ui-store";
 
 const STATS = [
-  { value: "12", label: "лет на маршруте" },
-  { value: "8", label: "стран Шёлкового пути" },
-  { value: "4 200+", label: "путешественников" },
-  { value: "4.9", label: "средний рейтинг" },
+  { value: "12", label: "years on the road" },
+  { value: "8", label: "Silk Road countries" },
+  { value: "4,200+", label: "travelers" },
+  { value: "4.9", label: "average rating" },
 ];
 
 export function Hero() {
@@ -21,7 +21,7 @@ export function Hero() {
     <section id="top" className="relative min-h-[100svh] w-full overflow-hidden">
       <Image
         src="/images/hero-silkroad.png"
-        alt="Караван верблюдов на закате вдоль Шёлкового пути"
+        alt="Camel caravan at sunset along the Silk Road"
         fill
         priority
         sizes="100vw"
@@ -39,24 +39,24 @@ export function Hero() {
           <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
             <MapPin className="h-3.5 w-3.5 text-accent" />
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-white/90">
-              Авторские туры с 2013 года
+              Boutique tours since 2013
             </span>
           </div>
 
           <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            По тропам{" "}
-            <span className="text-gold-gradient">Великого шёлкового пути</span>
+            On the trails of the{" "}
+            <span className="text-gold-gradient">Great Silk Road</span>
           </h1>
 
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg md:text-xl">
-            От бирюзовых куполов Самарканда до высокогорных юрт Тянь-Шаня и
-            розовых мечетей Исфахана. Малые группы, опытные гиды и караванные
-            маршруты, проверенные двенадцатью годами в пути.
+            From the turquoise domes of Samarkand to the high-altitude yurts of
+            the Tien Shan and the pink mosques of Isfahan. Small groups, expert
+            guides and caravan routes tested by twelve years on the road.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button asChild size="lg" className="text-base">
-              <Link href="#tours">Смотреть туры</Link>
+              <Link href="#tours">View Tours</Link>
             </Button>
             <Button
               onClick={() => openBooking()}
@@ -64,7 +64,7 @@ export function Hero() {
               variant="outline"
               className="border-white/40 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 hover:text-white text-base"
             >
-              Забронировать место
+              Book Your Spot
             </Button>
           </div>
 
@@ -75,7 +75,7 @@ export function Hero() {
               ))}
             </div>
             <span className="text-sm">
-              4.9 / 5 — более 800 отзывов путешественников
+              4.9 / 5 — over 800 reviews from travelers
             </span>
           </div>
         </motion.div>
@@ -105,7 +105,7 @@ export function Hero() {
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           className="flex flex-col items-center gap-1 text-white/70"
         >
-          <span className="text-xs uppercase tracking-[0.2em]">Листайте</span>
+          <span className="text-xs uppercase tracking-[0.2em]">Scroll</span>
           <ChevronDown className="h-4 w-4" />
         </motion.div>
       </div>

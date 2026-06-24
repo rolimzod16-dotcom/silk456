@@ -40,9 +40,9 @@ export function TourDetailDialog({ tour, open, onOpenChange, onBook }: Props) {
         aria-describedby={undefined}
       >
         <DialogHeader className="sr-only p-0">
-          <DialogTitle>{tour?.title ?? "Детали тура"}</DialogTitle>
+          <DialogTitle>{tour?.title ?? "Tour details"}</DialogTitle>
           <DialogDescription>
-            Программа, включённые услуги и бронирование тура.
+            Itinerary, included services and booking for this tour.
           </DialogDescription>
         </DialogHeader>
         {tour && (
@@ -78,17 +78,17 @@ export function TourDetailDialog({ tour, open, onOpenChange, onBook }: Props) {
             <ScrollArea className="max-h-[60vh]">
               <div className="p-5 sm:p-6">
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <InfoTile icon={Clock} label="Длительность" value={tour.duration} />
-                  <InfoTile icon={Users} label="Группа" value={tour.groupSize} />
-                  <InfoTile icon={TrendingUp} label="Сложность" value={tour.difficulty} />
-                  <InfoTile icon={CalendarDays} label="Сезон" value={tour.season} />
+                  <InfoTile icon={Clock} label="Duration" value={tour.duration} />
+                  <InfoTile icon={Users} label="Group" value={tour.groupSize} />
+                  <InfoTile icon={TrendingUp} label="Difficulty" value={tour.difficulty} />
+                  <InfoTile icon={CalendarDays} label="Season" value={tour.season} />
                 </div>
 
                 <div className="mt-5 flex items-center gap-3 text-sm">
                   <div className="flex items-center gap-1.5">
                     <Star className="h-4 w-4 fill-accent text-accent" />
                     <span className="font-semibold text-foreground">{tour.rating}</span>
-                    <span className="text-muted-foreground">· {tour.reviews} отзывов</span>
+                    <span className="text-muted-foreground">· {tour.reviews} reviews</span>
                   </div>
                   <Separator orientation="vertical" className="h-4" />
                   <span className="inline-flex items-center gap-1.5 text-muted-foreground">
@@ -101,7 +101,7 @@ export function TourDetailDialog({ tour, open, onOpenChange, onBook }: Props) {
                 </p>
 
                 <section className="mt-6">
-                  <SectionTitle icon={Sparkles} text="Что вы увидите" />
+                  <SectionTitle icon={Sparkles} text="What you'll see" />
                   <ul className="mt-3 grid gap-2 sm:grid-cols-2">
                     {tour.highlights.map((h) => (
                       <li
@@ -116,7 +116,7 @@ export function TourDetailDialog({ tour, open, onOpenChange, onBook }: Props) {
                 </section>
 
                 <section className="mt-6">
-                  <SectionTitle icon={CalendarDays} text="Программа по дням" />
+                  <SectionTitle icon={CalendarDays} text="Day-by-day itinerary" />
                   <ol className="mt-3 space-y-3">
                     {tour.itinerary.map((day) => (
                       <li
@@ -128,7 +128,7 @@ export function TourDetailDialog({ tour, open, onOpenChange, onBook }: Props) {
                         </div>
                         <div className="min-w-0">
                           <div className="text-sm font-semibold text-foreground">
-                            День {day.day}. {day.title}
+                            Day {day.day}. {day.title}
                           </div>
                           <p className="mt-0.5 text-sm text-muted-foreground">
                             {day.description}
@@ -141,7 +141,7 @@ export function TourDetailDialog({ tour, open, onOpenChange, onBook }: Props) {
 
                 <div className="mt-6 grid gap-5 sm:grid-cols-2">
                   <section>
-                    <SectionTitle icon={CheckCircle2} text="Включено" accent="primary" />
+                    <SectionTitle icon={CheckCircle2} text="Included" accent="primary" />
                     <ul className="mt-3 space-y-1.5 text-sm">
                       {tour.included.map((i) => (
                         <li key={i} className="flex items-start gap-2">
@@ -152,7 +152,7 @@ export function TourDetailDialog({ tour, open, onOpenChange, onBook }: Props) {
                     </ul>
                   </section>
                   <section>
-                    <SectionTitle icon={XCircle} text="Не включено" accent="muted" />
+                    <SectionTitle icon={XCircle} text="Not included" accent="muted" />
                     <ul className="mt-3 space-y-1.5 text-sm">
                       {tour.excluded.map((i) => (
                         <li key={i} className="flex items-start gap-2">
@@ -176,12 +176,12 @@ export function TourDetailDialog({ tour, open, onOpenChange, onBook }: Props) {
                 <div className="font-display text-2xl font-semibold text-primary">
                   ${tour.price}
                   <span className="ml-1 text-xs font-normal text-muted-foreground">
-                    / чел.
+                    / person
                   </span>
                 </div>
               </div>
               <Button size="lg" onClick={() => onBook(tour.slug)}>
-                Забронировать этот тур
+                Book This Tour
               </Button>
             </div>
           </>

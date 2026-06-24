@@ -67,7 +67,7 @@ export function BookingDialog() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name || !email || !phone || !tourSlug || !travelers || !travelDate) {
-      setErrorMsg("Заполните все обязательные поля.");
+      setErrorMsg("Please fill in all required fields.");
       setStatus("error");
       return;
     }
@@ -89,17 +89,17 @@ export function BookingDialog() {
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        throw new Error(data?.error || "Не удалось отправить заявку");
+        throw new Error(data?.error || "Failed to submit your request");
       }
       setStatus("success");
       toast({
-        title: "Заявка принята!",
-        description: `Мы свяжемся с вами по поводу тура «${data.tourTitle}» в течение 24 часов.`,
+        title: "Request received!",
+        description: `We'll contact you about the "${data.tourTitle}" tour within 24 hours.`,
       });
       router.refresh();
     } catch (err) {
       setStatus("error");
-      setErrorMsg(err instanceof Error ? err.message : "Ошибка отправки");
+      setErrorMsg(err instanceof Error ? err.message : "Submission failed");
     }
   }
 
@@ -110,11 +110,11 @@ export function BookingDialog() {
       <DialogContent className="max-h-[92svh] overflow-y-auto scrollbar-warm sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl font-semibold text-foreground">
-            Бронирование тура
+            Book a Tour
           </DialogTitle>
           <DialogDescription>
-            Оставьте заявку — менеджер свяжется с вами в течение 24 часов и
-            подтвердит наличие мест.
+            Leave your details — a manager will reach out within 24 hours to
+            confirm availability.
           </DialogDescription>
         </DialogHeader>
 
@@ -124,23 +124,23 @@ export function BookingDialog() {
               <CheckCircle2 className="h-9 w-9 text-primary" />
             </div>
             <h3 className="font-display text-xl font-semibold text-foreground">
-              Заявка отправлена!
+              Request sent!
             </h3>
             <p className="max-w-sm text-sm text-muted-foreground">
-              Спасибо, {name || "путешественник"}! Мы получили вашу заявку на
-              тур «{selectedTour?.title}» и напишем вам на {email}.
+              Thank you, {name || "traveler"}! We've received your request for
+              the "{selectedTour?.title}" tour and will write to you at {email}.
             </p>
             <Button className="mt-2" onClick={close}>
-              Готово
+              Done
             </Button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-1.5">
-              <Label htmlFor="b-tour">Тур *</Label>
+              <Label htmlFor="b-tour">Tour *</Label>
               <Select value={tourSlug} onValueChange={setTourSlug}>
                 <SelectTrigger id="b-tour">
-                  <SelectValue placeholder="Выберите тур" />
+                  <SelectValue placeholder="Select a tour" />
                 </SelectTrigger>
                 <SelectContent>
                   {tours.map((t) => (
@@ -154,7 +154,7 @@ export function BookingDialog() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-1.5">
-                <Label htmlFor="b-travelers">Путешественников *</Label>
+                <Label htmlFor="b-travelers">Travelers *</Label>
                 <Select value={travelers} onValueChange={setTravelers}>
                   <SelectTrigger id="b-travelers">
                     <SelectValue />
@@ -162,14 +162,14 @@ export function BookingDialog() {
                   <SelectContent>
                     {["1", "2", "3", "4", "5", "6", "7", "8"].map((n) => (
                       <SelectItem key={n} value={n}>
-                        {n} {n === "1" ? "человек" : "человек"}
+                        {n} {n === "1" ? "person" : "people"}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="grid gap-1.5">
-                <Label htmlFor="b-date">Дата старта *</Label>
+                <Label htmlFor="b-date">Start date *</Label>
                 <Input
                   id="b-date"
                   type="date"
@@ -182,10 +182,10 @@ export function BookingDialog() {
             </div>
 
             <div className="grid gap-1.5">
-              <Label htmlFor="b-name">Имя *</Label>
+              <Label htmlFor="b-name">Name *</Label>
               <Input
                 id="b-name"
-                placeholder="Как к вам обращаться"
+                placeholder="How should we address you"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -205,10 +205,10 @@ export function BookingDialog() {
                 />
               </div>
               <div className="grid gap-1.5">
-                <Label htmlFor="b-phone">Телефон *</Label>
+                <Label htmlFor="b-phone">Phone *</Label>
                 <Input
                   id="b-phone"
-                  placeholder="+7 999 123-45-67"
+                  placeholder="+1 555 123-4567"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   required
@@ -217,10 +217,10 @@ export function BookingDialog() {
             </div>
 
             <div className="grid gap-1.5">
-              <Label htmlFor="b-message">Пожелания (необязательно)</Label>
+              <Label htmlFor="b-message">Notes (optional)</Label>
               <Textarea
                 id="b-message"
-                placeholder="Например: вегетарианское питание, аллергии, дополнительные ночи…"
+                placeholder="e.g. vegetarian meals, allergies, extra nights…"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows={3}
@@ -230,10 +230,10 @@ export function BookingDialog() {
             {selectedTour && (
               <div className="flex items-center justify-between rounded-xl border border-border bg-secondary/50 p-3">
                 <div className="text-sm text-muted-foreground">
-                  Итого за {travelers} чел.
+                  Total for {travelers} {Number(travelers) === 1 ? "person" : "people"}
                 </div>
                 <div className="font-display text-2xl font-semibold text-primary">
-                  ${totalPrice.toLocaleString("ru-RU")}
+                  ${totalPrice.toLocaleString("en-US")}
                 </div>
               </div>
             )}
@@ -247,18 +247,18 @@ export function BookingDialog() {
             <Button type="submit" size="lg" disabled={status === "loading"} className="gap-2">
               {status === "loading" ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> Отправляем…
+                  <Loader2 className="h-4 w-4 animate-spin" /> Sending…
                 </>
               ) : (
                 <>
-                  <Send className="h-4 w-4" /> Отправить заявку
+                  <Send className="h-4 w-4" /> Send Request
                 </>
               )}
             </Button>
 
             <p className="text-center text-xs text-muted-foreground">
-              Нажимая кнопку, вы соглашаетесь с обработкой персональных данных.
-              Предоплата не требуется — оплата после подтверждения.
+              By submitting, you agree to the processing of your personal data.
+              No prepayment required — pay after confirmation.
             </p>
           </form>
         )}

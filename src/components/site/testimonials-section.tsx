@@ -13,10 +13,10 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-            Отзывы путешественников
+            Traveler Reviews
           </span>
           <h2 className="mt-3 font-display text-3xl font-semibold text-foreground sm:text-4xl md:text-5xl">
-            Истории тех, кто уже прошёл путь
+            Stories from those who walked the road
           </h2>
           <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2">
             <div className="flex">
@@ -25,7 +25,7 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
               ))}
             </div>
             <span className="text-sm font-semibold text-foreground">4.9 / 5</span>
-            <span className="text-sm text-muted-foreground">· 820+ отзывов</span>
+            <span className="text-sm text-muted-foreground">· 820+ reviews</span>
           </div>
         </div>
 
@@ -46,7 +46,7 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
                 ))}
               </div>
               <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-foreground/85">
-                «{t.text}»
+                "{t.text}"
               </blockquote>
               <figcaption className="mt-5 flex items-center gap-3 border-t border-border pt-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 font-display text-sm font-semibold text-primary">
@@ -62,7 +62,7 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
                 </div>
               </figcaption>
               <div className="mt-3 inline-flex w-fit items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs text-muted-foreground">
-                Тур: {t.tour}
+                Tour: {t.tour}
               </div>
             </motion.figure>
           ))}

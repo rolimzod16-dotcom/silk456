@@ -11,9 +11,9 @@ import { useToast } from "@/hooks/use-toast";
 const CONTACTS = [
   {
     icon: Phone,
-    label: "Телефон",
-    value: "+7 (495) 120-45-67",
-    href: "tel:+74951204567",
+    label: "Phone",
+    value: "+1 (415) 555-0142",
+    href: "tel:+14155550142",
   },
   {
     icon: Mail,
@@ -23,14 +23,14 @@ const CONTACTS = [
   },
   {
     icon: MapPin,
-    label: "Офис",
-    value: "Москва, ул. Самаркандская, 12",
+    label: "Office",
+    value: "221 Samarkand St, Suite 5",
     href: "#",
   },
   {
     icon: Clock,
-    label: "Часы работы",
-    value: "Пн–Сб, 10:00–20:00 МСК",
+    label: "Hours",
+    value: "Mon–Sat, 10:00–20:00",
     href: "#",
   },
 ];
@@ -51,18 +51,18 @@ export function ContactSection() {
         body: JSON.stringify(form),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data?.error || "Ошибка");
+      if (!res.ok || !data.ok) throw new Error(data?.error || "Error");
       setStatus("ok");
       setForm({ name: "", email: "", subject: "", message: "" });
       toast({
-        title: "Сообщение отправлено",
-        description: "Мы ответим вам в течение одного рабочего дня.",
+        title: "Message sent",
+        description: "We'll reply within one business day.",
       });
     } catch {
       setStatus("idle");
       toast({
-        title: "Не удалось отправить",
-        description: "Попробуйте ещё раз или напишите нам на email.",
+        title: "Failed to send",
+        description: "Please try again or email us directly.",
         variant: "destructive",
       });
     }
@@ -74,14 +74,14 @@ export function ContactSection() {
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-              Контакты
+              Contact
             </span>
             <h2 className="mt-3 font-display text-3xl font-semibold text-foreground sm:text-4xl md:text-5xl">
-              Расскажите о вашем путешествии
+              Tell us about your journey
             </h2>
             <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-              Не знаете, какой тур выбрать? Напишите нам — подберём маршрут под
-              ваши даты, бюджет и мечты. Ответим в течение одного рабочего дня.
+              Not sure which tour to pick? Write to us — we'll find a route that
+              fits your dates, budget and dreams. We reply within one business day.
             </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -114,24 +114,24 @@ export function ContactSection() {
                   <CheckCircle2 className="h-9 w-9 text-primary" />
                 </div>
                 <h3 className="font-display text-xl font-semibold text-foreground">
-                  Спасибо за обращение!
+                  Thanks for reaching out!
                 </h3>
                 <p className="max-w-sm text-sm text-muted-foreground">
-                  Мы получили ваше сообщение и ответим в течение одного
-                  рабочего дня.
+                  We've received your message and will reply within one
+                  business day.
                 </p>
                 <Button variant="outline" onClick={() => setStatus("idle")}>
-                  Отправить ещё одно
+                  Send another
                 </Button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="grid gap-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="grid gap-1.5">
-                    <Label htmlFor="c-name">Имя</Label>
+                    <Label htmlFor="c-name">Name</Label>
                     <Input
                       id="c-name"
-                      placeholder="Ваше имя"
+                      placeholder="Your name"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                       required
@@ -150,20 +150,20 @@ export function ContactSection() {
                   </div>
                 </div>
                 <div className="grid gap-1.5">
-                  <Label htmlFor="c-subject">Тема</Label>
+                  <Label htmlFor="c-subject">Subject</Label>
                   <Input
                     id="c-subject"
-                    placeholder="Например: тур в Самарканд в сентябре"
+                    placeholder="e.g. Samarkand tour in September"
                     value={form.subject}
                     onChange={(e) => setForm({ ...form, subject: e.target.value })}
                     required
                   />
                 </div>
                 <div className="grid gap-1.5">
-                  <Label htmlFor="c-message">Сообщение</Label>
+                  <Label htmlFor="c-message">Message</Label>
                   <Textarea
                     id="c-message"
-                    placeholder="Расскажите о пожеланиях: даты, состав группы, интересы…"
+                    placeholder="Tell us your wishes: dates, group size, interests…"
                     rows={5}
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
@@ -173,16 +173,16 @@ export function ContactSection() {
                 <Button type="submit" size="lg" disabled={status === "loading"} className="gap-2">
                   {status === "loading" ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin" /> Отправляем…
+                      <Loader2 className="h-4 w-4 animate-spin" /> Sending…
                     </>
                   ) : (
                     <>
-                      <Send className="h-4 w-4" /> Отправить сообщение
+                      <Send className="h-4 w-4" /> Send Message
                     </>
                   )}
                 </Button>
                 <p className="text-center text-xs text-muted-foreground">
-                  Отвечаем в течение одного рабочего дня. Без спама.
+                  We reply within one business day. No spam.
                 </p>
               </form>
             )}

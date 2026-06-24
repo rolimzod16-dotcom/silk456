@@ -25,10 +25,10 @@ type ToursSectionProps = {
 };
 
 const REGIONS = [
-  { value: "all", label: "Все маршруты" },
-  { value: "Средняя Азия", label: "Средняя Азия" },
-  { value: "Западная Азия", label: "Персия" },
-  { value: "Восточная Азия", label: "Китай и степи" },
+  { value: "all", label: "All Routes" },
+  { value: "Central Asia", label: "Central Asia" },
+  { value: "West Asia", label: "Persia" },
+  { value: "East Asia", label: "China & Steppes" },
 ];
 
 export function ToursSection({ tours }: ToursSectionProps) {
@@ -52,15 +52,15 @@ export function ToursSection({ tours }: ToursSectionProps) {
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
             <TrendingUp className="h-3.5 w-3.5 text-primary" />
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-primary">
-              Караванные маршруты
+              Caravan Routes
             </span>
           </div>
           <h2 className="mt-5 font-display text-3xl font-semibold text-foreground sm:text-4xl md:text-5xl">
-            Тур-пакеты по Шёлковому пути
+            Silk Road Tour Packages
           </h2>
           <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-            Готовые маршруты с проживанием, гидами и всеми переездами. Выберите
-            направление — детали и программу откроются по клику.
+            Ready-made routes with accommodation, guides and all transfers.
+            Pick a destination — details and itinerary open on click.
           </p>
         </div>
 
@@ -94,7 +94,7 @@ export function ToursSection({ tours }: ToursSectionProps) {
 
         {filtered.length === 0 && (
           <div className="mt-12 text-center text-muted-foreground">
-            В этом направлении пока нет туров — загляните позже.
+            No tours in this region yet — check back soon.
           </div>
         )}
       </div>
@@ -105,8 +105,7 @@ export function ToursSection({ tours }: ToursSectionProps) {
         onOpenChange={(o) => !o && setActiveSlug(null)}
         onBook={(slug) => {
           // Close the detail dialog and open the booking dialog with the
-          // selected tour pre-filled. Both run in the same tick; Radix
-          // handles the transition (detail unmounts, booking mounts).
+          // selected tour pre-filled.
           setActiveSlug(null);
           openBooking(slug);
         }}
@@ -150,7 +149,7 @@ function TourCard({
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
           {tour.featured && (
             <Badge className="bg-accent text-accent-foreground hover:bg-accent">
-              Хит сезона
+              Season Favorite
             </Badge>
           )}
           {discount > 0 && (
@@ -173,7 +172,7 @@ function TourCard({
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Star className="h-3.5 w-3.5 fill-accent text-accent" />
           <span className="font-medium text-foreground">{tour.rating}</span>
-          <span>· {tour.reviews} отзывов</span>
+          <span>· {tour.reviews} reviews</span>
         </div>
 
         <h3 className="mt-2 font-display text-xl font-semibold leading-snug text-foreground">
@@ -211,14 +210,14 @@ function TourCard({
             <div className="font-display text-2xl font-semibold text-primary">
               ${tour.price}
             </div>
-            <div className="text-xs text-muted-foreground">за человека</div>
+            <div className="text-xs text-muted-foreground">per person</div>
           </div>
           <div className="flex flex-col gap-2">
             <Button size="sm" variant="outline" onClick={onOpen}>
-              Подробнее
+              Details
             </Button>
             <Button size="sm" onClick={onBook} className={cn("gap-1")}>
-              Забронировать <ArrowRight className="h-3.5 w-3.5" />
+              Book <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>

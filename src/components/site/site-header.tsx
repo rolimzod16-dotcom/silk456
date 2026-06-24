@@ -9,11 +9,11 @@ import { useUiStore } from "@/lib/ui-store";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "#tours", label: "Туры" },
-  { href: "#about", label: "О нас" },
-  { href: "#why", label: "Преимущества" },
-  { href: "#testimonials", label: "Отзывы" },
-  { href: "#contact", label: "Контакты" },
+  { href: "#tours", label: "Tours" },
+  { href: "#about", label: "About" },
+  { href: "#why", label: "Why Us" },
+  { href: "#testimonials", label: "Reviews" },
+  { href: "#contact", label: "Contact" },
 ];
 
 export function SiteHeader() {
@@ -56,7 +56,7 @@ export function SiteHeader() {
                 scrolled ? "text-foreground" : "text-white"
               )}
             >
-              Шёлковый Караван
+              Silk Caravan
             </span>
             <span
               className={cn(
@@ -90,7 +90,7 @@ export function SiteHeader() {
             variant={scrolled ? "default" : "secondary"}
             className={cn(scrolled ? "" : "bg-white/95 text-foreground hover:bg-white")}
           >
-            Забронировать
+            Book Now
           </Button>
         </div>
 
@@ -100,7 +100,7 @@ export function SiteHeader() {
               variant="ghost"
               size="icon"
               className={cn("md:hidden", scrolled ? "text-foreground" : "text-white")}
-              aria-label="Открыть меню"
+              aria-label="Open menu"
             >
               <Menu className="h-6 w-6" />
             </Button>
@@ -109,10 +109,10 @@ export function SiteHeader() {
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b pb-4">
                 <span className="font-display text-lg font-semibold text-primary">
-                  Шёлковый Караван
+                  Silk Caravan
                 </span>
                 <SheetClose asChild>
-                  <Button variant="ghost" size="icon" aria-label="Закрыть">
+                  <Button variant="ghost" size="icon" aria-label="Close">
                     <X className="h-5 w-5" />
                   </Button>
                 </SheetClose>
@@ -135,7 +135,7 @@ export function SiteHeader() {
                     className="w-full"
                     onClick={() => openBooking()}
                   >
-                    Забронировать тур
+                    Book a Tour
                   </Button>
                 </SheetClose>
               </div>

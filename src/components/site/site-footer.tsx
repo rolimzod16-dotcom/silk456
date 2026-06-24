@@ -4,18 +4,18 @@ import Link from "next/link";
 import { Compass, Phone, Mail, MapPin } from "lucide-react";
 
 const TOUR_LINKS = [
-  { label: "Самаркандское Золото", href: "#tours" },
-  { label: "Караван в Кашгар", href: "#tours" },
-  { label: "Чарын и Небесные горы", href: "#tours" },
-  { label: "Персидские Шёлковые Пути", href: "#tours" },
-  { label: "Великий Туркестан", href: "#tours" },
+  { label: "Samarkand Gold", href: "#tours" },
+  { label: "Kashgar Caravan", href: "#tours" },
+  { label: "Charyn & Heavenly Mountains", href: "#tours" },
+  { label: "Persian Silk Roads", href: "#tours" },
+  { label: "Greater Turkestan", href: "#tours" },
 ];
 
 const COMPANY_LINKS = [
-  { label: "О компании", href: "#about" },
-  { label: "Преимущества", href: "#why" },
-  { label: "Отзывы", href: "#testimonials" },
-  { label: "Контакты", href: "#contact" },
+  { label: "About", href: "#about" },
+  { label: "Why Us", href: "#why" },
+  { label: "Reviews", href: "#testimonials" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export function SiteFooter() {
@@ -30,7 +30,7 @@ export function SiteFooter() {
               </span>
               <div className="flex flex-col leading-none">
                 <span className="font-display text-lg font-semibold text-white">
-                  Шёлковый Караван
+                  Silk Caravan
                 </span>
                 <span className="text-[10px] uppercase tracking-[0.25em] text-white/60">
                   Silk Road Tours
@@ -38,25 +38,25 @@ export function SiteFooter() {
               </div>
             </div>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/70">
-              Авторские туры по маршруту Великого шёлкового пути с 2013 года.
-              Малые группы, опытные гиды и живые истории на каждом километре.
+              Boutique tours along the ancient Silk Road since 2013. Small
+              groups, expert guides and living stories on every kilometer.
             </p>
             <div className="mt-5 space-y-2 text-sm">
-              <a href="tel:+74951204567" className="flex items-center gap-2 text-white/70 hover:text-accent">
-                <Phone className="h-4 w-4" /> +7 (495) 120-45-67
+              <a href="tel:+14155550142" className="flex items-center gap-2 text-white/70 hover:text-accent">
+                <Phone className="h-4 w-4" /> +1 (415) 555-0142
               </a>
               <a href="mailto:hello@silkcaravan.tours" className="flex items-center gap-2 text-white/70 hover:text-accent">
                 <Mail className="h-4 w-4" /> hello@silkcaravan.tours
               </a>
               <div className="flex items-center gap-2 text-white/70">
-                <MapPin className="h-4 w-4" /> Москва, ул. Самаркандская, 12
+                <MapPin className="h-4 w-4" /> 221 Samarkand St, Suite 5
               </div>
             </div>
           </div>
 
           <div className="lg:col-span-3">
             <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-white">
-              Туры
+              Tours
             </h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               {TOUR_LINKS.map((l) => (
@@ -71,7 +71,7 @@ export function SiteFooter() {
 
           <div className="lg:col-span-2">
             <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-white">
-              Компания
+              Company
             </h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               {COMPANY_LINKS.map((l) => (
@@ -86,26 +86,26 @@ export function SiteFooter() {
 
           <div className="lg:col-span-3">
             <h3 className="font-display text-sm font-semibold uppercase tracking-wider text-white">
-              Рассылка
+              Newsletter
             </h3>
             <p className="mt-4 text-sm text-white/70">
-              Новые маршруты, даты заездов и сезонные скидки — раз в месяц.
+              New routes, departure dates and seasonal deals — once a month.
             </p>
             <form className="mt-4 flex gap-2" onSubmit={(e) => e.preventDefault()}>
               <input
                 type="email"
-                placeholder="Ваш email"
+                placeholder="Your email"
                 className="min-w-0 flex-1 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-accent focus:outline-none"
               />
               <button
                 type="submit"
                 className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent/90"
               >
-                ОК
+                OK
               </button>
             </form>
             <div className="mt-5 flex gap-3">
-              {["VK", "TG", "YT", "IG"].map((s) => (
+              {["IG", "FB", "YT", "X"].map((s) => (
                 <a
                   key={s}
                   href="#"
@@ -120,10 +120,10 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
-          <p>© {new Date().getFullYear()} Шёлковый Караван. Все права защищены.</p>
+          <p>© {new Date().getFullYear()} Silk Caravan. All rights reserved.</p>
           <div className="flex gap-5">
-            <Link href="#" className="hover:text-accent">Политика конфиденциальности</Link>
-            <Link href="#" className="hover:text-accent">Договор оферты</Link>
+            <Link href="#" className="hover:text-accent">Privacy Policy</Link>
+            <Link href="#" className="hover:text-accent">Terms of Service</Link>
           </div>
         </div>
       </div>

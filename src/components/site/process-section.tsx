@@ -7,26 +7,26 @@ const STEPS = [
   {
     icon: MessagesSquare,
     step: "01",
-    title: "Заявка и звонок",
-    text: "Вы оставляете заявку — менеджер звонит в течение суток, уточняет пожелания и помогает выбрать маршрут.",
+    title: "Request & call",
+    text: "You submit a request — a manager calls within 24 hours, clarifies your wishes and helps choose a route.",
   },
   {
     icon: Map,
     step: "02",
-    title: "Подбор маршрута",
-    text: "Согласовываем даты, состав группы, добавки (одиночное поселение, доп. ночи, фототур). Присылаем договор.",
+    title: "Route planning",
+    text: "We agree on dates, group size and add-ons (single room, extra nights, photo tour). We send the contract.",
   },
   {
     icon: Plane,
     step: "03",
-    title: "Подготовка",
-    text: "Помогаем с визами и билетами, присылаем чек-лист снаряжения и приветственный briefing-пакет.",
+    title: "Preparation",
+    text: "We help with visas and flights, send a packing checklist and a welcome briefing pack.",
   },
   {
     icon: Route,
     step: "04",
-    title: "В путь!",
-    text: "Встречаем вас в аэропорту, передаём гиду — и караван отправляется. На связи весь тур 24/7.",
+    title: "Off you go!",
+    text: "We meet you at the airport, hand you over to the guide — and the caravan sets off. On call 24/7 throughout.",
   },
 ];
 
@@ -36,10 +36,10 @@ export function ProcessSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-            Как мы работаем
+            How We Work
           </span>
           <h2 className="mt-3 font-display text-3xl font-semibold text-foreground sm:text-4xl md:text-5xl">
-            От заявки до каравана — четыре шага
+            From request to caravan — four steps
           </h2>
         </div>
 

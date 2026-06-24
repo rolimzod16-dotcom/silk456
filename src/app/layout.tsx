@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
@@ -15,31 +15,32 @@ const geistMono = Geist_Mono({
 
 const display = Cormorant_Garamond({
   variable: "--font-display",
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Шёлковый Караван — туры по Великому шёлковому пути",
+  title: "Silk Caravan — Tours along the Great Silk Road",
   description:
-    "Авторские туры по маршруту Великого шёлкового пути: Узбекистан, Кыргызстан, Иран, Синьцзян. Караванные маршруты Самарканда, Бухары, Хивы, Кашгара и Персии с опытными гидами.",
+    "Boutique tours along the ancient Silk Road: Uzbekistan, Kyrgyzstan, Iran, Xinjiang. Caravan routes through Samarkand, Bukhara, Khiva, Kashgar and Persia with expert local guides.",
   keywords: [
-    "шёлковый путь",
-    "туры в Узбекистан",
-    "Самарканд",
-    "Бухара",
-    "Хива",
-    "туры по Средней Азии",
-    "караван",
-    "Isfahan",
+    "Silk Road",
+    "Silk Road tours",
+    "Uzbekistan tours",
+    "Samarkand",
+    "Bukhara",
+    "Khiva",
+    "Central Asia travel",
     "Kashgar",
+    "Isfahan",
+    "caravan",
   ],
-  authors: [{ name: "Шёлковый Караван" }],
+  authors: [{ name: "Silk Caravan" }],
   openGraph: {
-    title: "Шёлковый Караван — туры по Великому шёлковому пути",
+    title: "Silk Caravan — Tours along the Great Silk Road",
     description:
-      "Авторские туры по маршруту Великого шёлкового пути. Самарканд, Бухара, Хива, Кашгар, Исфахан.",
-    siteName: "Шёлковый Караван",
+      "Boutique tours along the ancient Silk Road. Samarkand, Bukhara, Khiva, Kashgar, Isfahan.",
+    siteName: "Silk Caravan",
     type: "website",
   },
 };
@@ -50,7 +51,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${display.variable} antialiased bg-background text-foreground`}
       >

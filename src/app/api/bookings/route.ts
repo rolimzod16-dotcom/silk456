@@ -9,7 +9,7 @@ export async function POST(req: Request) {
 
     if (!name || !email || !phone || !tourSlug || !travelers || !travelDate) {
       return NextResponse.json(
-        { ok: false, error: "Заполните все обязательные поля." },
+        { ok: false, error: "Please fill in all required fields." },
         { status: 400 }
       );
     }
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     const tour = getTourBySlug(tourSlug);
     if (!tour) {
       return NextResponse.json(
-        { ok: false, error: "Выбранный тур не найден." },
+        { ok: false, error: "Selected tour not found." },
         { status: 404 }
       );
     }
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error("[bookings] create error", err);
     return NextResponse.json(
-      { ok: false, error: "Не удалось сохранить заявку. Попробуйте ещё раз." },
+      { ok: false, error: "Could not save your request. Please try again." },
       { status: 500 }
     );
   }

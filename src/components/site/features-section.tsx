@@ -13,33 +13,33 @@ import {
 const FEATURES = [
   {
     icon: ShieldCheck,
-    title: "Безопасность прежде всего",
-    text: "Все маршруты проходят оценку рисков, гиды сертифицированы, на связи 24/7 координатор и страховка включена в пакеты.",
+    title: "Safety first",
+    text: "Every route is risk-assessed, guides are certified, a coordinator is on call 24/7 and insurance is included in the packages.",
   },
   {
     icon: Users,
-    title: "Малые группы",
-    text: "От 6 до 14 человек. Никаких автобусов на 50 мест — только живой диалог и внимание гида к каждому.",
+    title: "Small groups",
+    text: "From 6 to 14 people. No 50-seat buses — just living dialogue and attention to every traveler.",
   },
   {
     icon: MapPinned,
-    title: "Авторские маршруты",
-    text: "Мы сами проезжаем каждый километр перед запуском тура. Нетипичные стоянки, секретные смотровые и местные мастера.",
+    title: "Original routes",
+    text: "We drive every kilometer ourselves before launching a tour. Unusual stops, secret viewpoints and local masters.",
   },
   {
     icon: Compass,
-    title: "Опытные гиды-энтузиасты",
-    text: "Историки, этнографы и фотографы. Не зачитывают Википедию, а рассказывают то, что узнали сами в экспедициях.",
+    title: "Expert enthusiast guides",
+    text: "Historians, ethnographers and photographers. They don't read Wikipedia — they share what they learned on expeditions.",
   },
   {
     icon: Wallet,
-    title: "Честная цена",
-    text: "В пакете уже всё — трансферы, проживание, билеты, гиды и большинство ужинов. Без скрытых доплат на месте.",
+    title: "Honest pricing",
+    text: "Everything is in the package — transfers, accommodation, tickets, guides and most dinners. No hidden extras on the ground.",
   },
   {
     icon: Headphones,
-    title: "Поддержка 24/7",
-    text: "Персональный координатор на весь тур. Задержался рейс, потеряли багаж — решаем за вас, пока вы пьёте чай.",
+    title: "24/7 support",
+    text: "A personal coordinator for your whole tour. Flight delayed, luggage lost — we handle it while you sip tea.",
   },
 ];
 
@@ -52,14 +52,14 @@ export function FeaturesSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-            Почему мы
+            Why Us
           </span>
           <h2 className="mt-3 font-display text-3xl font-semibold text-foreground sm:text-4xl md:text-5xl">
-            Шёлковый путь без сюрпризов
+            The Silk Road, with no surprises
           </h2>
           <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-            Двенадцать лет назад мы поняли: путешествие по этому маршруту
-            требует не билета, а проводника. Поэтому мы им стали.
+            Twelve years ago we realized: a journey along this route takes not
+            a ticket, but a guide. So we became one.
           </p>
         </div>
 

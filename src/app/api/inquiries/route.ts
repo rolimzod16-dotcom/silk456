@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
-        { ok: false, error: "Заполните все поля формы." },
+        { ok: false, error: "Please fill in all fields." },
         { status: 400 }
       );
     }
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error("[inquiries] create error", err);
     return NextResponse.json(
-      { ok: false, error: "Не удалось отправить сообщение." },
+      { ok: false, error: "Could not send your message." },
       { status: 500 }
     );
   }
