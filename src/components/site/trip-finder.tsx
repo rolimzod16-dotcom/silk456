@@ -16,7 +16,7 @@ export function TripFinder() {
   const setFilters = useUiStore((state) => state.setFilters);
 
   return (
-    <div className="mt-8 w-full max-w-3xl rounded-2xl border border-[#d4a82a]/30 bg-white/95 p-4 text-left text-[#0f1225] shadow-2xl sm:p-5">
+    <div className="mt-8 w-full max-w-3xl rounded-2xl border border-white/50 bg-white/70 p-4 text-left text-[#0f1225] shadow-2xl backdrop-blur-md sm:p-5">
       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0f1225]/60">
         {t.finder.season}
       </p>
