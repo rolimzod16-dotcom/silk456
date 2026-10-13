@@ -54,3 +54,4 @@ server.log
 /skills/
 # local database
 /db/*.db
+/data/silk456-leads.json

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ChevronDown, MapPin, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TripFinder } from "@/components/site/trip-finder";
 import { useUiStore } from "@/lib/ui-store";
 
 const STATS = [
@@ -18,7 +19,7 @@ export function Hero() {
   const openBooking = useUiStore((s) => s.openBooking);
 
   return (
-    <section id="top" className="relative min-h-[100svh] w-full overflow-hidden">
+    <section id="top" className="relative min-h-[100svh] w-full overflow-hidden scroll-mt-24">
       <Image
         src="/images/hero-silkroad.png"
         alt="Camel caravan at sunset along the Silk Road"
@@ -67,6 +68,8 @@ export function Hero() {
               Book Your Spot
             </Button>
           </div>
+
+          <TripFinder />
 
           <div className="mt-6 flex items-center gap-3 text-white/80">
             <div className="flex">

@@ -23,7 +23,7 @@ const VALUES = [
 
 export function AboutSection() {
   return (
-    <section id="about" className="relative bg-background py-20 sm:py-28">
+    <section id="about" className="relative scroll-mt-24 bg-background py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <div className="relative order-2 lg:order-1">

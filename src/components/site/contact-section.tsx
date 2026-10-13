@@ -69,7 +69,7 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="relative bg-background py-20 sm:py-28">
+    <section id="contact" className="relative scroll-mt-24 bg-background py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           <div>

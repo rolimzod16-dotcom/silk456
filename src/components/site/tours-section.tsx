@@ -15,6 +15,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { tourMatches } from "@/lib/catalog";
+import { useLocale } from "@/lib/locale";
 import { Tour } from "@/lib/tours";
 import { useUiStore } from "@/lib/ui-store";
 import { cn } from "@/lib/utils";
@@ -32,21 +34,31 @@ const REGIONS = [
 ];
 
 export function ToursSection({ tours }: ToursSectionProps) {
-  const [region, setRegion] = useState("all");
+  const { t } = useLocale();
+  const filters = useUiStore((state) => state.filters);
+  const setFilters = useUiStore((state) => state.setFilters);
+  const clearFilters = useUiStore((state) => state.clearFilters);
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const openBooking = useUiStore((s) => s.openBooking);
+  const region = filters.region;
 
   const filtered = useMemo(() => {
-    if (region === "all") return tours;
-    return tours.filter((t) => t.region === region);
-  }, [region, tours]);
+    return tours.filter((tour) => tourMatches(tour, filters));
+  }, [filters, tours]);
+
+  const filtersActive =
+    filters.season !== null ||
+    filters.duration !== null ||
+    filters.country !== null ||
+    filters.style !== null ||
+    filters.region !== "all";
 
   const activeTour = activeSlug
     ? tours.find((t) => t.slug === activeSlug) ?? null
     : null;
 
   return (
-    <section id="tours" className="relative bg-silk-pattern py-20 sm:py-28">
+    <section id="tours" className="relative scroll-mt-24 bg-silk-pattern py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
@@ -64,8 +76,18 @@ export function ToursSection({ tours }: ToursSectionProps) {
           </p>
         </div>
 
-        <div className="mt-10 flex justify-center">
-          <Tabs value={region} onValueChange={setRegion}>
+        <div className="mt-10 flex flex-col items-center gap-3">
+          {filtersActive && (
+            <div className="flex items-center gap-3 text-sm text-muted-foreground">
+              <span>
+                {t.finder.showing}: {filtered.length}
+              </span>
+              <button type="button" onClick={clearFilters} className="font-semibold text-primary hover:underline">
+                {t.finder.clear}
+              </button>
+            </div>
+          )}
+          <Tabs value={region} onValueChange={(value) => setFilters({ region: value })}>
             <TabsList className="h-auto flex-wrap justify-center gap-1 bg-secondary/60 p-1.5">
               {REGIONS.map((r) => (
                 <TabsTrigger
@@ -93,9 +115,7 @@ export function ToursSection({ tours }: ToursSectionProps) {
         </div>
 
         {filtered.length === 0 && (
-          <div className="mt-12 text-center text-muted-foreground">
-            No tours in this region yet — check back soon.
-          </div>
+          <div className="mt-12 text-center text-muted-foreground">{t.finder.empty}</div>
         )}
       </div>
 
