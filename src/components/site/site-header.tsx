@@ -51,11 +51,13 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 border-b border-[#d4a82a]/25 bg-[#0f1225] text-white",
-        scrolled && "shadow-md",
+        "fixed inset-x-0 top-0 z-50 border-b text-white transition-all duration-300",
+        scrolled
+          ? "border-white/10 bg-spice-dark shadow-md"
+          : "border-white/10 bg-[oklch(0.22_0.04_40/0.42)] backdrop-blur-md",
       )}
     >
-      <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between gap-3 px-4 sm:h-20 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6 lg:px-8">
         <a href="#top" className="flex shrink-0 items-center gap-2.5" onClick={() => go("top")}>
           <Image
             src="/brand/logo.png"
@@ -65,8 +67,13 @@ export function SiteHeader() {
             priority
             className="h-10 w-auto sm:h-12"
           />
-          <span className="text-sm font-bold tracking-[0.08em] text-white sm:text-[15px]">
-            GREAT SILK TRAILS
+          <span className="flex flex-col leading-none">
+            <span className="font-display text-lg font-semibold tracking-wide text-white">
+              Great Silk Trails
+            </span>
+            <span className="text-[10px] uppercase tracking-[0.22em] text-white/65">
+              Silk Road Tours
+            </span>
           </span>
         </a>
 
@@ -105,7 +112,7 @@ export function SiteHeader() {
 
         <div className="flex shrink-0 items-center gap-2">
           <div
-            className="flex items-center rounded-full border border-white/35 bg-white/10 px-1 py-0.5 text-[11px] font-bold tracking-wide"
+            className="flex items-center rounded-full border border-white/25 bg-white/10 px-1 py-0.5 text-[11px] font-semibold tracking-wide"
             role="group"
             aria-label="Language"
           >
@@ -117,7 +124,7 @@ export function SiteHeader() {
                 onClick={() => setLocale(code)}
                 className={cn(
                   "rounded-full px-2 py-1 uppercase transition",
-                  locale === code ? "bg-[#d4a82a] text-[#0f1225]" : "text-white hover:text-white",
+                  locale === code ? "bg-accent text-accent-foreground" : "text-white/80 hover:text-white",
                 )}
               >
                 {code}
@@ -128,7 +135,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => openBooking()}
-            className="inline-flex items-center rounded-full bg-[#d4a82a] px-3 py-2 text-[11px] font-semibold text-[#0f1225] shadow-md hover:bg-[#e0b84a] sm:px-4 sm:text-sm"
+            className="inline-flex items-center rounded-full bg-accent px-3 py-2 text-[11px] font-semibold text-accent-foreground shadow-sm hover:bg-accent/90 sm:px-4 sm:text-sm"
           >
             {t.plan}
           </button>
@@ -137,19 +144,19 @@ export function SiteHeader() {
             <SheetTrigger asChild>
               <button
                 type="button"
-                className="inline-flex size-9 items-center justify-center rounded-md border border-[#d4a82a]/40 text-white lg:hidden"
+                className="inline-flex size-9 items-center justify-center rounded-md border border-white/25 text-white lg:hidden"
                 aria-label={t.menu}
               >
                 <Menu className="size-5" />
               </button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80 border-l border-[#d4a82a]/30 bg-white">
-              <SheetTitle className="flex items-center gap-2 pr-8 text-base font-bold tracking-wide text-[#0f1225]">
+            <SheetContent side="right" className="w-80 border-l border-border bg-background">
+              <SheetTitle className="flex items-center gap-2 pr-8 font-display text-lg font-semibold tracking-wide text-foreground">
                 <Image src="/brand/logo.png" alt="" width={756} height={571} className="h-8 w-auto" />
-                GREAT SILK TRAILS
+                Great Silk Trails
               </SheetTitle>
-              <div className="mt-6 space-y-2 text-sm text-[#0f1225]">
-                <p className="px-2 text-[11px] font-bold uppercase tracking-wide text-[#0f1225]/50">
+              <div className="mt-6 space-y-2 text-sm text-foreground">
+                <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   {t.nav.destinations}
                 </p>
                 {t.countries.map((item) => (
@@ -157,12 +164,12 @@ export function SiteHeader() {
                     key={item.id}
                     type="button"
                     onClick={() => pickCountry(item.id)}
-                    className="block w-full rounded-lg px-3 py-2 text-left hover:bg-[#faf5eb]"
+                    className="block w-full rounded-lg px-3 py-2 text-left hover:bg-secondary"
                   >
                     {item.label}
                   </button>
                 ))}
-                <p className="px-2 pt-3 text-[11px] font-bold uppercase tracking-wide text-[#0f1225]/50">
+                <p className="px-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   {t.nav.travelStyles}
                 </p>
                 {t.styles.map((item) => (
@@ -170,7 +177,7 @@ export function SiteHeader() {
                     key={item.id}
                     type="button"
                     onClick={() => pickStyle(item.id)}
-                    className="block w-full rounded-lg px-3 py-2 text-left hover:bg-[#faf5eb]"
+                    className="block w-full rounded-lg px-3 py-2 text-left hover:bg-secondary"
                   >
                     {item.label}
                   </button>
@@ -181,7 +188,7 @@ export function SiteHeader() {
                     setOpen(false);
                     go("services");
                   }}
-                  className="mt-2 block w-full rounded-lg px-3 py-2 text-left font-semibold uppercase tracking-wide hover:bg-[#faf5eb]"
+                  className="mt-2 block w-full rounded-lg px-3 py-2 text-left font-medium uppercase tracking-[0.14em] hover:bg-secondary"
                 >
                   {t.nav.services}
                 </button>
@@ -191,7 +198,7 @@ export function SiteHeader() {
                     setOpen(false);
                     go("about");
                   }}
-                  className="block w-full rounded-lg px-3 py-2 text-left font-semibold uppercase tracking-wide hover:bg-[#faf5eb]"
+                  className="block w-full rounded-lg px-3 py-2 text-left font-medium uppercase tracking-[0.14em] hover:bg-secondary"
                 >
                   {t.nav.about}
                 </button>
@@ -201,7 +208,7 @@ export function SiteHeader() {
                     setOpen(false);
                     go("contact");
                   }}
-                  className="block w-full rounded-lg px-3 py-2 text-left font-semibold uppercase tracking-wide hover:bg-[#faf5eb]"
+                  className="block w-full rounded-lg px-3 py-2 text-left font-medium uppercase tracking-[0.14em] hover:bg-secondary"
                 >
                   {t.nav.contact}
                 </button>
@@ -219,7 +226,7 @@ function NavButton({ children, onClick }: { children: React.ReactNode; onClick: 
     <button
       type="button"
       onClick={onClick}
-      className="rounded-lg px-2.5 py-2 text-[11px] font-bold uppercase tracking-wide text-white hover:bg-white/10 xl:px-3 xl:text-xs"
+      className="rounded-md px-2.5 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-white/85 hover:text-accent xl:px-3 xl:text-xs"
     >
       {children}
     </button>
@@ -229,12 +236,12 @@ function NavButton({ children, onClick }: { children: React.ReactNode; onClick: 
 function Dropdown({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="group relative">
-      <div className="flex cursor-default items-center gap-0.5 rounded-lg px-2.5 py-2 text-[11px] font-bold uppercase tracking-wide text-white group-hover:bg-white/10 xl:px-3 xl:text-xs">
+      <div className="flex cursor-default items-center gap-0.5 rounded-md px-2.5 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-white/85 group-hover:text-accent xl:px-3 xl:text-xs">
         <span>{label}</span>
         <ChevronDown className="size-3 text-white" />
       </div>
       <div className="invisible absolute left-0 top-full z-50 min-w-[240px] pt-1 opacity-0 transition group-hover:visible group-hover:opacity-100">
-        <div className="max-h-[min(70vh,520px)] overflow-y-auto rounded-xl border border-[#d4a82a]/25 bg-white py-2 text-[#0f1225] shadow-xl">
+        <div className="max-h-[min(70vh,520px)] overflow-y-auto rounded-xl border border-border bg-card py-2 text-foreground shadow-lg">
           {children}
         </div>
       </div>
@@ -247,7 +254,7 @@ function DropdownLink({ children, onClick }: { children: React.ReactNode; onClic
     <button
       type="button"
       onClick={onClick}
-      className="block w-full px-4 py-2.5 text-left text-sm text-[#3a4060] hover:bg-[#faf5eb]"
+      className="block w-full px-4 py-2.5 text-left text-sm text-foreground/80 hover:bg-secondary hover:text-foreground"
     >
       {children}
     </button>
