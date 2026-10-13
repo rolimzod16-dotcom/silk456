@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 
 function chipClass(active: boolean) {
   return active
-    ? "border-[#0f1225] bg-[#0f1225] text-[#d4a82a]"
-    : "border-[#d4a82a]/40 bg-[#faf5eb] text-[#0f1225] hover:border-[#d4a82a] hover:bg-[#d4a82a]/20";
+    ? "border-accent bg-accent text-accent-foreground"
+    : "border-white/30 bg-white/10 text-white hover:border-white/50 hover:bg-white/20";
 }
 
 export function TripFinder() {
@@ -16,8 +16,8 @@ export function TripFinder() {
   const setFilters = useUiStore((state) => state.setFilters);
 
   return (
-    <div className="mt-8 w-full max-w-3xl rounded-2xl border border-white/50 bg-white/70 p-4 text-left text-[#0f1225] shadow-2xl backdrop-blur-md sm:p-5">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0f1225]/60">
+    <div className="mt-8 w-full max-w-3xl rounded-2xl border border-white/20 bg-white/10 p-4 text-left text-white shadow-lg backdrop-blur-md sm:p-5">
+      <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/70">
         {t.finder.season}
       </p>
       <div className="mt-2 flex flex-wrap gap-1.5">
@@ -39,7 +39,7 @@ export function TripFinder() {
 
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0f1225]/60">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/70">
             {t.finder.howLong}
           </p>
           <div className="mt-2 flex flex-wrap gap-1.5">
@@ -60,7 +60,7 @@ export function TripFinder() {
           </div>
         </div>
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0f1225]/60">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/70">
             {t.finder.where}
           </p>
           <div className="mt-2 flex flex-wrap gap-1.5">
@@ -85,7 +85,7 @@ export function TripFinder() {
       <button
         type="button"
         onClick={() => scrollToId("tours")}
-        className="mt-4 rounded-full bg-[#d4a82a] px-4 py-2 text-sm font-semibold text-[#0f1225] hover:bg-[#e0b84a]"
+        className="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90"
       >
         {t.finder.explore}
       </button>
