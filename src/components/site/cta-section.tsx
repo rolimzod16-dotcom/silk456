@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -52,7 +53,7 @@ export function CtaSection() {
                 variant="outline"
                 className="border-white/40 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 hover:text-white text-base"
               >
-                <a href="#contact">Ask a Question</a>
+                <Link href="/contact">Ask a Question</Link>
               </Button>
             </div>
           </motion.div>

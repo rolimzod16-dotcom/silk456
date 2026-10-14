@@ -35,3 +35,11 @@ export function useLocale() {
   if (!value) throw new Error("useLocale must be used inside LocaleProvider");
   return value;
 }
+
+export type Text = { en: string; ru: string };
+
+/** Picks the current-locale string from an { en, ru } pair. */
+export function useText() {
+  const { locale } = useLocale();
+  return (text: Text) => text[locale];
+}

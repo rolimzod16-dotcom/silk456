@@ -20,7 +20,11 @@ const display = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Silk Caravan — Tours along the Great Silk Road",
+  metadataBase: new URL("https://www.greatsilktrails.com"),
+  title: {
+    default: "Silk Caravan — Tours along the Great Silk Road",
+    template: "%s — Great Silk Trails",
+  },
   description:
     "Boutique tours along the ancient Silk Road: Uzbekistan, Kyrgyzstan, Iran, Xinjiang. Caravan routes through Samarkand, Bukhara, Khiva, Kashgar and Persia with expert local guides.",
   keywords: [

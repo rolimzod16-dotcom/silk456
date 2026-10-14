@@ -2,24 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ChevronDown, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { useLocale } from "@/lib/locale";
-import { scrollToId, useUiStore } from "@/lib/ui-store";
+import { useLocale, useText } from "@/lib/locale";
+import { COMMON } from "@/lib/pages";
+import { useUiStore } from "@/lib/ui-store";
 import { cn } from "@/lib/utils";
-
-function go(id: string) {
-  if (window.location.pathname !== "/") {
-    window.location.href = `/#${id}`;
-    return;
-  }
-  scrollToId(id);
-}
 
 export function SiteHeader() {
   const { locale, setLocale, t } = useLocale();
+  const tx = useText();
+  const pathname = usePathname();
   const openBooking = useUiStore((state) => state.openBooking);
-  const setFilters = useUiStore((state) => state.setFilters);
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -30,23 +26,9 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  function pickCountry(id: (typeof t.countries)[number]["id"]) {
-    setFilters({ country: id, style: null, region: "all" });
-    setOpen(false);
-    go("tours");
-  }
+  useEffect(() => setOpen(false), [pathname]);
 
-  function pickStyle(id: (typeof t.styles)[number]["id"]) {
-    setFilters({ style: id, country: null, region: "all" });
-    setOpen(false);
-    go("tours");
-  }
-
-  function pickAllTours() {
-    setFilters({ country: null, style: null, region: "all" });
-    setOpen(false);
-    go("tours");
-  }
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <header
@@ -58,7 +40,7 @@ export function SiteHeader() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6 lg:px-8">
-        <a href="#top" className="flex shrink-0 items-center gap-2.5" onClick={() => go("top")}>
+        <Link href="/" className="flex shrink-0 items-center gap-2.5">
           <Image
             src="/brand/logo.png"
             alt=""
@@ -75,39 +57,35 @@ export function SiteHeader() {
               Silk Road Tours
             </span>
           </span>
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex">
-          <Dropdown label={t.nav.destinations}>
-            <DropdownLink onClick={pickAllTours}>{t.nav.viewAll}</DropdownLink>
+          <NavLink href="/tours" active={isActive("/tours")}>{tx(COMMON.tours)}</NavLink>
+          <Dropdown label={t.nav.destinations} href="/destinations" active={isActive("/destinations")}>
             {t.countries.map((item) => (
-              <DropdownLink key={item.id} onClick={() => pickCountry(item.id)}>
+              <DropdownLink key={item.id} href={`/destinations/${item.id}`}>
                 {item.label}
               </DropdownLink>
             ))}
+            <DropdownLink href="/destinations">{t.nav.viewAll}</DropdownLink>
           </Dropdown>
-          <Dropdown label={t.nav.travelStyles}>
+          <Dropdown label={t.nav.travelStyles} href="/travel-styles" active={isActive("/travel-styles")}>
             {t.styles.map((item) => (
-              <DropdownLink key={item.id} onClick={() => pickStyle(item.id)}>
+              <DropdownLink key={item.id} href={`/travel-styles/${item.id}`}>
                 {item.label}
               </DropdownLink>
             ))}
+            <DropdownLink href="/travel-styles">{t.nav.viewAll}</DropdownLink>
           </Dropdown>
-          <Dropdown label={t.nav.services}>
+          <Dropdown label={t.nav.services} href="/services" active={isActive("/services")}>
             {t.services.map((item) => (
-              <DropdownLink
-                key={item.id}
-                onClick={() => {
-                  setOpen(false);
-                  go("services");
-                }}
-              >
+              <DropdownLink key={item.id} href={`/services#${item.id}`}>
                 {item.title}
               </DropdownLink>
             ))}
           </Dropdown>
-          <NavButton onClick={() => go("about")}>{t.nav.about}</NavButton>
-          <NavButton onClick={() => go("contact")}>{t.nav.contact}</NavButton>
+          <NavLink href="/about" active={isActive("/about")}>{t.nav.about}</NavLink>
+          <NavLink href="/contact" active={isActive("/contact")}>{t.nav.contact}</NavLink>
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
@@ -155,63 +133,23 @@ export function SiteHeader() {
                 <Image src="/brand/logo.png" alt="" width={756} height={571} className="h-8 w-auto" />
                 Great Silk Trails
               </SheetTitle>
-              <div className="mt-6 space-y-2 text-sm text-foreground">
-                <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  {t.nav.destinations}
-                </p>
+              <div className="mt-6 max-h-[calc(100vh-6rem)] space-y-1 overflow-y-auto pb-6 text-sm text-foreground">
+                <MobileLink href="/tours" strong>{tx(COMMON.tours)}</MobileLink>
+                <MobileLink href="/destinations" strong>{t.nav.destinations}</MobileLink>
                 {t.countries.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => pickCountry(item.id)}
-                    className="block w-full rounded-lg px-3 py-2 text-left hover:bg-secondary"
-                  >
+                  <MobileLink key={item.id} href={`/destinations/${item.id}`}>
                     {item.label}
-                  </button>
+                  </MobileLink>
                 ))}
-                <p className="px-2 pt-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  {t.nav.travelStyles}
-                </p>
+                <MobileLink href="/travel-styles" strong>{t.nav.travelStyles}</MobileLink>
                 {t.styles.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => pickStyle(item.id)}
-                    className="block w-full rounded-lg px-3 py-2 text-left hover:bg-secondary"
-                  >
+                  <MobileLink key={item.id} href={`/travel-styles/${item.id}`}>
                     {item.label}
-                  </button>
+                  </MobileLink>
                 ))}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    go("services");
-                  }}
-                  className="mt-2 block w-full rounded-lg px-3 py-2 text-left font-medium uppercase tracking-[0.14em] hover:bg-secondary"
-                >
-                  {t.nav.services}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    go("about");
-                  }}
-                  className="block w-full rounded-lg px-3 py-2 text-left font-medium uppercase tracking-[0.14em] hover:bg-secondary"
-                >
-                  {t.nav.about}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    go("contact");
-                  }}
-                  className="block w-full rounded-lg px-3 py-2 text-left font-medium uppercase tracking-[0.14em] hover:bg-secondary"
-                >
-                  {t.nav.contact}
-                </button>
+                <MobileLink href="/services" strong>{t.nav.services}</MobileLink>
+                <MobileLink href="/about" strong>{t.nav.about}</MobileLink>
+                <MobileLink href="/contact" strong>{t.nav.contact}</MobileLink>
               </div>
             </SheetContent>
           </Sheet>
@@ -221,26 +159,52 @@ export function SiteHeader() {
   );
 }
 
-function NavButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+function NavLink({
+  href,
+  active,
+  children,
+}: {
+  href: string;
+  active: boolean;
+  children: React.ReactNode;
+}) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="rounded-md px-2.5 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-white/85 hover:text-accent xl:px-3 xl:text-xs"
+    <Link
+      href={href}
+      className={cn(
+        "rounded-md px-2.5 py-2 text-[11px] font-medium uppercase tracking-[0.14em] hover:text-accent xl:px-3 xl:text-xs",
+        active ? "text-accent" : "text-white/85",
+      )}
     >
       {children}
-    </button>
+    </Link>
   );
 }
 
-function Dropdown({ label, children }: { label: string; children: React.ReactNode }) {
+function Dropdown({
+  label,
+  href,
+  active,
+  children,
+}: {
+  label: string;
+  href: string;
+  active: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <div className="group relative">
-      <div className="flex cursor-default items-center gap-0.5 rounded-md px-2.5 py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-white/85 group-hover:text-accent xl:px-3 xl:text-xs">
+      <Link
+        href={href}
+        className={cn(
+          "flex items-center gap-0.5 rounded-md px-2.5 py-2 text-[11px] font-medium uppercase tracking-[0.14em] group-hover:text-accent xl:px-3 xl:text-xs",
+          active ? "text-accent" : "text-white/85",
+        )}
+      >
         <span>{label}</span>
         <ChevronDown className="size-3 text-white" />
-      </div>
-      <div className="invisible absolute left-0 top-full z-50 min-w-[240px] pt-1 opacity-0 transition group-hover:visible group-hover:opacity-100">
+      </Link>
+      <div className="invisible absolute left-0 top-full z-50 min-w-[240px] pt-1 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
         <div className="max-h-[min(70vh,520px)] overflow-y-auto rounded-xl border border-border bg-card py-2 text-foreground shadow-lg">
           {children}
         </div>
@@ -249,14 +213,35 @@ function Dropdown({ label, children }: { label: string; children: React.ReactNod
   );
 }
 
-function DropdownLink({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+function DropdownLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <Link
+      href={href}
       className="block w-full px-4 py-2.5 text-left text-sm text-foreground/80 hover:bg-secondary hover:text-foreground"
     >
       {children}
-    </button>
+    </Link>
+  );
+}
+
+function MobileLink({
+  href,
+  strong = false,
+  children,
+}: {
+  href: string;
+  strong?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "block w-full rounded-lg px-3 py-2 text-left hover:bg-secondary",
+        strong && "mt-2 font-medium uppercase tracking-[0.14em]",
+      )}
+    >
+      {children}
+    </Link>
   );
 }

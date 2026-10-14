@@ -91,7 +91,7 @@ export function AboutSection() {
 
             <div className="mt-8">
               <Link
-                href="#tours"
+                href="/tours"
                 className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
               >
                 Choose a route →

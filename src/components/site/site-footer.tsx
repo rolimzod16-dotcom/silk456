@@ -1,24 +1,55 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Compass, Phone, Mail, MapPin } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { tours } from "@/lib/tours";
 
 const TOUR_LINKS = [
-  { label: "Samarkand Gold", href: "#tours" },
-  { label: "Kashgar Caravan", href: "#tours" },
-  { label: "Charyn & Heavenly Mountains", href: "#tours" },
-  { label: "Persian Silk Roads", href: "#tours" },
-  { label: "Greater Turkestan", href: "#tours" },
+  ...tours.slice(0, 5).map((tour) => ({ label: tour.title, href: `/tours/${tour.slug}` })),
+  { label: "All tours →", href: "/tours" },
 ];
 
 const COMPANY_LINKS = [
-  { label: "About", href: "#about" },
-  { label: "Why Us", href: "#why" },
-  { label: "Reviews", href: "#testimonials" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: "/about" },
+  { label: "Why Us", href: "/about#why" },
+  { label: "Reviews", href: "/about#testimonials" },
+  { label: "Destinations", href: "/destinations" },
+  { label: "Services", href: "/services" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function SiteFooter() {
+  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [sending, setSending] = useState(false);
+
+  async function subscribe(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email) return;
+    setSending(true);
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "Newsletter",
+          email,
+          subject: "Newsletter subscription",
+          message: `Subscribe ${email} to the newsletter.`,
+        }),
+      });
+      if (!res.ok) throw new Error();
+      setEmail("");
+      toast({ title: "You're subscribed", description: "New routes and dates — once a month." });
+    } catch {
+      toast({ title: "Failed to subscribe", description: "Please try again later.", variant: "destructive" });
+    } finally {
+      setSending(false);
+    }
+  }
+
   return (
     <footer className="mt-auto border-t border-border bg-spice-dark text-white/80">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -91,14 +122,18 @@ export function SiteFooter() {
             <p className="mt-4 text-sm text-white/70">
               New routes, departure dates and seasonal deals — once a month.
             </p>
-            <form className="mt-4 flex gap-2" onSubmit={(e) => e.preventDefault()}>
+            <form className="mt-4 flex gap-2" onSubmit={subscribe}>
               <input
                 type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email"
                 className="min-w-0 flex-1 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-accent focus:outline-none"
               />
               <button
                 type="submit"
+                disabled={sending}
                 className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent/90"
               >
                 OK
@@ -122,8 +157,8 @@ export function SiteFooter() {
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
           <p>© {new Date().getFullYear()} Silk Caravan. All rights reserved.</p>
           <div className="flex gap-5">
-            <Link href="#" className="hover:text-accent">Privacy Policy</Link>
-            <Link href="#" className="hover:text-accent">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-accent">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-accent">Terms of Service</Link>
           </div>
         </div>
       </div>
