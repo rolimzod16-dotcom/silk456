@@ -8,7 +8,7 @@ import { CtaSection } from "@/components/site/cta-section";
 import { getContent } from "@/lib/content";
 
 export const metadata: Metadata = pageMeta({
-  title: "About Great Silk Trails — Local Silk Road Tour Operator",
+  title: "About Us — Local Silk Road Tour Operator",
   description:
     "Boutique Silk Road tours with local guides, small groups and family guesthouses across Central Asia.",
   path: "/about",
