@@ -172,7 +172,7 @@ function NavLink({
     <Link
       href={href}
       className={cn(
-        "rounded-md px-2.5 py-2 text-[11px] font-medium uppercase tracking-[0.14em] hover:text-accent xl:px-3 xl:text-xs",
+        "whitespace-nowrap rounded-md px-2.5 py-2 text-[11px] font-medium uppercase tracking-[0.14em] hover:text-accent xl:px-3 xl:text-xs",
         active ? "text-accent" : "text-white/85",
       )}
     >
@@ -197,7 +197,7 @@ function Dropdown({
       <Link
         href={href}
         className={cn(
-          "flex items-center gap-0.5 rounded-md px-2.5 py-2 text-[11px] font-medium uppercase tracking-[0.14em] group-hover:text-accent xl:px-3 xl:text-xs",
+          "flex items-center gap-0.5 whitespace-nowrap rounded-md px-2.5 py-2 text-[11px] font-medium uppercase tracking-[0.14em] group-hover:text-accent xl:px-3 xl:text-xs",
           active ? "text-accent" : "text-white/85",
         )}
       >

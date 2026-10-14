@@ -218,7 +218,7 @@ export const PAGE_COPY = {
 export const COMMON = {
   home: { en: "Home", ru: "Главная" },
   tours: { en: "Tours", ru: "Туры" },
-  routes: { en: "routes", ru: "маршрутов" },
+  routes: { en: "Routes", ru: "Маршрутов" },
   seeRoutes: { en: "See routes", ru: "Смотреть маршруты" },
   allTours: { en: "All tours", ru: "Все туры" },
   noRoutesTitle: { en: "No ready-made routes yet", ru: "Готовых маршрутов пока нет" },

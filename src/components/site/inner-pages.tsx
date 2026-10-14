@@ -74,7 +74,7 @@ export function CollectionIndex({
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/0" />
                 <div className="absolute inset-x-0 bottom-0 p-5 text-white">
                   <div className="text-xs uppercase tracking-[0.2em] text-accent">
-                    {item.tours.length} {tx(COMMON.routes)}
+                    {tx(COMMON.routes)}: {item.tours.length}
                   </div>
                   <h2 className="mt-1 font-display text-2xl font-semibold">{tx(item.label)}</h2>
                   <p className="mt-1 text-sm text-white/80">{tx(item.tagline)}</p>
