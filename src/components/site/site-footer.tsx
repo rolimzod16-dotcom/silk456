@@ -4,12 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Compass, Phone, Mail, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { tours } from "@/lib/tours";
-
-const TOUR_LINKS = [
-  ...tours.slice(0, 5).map((tour) => ({ label: tour.title, href: `/tours/${tour.slug}` })),
-  { label: "All tours →", href: "/tours" },
-];
+import { useContent } from "@/lib/content-context";
+import { phoneHref } from "@/lib/site-content";
 
 const COMPANY_LINKS = [
   { label: "About", href: "/about" },
@@ -21,6 +17,18 @@ const COMPANY_LINKS = [
 ];
 
 export function SiteFooter() {
+  const { tours, settings } = useContent();
+  const tourLinks = [
+    ...tours.slice(0, 5).map((tour) => ({ label: tour.title, href: `/tours/${tour.slug}` })),
+    { label: "All tours →", href: "/tours" },
+  ];
+  const socials = [
+    { label: "IG", name: "Instagram", href: settings.instagram },
+    { label: "FB", name: "Facebook", href: settings.facebook },
+    { label: "YT", name: "YouTube", href: settings.youtube },
+    { label: "TG", name: "Telegram", href: settings.telegram },
+    { label: "WA", name: "WhatsApp", href: settings.whatsapp },
+  ].filter((item) => item.href);
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [sending, setSending] = useState(false);
@@ -61,7 +69,7 @@ export function SiteFooter() {
               </span>
               <div className="flex flex-col leading-none">
                 <span className="font-display text-lg font-semibold text-white">
-                  Silk Caravan
+                  {settings.brandName}
                 </span>
                 <span className="text-[10px] uppercase tracking-[0.25em] text-white/60">
                   Silk Road Tours
@@ -73,15 +81,21 @@ export function SiteFooter() {
               groups, expert guides and living stories on every kilometer.
             </p>
             <div className="mt-5 space-y-2 text-sm">
-              <a href="tel:+14155550142" className="flex items-center gap-2 text-white/70 hover:text-accent">
-                <Phone className="h-4 w-4" /> +1 (415) 555-0142
-              </a>
-              <a href="mailto:hello@silkcaravan.tours" className="flex items-center gap-2 text-white/70 hover:text-accent">
-                <Mail className="h-4 w-4" /> hello@silkcaravan.tours
-              </a>
-              <div className="flex items-center gap-2 text-white/70">
-                <MapPin className="h-4 w-4" /> 221 Samarkand St, Suite 5
-              </div>
+              {settings.phone && (
+                <a href={phoneHref(settings.phone)} className="flex items-center gap-2 text-white/70 hover:text-accent">
+                  <Phone className="h-4 w-4" /> {settings.phone}
+                </a>
+              )}
+              {settings.email && (
+                <a href={`mailto:${settings.email}`} className="flex items-center gap-2 text-white/70 hover:text-accent">
+                  <Mail className="h-4 w-4" /> {settings.email}
+                </a>
+              )}
+              {settings.address && (
+                <div className="flex items-center gap-2 text-white/70">
+                  <MapPin className="h-4 w-4" /> {settings.address}
+                </div>
+              )}
             </div>
           </div>
 
@@ -90,7 +104,7 @@ export function SiteFooter() {
               Tours
             </h3>
             <ul className="mt-4 space-y-2.5 text-sm">
-              {TOUR_LINKS.map((l) => (
+              {tourLinks.map((l) => (
                 <li key={l.label}>
                   <Link href={l.href} className="text-white/70 transition-colors hover:text-accent">
                     {l.label}
@@ -139,23 +153,27 @@ export function SiteFooter() {
                 OK
               </button>
             </form>
+            {socials.length > 0 && (
             <div className="mt-5 flex gap-3">
-              {["IG", "FB", "YT", "X"].map((s) => (
+              {socials.map((s) => (
                 <a
-                  key={s}
-                  href="#"
-                  aria-label={s}
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.name}
                   className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/5 text-xs font-semibold text-white/70 transition-colors hover:border-accent hover:text-accent"
                 >
-                  {s}
+                  {s.label}
                 </a>
               ))}
             </div>
+            )}
           </div>
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
-          <p>© {new Date().getFullYear()} Silk Caravan. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {settings.brandName}. All rights reserved.</p>
           <div className="flex gap-5">
             <Link href="/privacy" className="hover:text-accent">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-accent">Terms of Service</Link>

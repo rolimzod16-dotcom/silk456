@@ -2,16 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { TourPage } from "@/components/site/tour-page";
 import { tourMeta } from "@/lib/catalog";
-import { getTourBySlug, tours } from "@/lib/tours";
+import { getContent, getTour } from "@/lib/content";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return tours.map((tour) => ({ slug: tour.slug }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const tour = getTourBySlug((await params).slug);
+  const tour = await getTour((await params).slug);
   if (!tour) return {};
   return {
     title: tour.title,
@@ -21,16 +17,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function TourDetailPage({ params }: Props) {
-  const tour = getTourBySlug((await params).slug);
+  const tour = await getTour((await params).slug);
   if (!tour) notFound();
 
   // Prefer tours that share a country, then fill up with the rest.
   const countries = tourMeta(tour).countries;
-  const others = tours.filter((item) => item.slug !== tour.slug);
-  const related = [
-    ...others.filter((item) => tourMeta(item).countries.some((c) => countries.includes(c))),
-    ...others.filter((item) => !tourMeta(item).countries.some((c) => countries.includes(c))),
-  ].slice(0, 3);
+  const shares = (item: typeof tour) => tourMeta(item).countries.some((c) => countries.includes(c));
+  const others = (await getContent()).tours.filter((item) => item.slug !== tour.slug);
+  const related = [...others.filter(shares), ...others.filter((item) => !shares(item))].slice(0, 3);
 
   return <TourPage tour={tour} related={related} />;
 }

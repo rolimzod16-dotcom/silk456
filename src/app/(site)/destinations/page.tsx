@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CollectionIndex } from "@/components/site/inner-pages";
+import { getContent } from "@/lib/content";
 import { countryCollections } from "@/lib/pages";
 
 export const metadata: Metadata = {
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
   description: "Silk Road destinations: Uzbekistan, Tajikistan, Kyrgyzstan, Kazakhstan, China, Iran, Turkmenistan and Mongolia.",
 };
 
-export default function DestinationsPage() {
-  return <CollectionIndex kind="destinations" items={countryCollections()} />;
+export default async function DestinationsPage() {
+  const { tours } = await getContent();
+  return <CollectionIndex kind="destinations" items={countryCollections(tours)} />;
 }

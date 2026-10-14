@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
 import { COUNTRIES, STYLES } from "@/lib/catalog";
 import { SITE_URL } from "@/lib/pages";
-import { tours } from "@/lib/tours";
+import { getContent } from "@/lib/content";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const { tours } = await getContent();
   const paths = [
     "",
     "/tours",

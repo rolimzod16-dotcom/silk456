@@ -26,8 +26,6 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [pathname]);
-
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
@@ -133,7 +131,12 @@ export function SiteHeader() {
                 <Image src="/brand/logo.png" alt="" width={756} height={571} className="h-8 w-auto" />
                 Great Silk Trails
               </SheetTitle>
-              <div className="mt-6 max-h-[calc(100vh-6rem)] space-y-1 overflow-y-auto pb-6 text-sm text-foreground">
+              <div
+                className="mt-6 max-h-[calc(100vh-6rem)] space-y-1 overflow-y-auto pb-6 text-sm text-foreground"
+                onClickCapture={(event) => {
+                  if ((event.target as HTMLElement).closest("a")) setOpen(false);
+                }}
+              >
                 <MobileLink href="/tours" strong>{tx(COMMON.tours)}</MobileLink>
                 <MobileLink href="/destinations" strong>{t.nav.destinations}</MobileLink>
                 {t.countries.map((item) => (

@@ -1,3 +1,5 @@
+import type { CountryId, SeasonId, StyleId } from "@/lib/catalog"
+
 export type Tour = {
   slug: string
   title: string
@@ -20,6 +22,9 @@ export type Tour = {
   excluded: string[]
   description: string
   featured?: boolean
+  countries?: CountryId[]
+  seasons?: SeasonId[]
+  styles?: StyleId[]
 }
 
 export const tours: Tour[] = [

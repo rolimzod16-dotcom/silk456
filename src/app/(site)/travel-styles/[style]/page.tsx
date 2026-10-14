@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CollectionDetail } from "@/components/site/inner-pages";
-import { STYLES } from "@/lib/catalog";
+import { getContent } from "@/lib/content";
 import { styleCollection } from "@/lib/pages";
 
 type Props = { params: Promise<{ style: string }> };
 
-export function generateStaticParams() {
-  return STYLES.map((item) => ({ style: item.id }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const collection = styleCollection((await params).style);
+  const collection = styleCollection((await params).style, (await getContent()).tours);
   if (!collection) return {};
   return {
     title: `${collection.label.en} tours`,
@@ -20,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function TravelStylePage({ params }: Props) {
-  const collection = styleCollection((await params).style);
+  const collection = styleCollection((await params).style, (await getContent()).tours);
   if (!collection) notFound();
   return <CollectionDetail collection={collection} />;
 }

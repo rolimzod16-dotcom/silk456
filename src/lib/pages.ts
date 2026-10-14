@@ -1,6 +1,6 @@
 import { COUNTRIES, STYLES, tourMeta, type CountryId, type StyleId } from "@/lib/catalog";
 import type { Text } from "@/lib/locale";
-import { tours, type Tour } from "@/lib/tours";
+import type { Tour } from "@/lib/tours";
 
 export const SITE_URL = "https://www.greatsilktrails.com";
 
@@ -120,7 +120,7 @@ export type Collection = {
   tours: Tour[];
 };
 
-export function countryCollection(id: string): Collection | undefined {
+export function countryCollection(id: string, tours: Tour[]): Collection | undefined {
   const country = COUNTRIES.find((item) => item.id === id);
   if (!country) return undefined;
   const list = tours.filter((tour) => tourMeta(tour).countries.includes(country.id));
@@ -134,7 +134,7 @@ export function countryCollection(id: string): Collection | undefined {
   };
 }
 
-export function styleCollection(id: string): Collection | undefined {
+export function styleCollection(id: string, tours: Tour[]): Collection | undefined {
   const style = STYLES.find((item) => item.id === id);
   if (!style) return undefined;
   const list = tours.filter((tour) => tourMeta(tour).styles.includes(style.id));
@@ -148,10 +148,11 @@ export function styleCollection(id: string): Collection | undefined {
   };
 }
 
-export const countryCollections = () =>
-  COUNTRIES.map((item) => countryCollection(item.id)!);
+export const countryCollections = (tours: Tour[]) =>
+  COUNTRIES.map((item) => countryCollection(item.id, tours)!);
 
-export const styleCollections = () => STYLES.map((item) => styleCollection(item.id)!);
+export const styleCollections = (tours: Tour[]) =>
+  STYLES.map((item) => styleCollection(item.id, tours)!);
 
 /** Shared hero / heading copy for the inner pages. */
 export const PAGE_COPY = {

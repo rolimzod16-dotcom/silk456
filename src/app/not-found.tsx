@@ -2,10 +2,14 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
 import { BookingDialog } from "@/components/site/booking-dialog";
+import { getContent } from "@/lib/content";
+import { ContentProvider } from "@/lib/content-context";
 import { LocaleProvider } from "@/lib/locale";
 
-export default function NotFound() {
+export default async function NotFound() {
+  const content = await getContent();
   return (
+    <ContentProvider content={content}>
     <LocaleProvider>
       <div className="flex min-h-screen flex-col bg-background">
         <SiteHeader />
@@ -30,5 +34,6 @@ export default function NotFound() {
         <BookingDialog />
       </div>
     </LocaleProvider>
+    </ContentProvider>
   );
 }

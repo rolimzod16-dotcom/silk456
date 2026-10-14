@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
-function pick<T extends { id: string }>(list: readonly T[], value: unknown) {
+function pick<T extends string>(list: readonly { id: T }[], value: unknown): T | null {
   return list.find((item) => item.id === value)?.id ?? null;
 }
 

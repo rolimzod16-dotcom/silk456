@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+  images: {
+    // Tour photos uploaded from the admin live in Supabase Storage.
+    remotePatterns: [{ protocol: "https", hostname: "*.supabase.co" }],
+  },
 };
 
 export default nextConfig;

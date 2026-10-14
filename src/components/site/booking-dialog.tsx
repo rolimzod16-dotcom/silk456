@@ -21,13 +21,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { tours, Tour } from "@/lib/tours";
+import type { Tour } from "@/lib/tours";
+import { useContent } from "@/lib/content-context";
 import { useUiStore } from "@/lib/ui-store";
 import { useToast } from "@/hooks/use-toast";
 
 type Status = "idle" | "loading" | "success" | "error";
 
 export function BookingDialog() {
+  const { tours } = useContent();
   const open = useUiStore((s) => s.bookingOpen);
   const presetSlug = useUiStore((s) => s.bookingTourSlug);
   const close = useUiStore((s) => s.closeBooking);
@@ -57,7 +59,7 @@ export function BookingDialog() {
 
   const selectedTour: Tour | undefined = useMemo(
     () => tours.find((t) => t.slug === tourSlug),
-    [tourSlug]
+    [tours, tourSlug]
   );
 
   const totalPrice = selectedTour

@@ -7,35 +7,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-
-const CONTACTS = [
-  {
-    icon: Phone,
-    label: "Phone",
-    value: "+1 (415) 555-0142",
-    href: "tel:+14155550142",
-  },
-  {
-    icon: Mail,
-    label: "Email",
-    value: "hello@silkcaravan.tours",
-    href: "mailto:hello@silkcaravan.tours",
-  },
-  {
-    icon: MapPin,
-    label: "Office",
-    value: "221 Samarkand St, Suite 5",
-    href: "#",
-  },
-  {
-    icon: Clock,
-    label: "Hours",
-    value: "Mon–Sat, 10:00–20:00",
-    href: "#",
-  },
-];
+import { useContent } from "@/lib/content-context";
+import { phoneHref } from "@/lib/site-content";
 
 export function ContactSection() {
+  const { settings } = useContent();
+  const contacts = [
+    { icon: Phone, label: "Phone", value: settings.phone, href: phoneHref(settings.phone) },
+    { icon: Mail, label: "Email", value: settings.email, href: `mailto:${settings.email}` },
+    { icon: MapPin, label: "Office", value: settings.address, href: undefined },
+    { icon: Clock, label: "Hours", value: settings.hours, href: undefined },
+  ].filter((item) => item.value);
   const { toast } = useToast();
   const [status, setStatus] = useState<"idle" | "loading" | "ok">("idle");
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
@@ -85,7 +67,7 @@ export function ContactSection() {
             </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {CONTACTS.map((c) => (
+              {contacts.map((c) => (
                 <a
                   key={c.label}
                   href={c.href}

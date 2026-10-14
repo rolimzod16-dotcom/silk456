@@ -1,4 +1,4 @@
-import { tours, type Tour } from "@/lib/tours";
+import type { Tour } from "@/lib/tours";
 
 export const SEASONS = [
   { id: "spring", months: [3, 4, 5], en: "Spring", ru: "Весна" },
@@ -102,15 +102,17 @@ export function durationOf(days: number): DurationId {
   return "long";
 }
 
+/** Tours edited in the admin carry their own tags; built-in tours fall back to META. */
 export function tourMeta(tour: Tour): TourMeta {
-  return (
-    META[tour.slug] ?? {
-      countries: [],
-      seasons: [],
-      styles: [],
-    }
-  );
+  const fallback = META[tour.slug];
+  return {
+    countries: tour.countries ?? fallback?.countries ?? [],
+    seasons: tour.seasons ?? fallback?.seasons ?? [],
+    styles: tour.styles ?? fallback?.styles ?? [],
+  };
 }
+
+export const REGIONS = ["Central Asia", "West Asia", "East Asia"] as const;
 
 export function tourMatches(tour: Tour, filters: TourFilters): boolean {
   const meta = tourMeta(tour);
@@ -120,8 +122,4 @@ export function tourMatches(tour: Tour, filters: TourFilters): boolean {
   if (filters.country && !meta.countries.includes(filters.country)) return false;
   if (filters.style && !meta.styles.includes(filters.style)) return false;
   return true;
-}
-
-export function filterTours(filters: TourFilters): Tour[] {
-  return tours.filter((tour) => tourMatches(tour, filters));
 }

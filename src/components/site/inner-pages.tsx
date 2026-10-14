@@ -13,11 +13,12 @@ import { CtaSection } from "@/components/site/cta-section";
 import { emptyFilters, type TourFilters } from "@/lib/catalog";
 import { useText } from "@/lib/locale";
 import { COMMON, PAGE_COPY, type Collection } from "@/lib/pages";
-import { tours } from "@/lib/tours";
 import { useUiStore } from "@/lib/ui-store";
+import { useContent } from "@/lib/content-context";
 
 export function ToursCatalog({ initial }: { initial: Partial<TourFilters> }) {
   const setFilters = useUiStore((s) => s.setFilters);
+  const { tours } = useContent();
   const copy = PAGE_COPY.tours;
   const key = JSON.stringify(initial);
 

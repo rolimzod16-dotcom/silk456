@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { addBooking } from "@/lib/leads";
-import { getTourBySlug } from "@/lib/tours";
+import { getTour } from "@/lib/content";
 import { leadLine, notifyTelegram } from "@/lib/telegram";
 
 export async function POST(req: Request) {
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const tour = getTourBySlug(tourSlug);
+    const tour = await getTour(String(tourSlug));
     if (!tour) {
       return NextResponse.json(
         { ok: false, error: "Selected tour not found." },
