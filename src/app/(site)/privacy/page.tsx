@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import { SimplePage } from "@/components/site/inner-pages";
 import { LegalText } from "@/components/site/legal-text";
 
-export const metadata: Metadata = { title: "Privacy Policy" };
+export const metadata: Metadata = pageMeta({
+  title: "Privacy Policy",
+  description:
+    "How Great Silk Trails handles the details you send with booking requests and messages.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

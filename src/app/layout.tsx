@@ -22,31 +22,22 @@ const display = Cormorant_Garamond({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.greatsilktrails.com"),
   title: {
-    default: "Silk Caravan — Tours along the Great Silk Road",
+    default: "Silk Road Tours in Central Asia | Great Silk Trails",
     template: "%s — Great Silk Trails",
   },
   description:
-    "Boutique tours along the ancient Silk Road: Uzbekistan, Kyrgyzstan, Iran, Xinjiang. Caravan routes through Samarkand, Bukhara, Khiva, Kashgar and Persia with expert local guides.",
-  keywords: [
-    "Silk Road",
-    "Silk Road tours",
-    "Uzbekistan tours",
-    "Samarkand",
-    "Bukhara",
-    "Khiva",
-    "Central Asia travel",
-    "Kashgar",
-    "Isfahan",
-    "caravan",
-  ],
-  authors: [{ name: "Silk Caravan" }],
+    "Small-group and private Silk Road tours in Uzbekistan, Tajikistan, Kyrgyzstan, Kazakhstan, Turkmenistan, Iran, China and Mongolia with local guides.",
+  applicationName: "Great Silk Trails",
+  authors: [{ name: "Great Silk Trails" }],
+  formatDetection: { telephone: false },
   openGraph: {
-    title: "Silk Caravan — Tours along the Great Silk Road",
-    description:
-      "Boutique tours along the ancient Silk Road. Samarkand, Bukhara, Khiva, Kashgar, Isfahan.",
-    siteName: "Silk Caravan",
+    siteName: "Great Silk Trails",
     type: "website",
+    locale: "en_US",
+    images: [{ url: "/images/hero-silkroad.png", alt: "Camel caravan on the Silk Road" }],
   },
+  twitter: { card: "summary_large_image" },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
 };
 
 export default function RootLayout({

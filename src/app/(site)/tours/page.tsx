@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
 import { ToursCatalog } from "@/components/site/inner-pages";
 import { COUNTRIES, DURATIONS, SEASONS, STYLES, type TourFilters } from "@/lib/catalog";
+import { JsonLd } from "@/components/site/json-ld";
+import { getContent } from "@/lib/content";
+import { breadcrumbLd, pageMeta, tourListLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Tours",
-  description: "Silk Road tour packages with accommodation, guides and transfers included.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { tours } = await getContent();
+  return pageMeta({
+    title: "Silk Road Tour Packages & Itineraries",
+    description: `${tours.length} Silk Road itineraries across Uzbekistan, Tajikistan, Kyrgyzstan, Kazakhstan, Turkmenistan, Iran, China and Mongolia. Hotels, guides and transfers included — filter by season, length or country.`,
+    path: "/tours",
+  });
+}
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
@@ -21,5 +28,11 @@ export default async function ToursPage({ searchParams }: Props) {
     season: pick(SEASONS, query.season),
     duration: pick(DURATIONS, query.duration),
   };
-  return <ToursCatalog initial={initial} />;
+  const { tours } = await getContent();
+  return (
+    <>
+      <JsonLd data={[tourListLd("Silk Road tour packages", tours), breadcrumbLd([{ name: "Tours", path: "/tours" }])]} />
+      <ToursCatalog initial={initial} />
+    </>
+  );
 }

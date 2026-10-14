@@ -3,17 +3,20 @@ import { notFound } from "next/navigation";
 import { TourPage } from "@/components/site/tour-page";
 import { tourMeta } from "@/lib/catalog";
 import { getContent, getTour } from "@/lib/content";
+import { JsonLd } from "@/components/site/json-ld";
+import { breadcrumbLd, pageMeta, tourDescription, tourLd, tourTitle } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tour = await getTour((await params).slug);
   if (!tour) return {};
-  return {
-    title: tour.title,
-    description: `${tour.subtitle}. ${tour.duration}, from $${tour.price}.`,
-    openGraph: { title: tour.title, description: tour.subtitle, images: [tour.image] },
-  };
+  return pageMeta({
+    title: tourTitle(tour),
+    description: tourDescription(tour),
+    path: `/tours/${tour.slug}`,
+    image: tour.image,
+  });
 }
 
 export default async function TourDetailPage({ params }: Props) {
@@ -26,5 +29,18 @@ export default async function TourDetailPage({ params }: Props) {
   const others = (await getContent()).tours.filter((item) => item.slug !== tour.slug);
   const related = [...others.filter(shares), ...others.filter((item) => !shares(item))].slice(0, 3);
 
-  return <TourPage tour={tour} related={related} />;
+  return (
+    <>
+      <JsonLd
+        data={[
+          tourLd(tour),
+          breadcrumbLd([
+            { name: "Tours", path: "/tours" },
+            { name: tour.title, path: `/tours/${tour.slug}` },
+          ]),
+        ]}
+      />
+      <TourPage tour={tour} related={related} />
+    </>
+  );
 }

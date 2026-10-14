@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import { SimplePage } from "@/components/site/inner-pages";
 import { LegalText } from "@/components/site/legal-text";
 
-export const metadata: Metadata = { title: "Terms of Service" };
+export const metadata: Metadata = pageMeta({
+  title: "Terms of Service",
+  description:
+    "How booking requests, prices and payment work with Great Silk Trails.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (
