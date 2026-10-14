@@ -46,6 +46,8 @@ export function copy(locale: Locale) {
       clear: ru ? "Сбросить" : "Clear",
       empty: ru ? "Под эти фильтры маршрутов нет." : "No routes match these filters.",
       showing: ru ? "Показано маршрутов" : "Routes shown",
+      showN: (n: number) => (ru ? `Показать маршруты: ${n}` : `Show ${n} ${n === 1 ? "route" : "routes"}`),
+      request: ru ? "Заказать свой маршрут" : "Request a custom route",
       seasons: SEASONS.map((item) => ({ id: item.id, label: ru ? item.ru : item.en })),
       durations: DURATIONS.map((item) => ({ id: item.id, label: ru ? item.ru : item.en })),
     },

@@ -1,5 +1,8 @@
 "use client";
 
+import { useMemo } from "react";
+import { tourMatches } from "@/lib/catalog";
+import { useContent } from "@/lib/content-context";
 import { useLocale } from "@/lib/locale";
 import { scrollToId, useUiStore } from "@/lib/ui-store";
 import { cn } from "@/lib/utils";
@@ -14,6 +17,10 @@ export function TripFinder() {
   const { t } = useLocale();
   const filters = useUiStore((state) => state.filters);
   const setFilters = useUiStore((state) => state.setFilters);
+  const clearFilters = useUiStore((state) => state.clearFilters);
+  const { tours } = useContent();
+  const count = useMemo(() => tours.filter((tour) => tourMatches(tour, filters)).length, [tours, filters]);
+  const active = filters.season !== null || filters.duration !== null || filters.country !== null;
 
   return (
     <div className="mt-8 w-full max-w-3xl rounded-2xl border border-white/20 bg-white/10 p-4 text-left text-white shadow-lg backdrop-blur-md sm:p-5">
@@ -82,13 +89,20 @@ export function TripFinder() {
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={() => scrollToId("tours")}
-        className="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90"
-      >
-        {t.finder.explore}
-      </button>
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => scrollToId("tours")}
+          className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90"
+        >
+          {active ? t.finder.showN(count) : t.finder.explore}
+        </button>
+        {active && (
+          <button type="button" onClick={clearFilters} className="text-sm font-semibold text-white/80 underline-offset-4 hover:text-white hover:underline">
+            {t.finder.clear}
+          </button>
+        )}
+      </div>
     </div>
   );
 }

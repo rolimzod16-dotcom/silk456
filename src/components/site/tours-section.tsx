@@ -85,7 +85,7 @@ export function ToursSection({ tours, showHeading = true }: ToursSectionProps) {
               </button>
             </div>
           )}
-          <Tabs value={region} onValueChange={(value) => setFilters({ region: value })}>
+          <Tabs value={region} onValueChange={(value) => setFilters({ region: value, country: null })}>
             <TabsList className="h-auto flex-wrap justify-center gap-1 bg-secondary/60 p-1.5">
               {REGIONS.map((r) => (
                 <TabsTrigger
@@ -112,7 +112,15 @@ export function ToursSection({ tours, showHeading = true }: ToursSectionProps) {
         </div>
 
         {filtered.length === 0 && (
-          <div className="mt-12 text-center text-muted-foreground">{t.finder.empty}</div>
+          <div className="mt-12 flex flex-col items-center gap-4 text-center text-muted-foreground">
+            <p>{t.finder.empty}</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Button variant="outline" onClick={clearFilters}>
+                {t.finder.clear}
+              </Button>
+              <Button onClick={() => openBooking()}>{t.finder.request}</Button>
+            </div>
+          </div>
         )}
       </div>
     </section>
