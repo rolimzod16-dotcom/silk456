@@ -12,7 +12,7 @@ import { useUiStore } from "@/lib/ui-store";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
-  const { locale, setLocale, t } = useLocale();
+  const { locale, setLocale, t, ui } = useLocale();
   const tx = useText();
   const pathname = usePathname();
   const openBooking = useUiStore((state) => state.openBooking);
@@ -42,6 +42,7 @@ export function SiteHeader() {
           <Image
             src="/brand/logo.png"
             alt=""
+            sizes="96px"
             width={756}
             height={571}
             priority
@@ -57,7 +58,7 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-0.5 lg:flex">
+        <nav className="hidden items-center gap-0.5 xl:flex">
           <NavLink href="/tours" active={isActive("/tours")}>{tx(COMMON.tours)}</NavLink>
           <Dropdown label={t.nav.destinations} href="/destinations" active={isActive("/destinations")}>
             {t.countries.map((item) => (
@@ -111,7 +112,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => openBooking()}
-            className="inline-flex items-center rounded-full bg-accent px-3 py-2 text-[11px] font-semibold text-accent-foreground shadow-sm hover:bg-accent/90 sm:px-4 sm:text-sm"
+            className="hidden items-center rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground shadow-sm hover:bg-accent/90 sm:inline-flex"
           >
             {t.plan}
           </button>
@@ -120,7 +121,7 @@ export function SiteHeader() {
             <SheetTrigger asChild>
               <button
                 type="button"
-                className="inline-flex size-9 items-center justify-center rounded-md border border-white/25 text-white lg:hidden"
+                className="inline-flex size-9 items-center justify-center rounded-md border border-white/25 text-white xl:hidden"
                 aria-label={t.menu}
               >
                 <Menu className="size-5" />
@@ -128,7 +129,8 @@ export function SiteHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="w-80 border-l border-border bg-background">
               <SheetTitle className="flex items-center gap-2 pr-8 font-display text-lg font-semibold tracking-wide text-foreground">
-                <Image src="/brand/logo.png" alt="" width={756} height={571} className="h-8 w-auto" />
+                <Image src="/brand/logo.png" alt="" sizes="96px"
+            width={756} height={571} className="h-8 w-auto" />
                 Great Silk Trails
               </SheetTitle>
               <div
@@ -137,6 +139,16 @@ export function SiteHeader() {
                   if ((event.target as HTMLElement).closest("a")) setOpen(false);
                 }}
               >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    openBooking();
+                  }}
+                  className="mb-2 w-full rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground hover:bg-accent/90"
+                >
+                  {t.plan}
+                </button>
                 <MobileLink href="/tours" strong>{tx(COMMON.tours)}</MobileLink>
                 <MobileLink href="/destinations" strong>{t.nav.destinations}</MobileLink>
                 {t.countries.map((item) => (
@@ -152,6 +164,7 @@ export function SiteHeader() {
                 ))}
                 <MobileLink href="/services" strong>{t.nav.services}</MobileLink>
                 <MobileLink href="/about" strong>{t.nav.about}</MobileLink>
+                <MobileLink href="/faq" strong>{ui.faq.nav}</MobileLink>
                 <MobileLink href="/contact" strong>{t.nav.contact}</MobileLink>
               </div>
             </SheetContent>

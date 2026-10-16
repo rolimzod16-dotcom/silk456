@@ -31,6 +31,16 @@ export default function PrivacyPage() {
           To organise a confirmed trip we may pass the necessary details to the hotels, drivers and
           guides who serve your route, and to authorities when a visa or permit requires it.
         </p>
+        <h2>Notifications and email</h2>
+        <p>
+          Requests are stored in our secure database and forwarded to our team in a private Telegram chat. If you send a
+          booking request, we may email you a confirmation from our booking address.
+        </p>
+        <h2>Analytics</h2>
+        <p>
+          We measure visits with Vercel Web Analytics, which counts page views anonymously and does not use cookies or
+          track you across other websites.
+        </p>
         <h2>Your rights</h2>
         <p>
           You can ask us to update or delete your details at any time — just{" "}

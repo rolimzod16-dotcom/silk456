@@ -29,14 +29,17 @@ function localFile(id: string) {
   return path.join(process.cwd(), "data", id);
 }
 
-async function readRemote(id: string): Promise<unknown> {
+/** Pass a cache tag to let Next cache the read until that tag is revalidated. */
+export type ReadOptions = { tag?: string };
+
+async function readRemote(id: string, options: ReadOptions = {}): Promise<unknown> {
   const cfg = supabaseConfig();
   if (!cfg) throw new Error("Supabase is not configured");
   const response = await fetch(
     `${cfg.url}/rest/v1/cms_documents?id=eq.${encodeURIComponent(id)}&select=payload`,
     {
       headers: { apikey: cfg.key, Authorization: `Bearer ${cfg.key}` },
-      cache: "no-store",
+      ...(options.tag ? { next: { tags: [options.tag], revalidate: 3600 } } : { cache: "no-store" as const }),
     },
   );
   if (!response.ok) throw new Error(`Could not read ${id} (${response.status})`);
@@ -64,9 +67,9 @@ async function writeRemote(id: string, payload: unknown) {
 }
 
 /** Returns the stored payload, or null when the document does not exist yet. */
-export async function readDoc(id: string): Promise<unknown> {
+export async function readDoc(id: string, options: ReadOptions = {}): Promise<unknown> {
   const backend = storeBackend();
-  if (backend === "supabase") return readRemote(id);
+  if (backend === "supabase") return readRemote(id, options);
   if (backend === "file") {
     try {
       return JSON.parse(await readFile(localFile(id), "utf8"));

@@ -1,3 +1,4 @@
+import { unstable_rethrow } from "next/navigation";
 import { cache } from "react";
 import { COUNTRIES, REGIONS, SEASONS, STYLES, tourMeta } from "@/lib/catalog";
 import { DEFAULT_SETTINGS, type SiteContent, type SiteSettings } from "@/lib/site-content";
@@ -6,6 +7,8 @@ import { testimonials as builtInTestimonials, type Testimonial } from "@/lib/tes
 import { tours as builtInTours, type Tour } from "@/lib/tours";
 
 const DOC_ID = "silk456-content.json";
+/** Cache tag for public reads; the admin revalidates it on every save. */
+export const CONTENT_TAG = "site-content";
 
 type StoredContent = Partial<SiteContent>;
 
@@ -67,7 +70,7 @@ export function normalizeTour(raw: unknown): Tour | null {
     price: num(t.price),
     oldPrice: oldPrice > 0 ? oldPrice : undefined,
     image: str(t.image, 600) || "/images/hero-silkroad.png",
-    rating: Math.min(5, num(t.rating)) || 5,
+    rating: Math.min(5, num(t.rating)),
     reviews: Math.round(num(t.reviews)),
     groupSize: str(t.groupSize, 80),
     difficulty: str(t.difficulty, 80),
@@ -142,8 +145,8 @@ function merge(stored: StoredContent | null): SiteContent {
   };
 }
 
-async function readStored(): Promise<StoredContent | null> {
-  const value = await readDoc(DOC_ID);
+async function readStored(fresh = false): Promise<StoredContent | null> {
+  const value = await readDoc(DOC_ID, fresh ? {} : { tag: CONTENT_TAG });
   return value && typeof value === "object" ? (value as StoredContent) : null;
 }
 
@@ -152,10 +155,16 @@ export const getContent = cache(async (): Promise<SiteContent> => {
   try {
     return merge(await readStored());
   } catch (error) {
+    unstable_rethrow(error);
     console.error("[content] read failed, using built-in data", error);
     return defaults();
   }
 });
+
+/** Uncached read for the admin, so edits never start from stale data. */
+export async function getFreshContent(): Promise<SiteContent> {
+  return merge(await readStored(true));
+}
 
 export async function getTour(slug: string) {
   return (await getContent()).tours.find((tour) => tour.slug === slug);
@@ -166,7 +175,7 @@ type Section = keyof SiteContent;
 export function saveSection(section: Section, value: unknown): Promise<SiteContent> {
   return mutateDoc(
     DOC_ID,
-    async () => (await readStored()) ?? {},
+    async () => (await readStored(true)) ?? {},
     (stored) => {
       const current = merge(stored);
       const next: SiteContent = {

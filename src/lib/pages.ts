@@ -204,6 +204,14 @@ export const PAGE_COPY = {
       ru: "Расскажите о датах и пожеланиях — ответим в течение рабочего дня.",
     },
   },
+  faq: {
+    eyebrow: { en: "Before you go", ru: "Перед поездкой" },
+    title: { en: "Questions & answers", ru: "Вопросы и ответы" },
+    text: {
+      en: "Visas, seasons, booking, altitude and safety — what travelers ask us most.",
+      ru: "Визы, сезоны, бронирование, высота и безопасность — о чём нас спрашивают чаще всего.",
+    },
+  },
   privacy: {
     eyebrow: { en: "Legal", ru: "Документы" },
     title: { en: "Privacy Policy", ru: "Политика конфиденциальности" },

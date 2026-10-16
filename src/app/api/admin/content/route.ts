@@ -1,14 +1,14 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { denyUnlessAdmin } from "@/lib/admin-guard";
-import { getContent, saveSection } from "@/lib/content";
+import { CONTENT_TAG, getFreshContent, saveSection } from "@/lib/content";
 
 const SECTIONS = new Set(["tours", "testimonials", "settings"]);
 
 export async function GET() {
   const denied = await denyUnlessAdmin();
   if (denied) return denied;
-  return NextResponse.json({ ok: true, content: await getContent() });
+  return NextResponse.json({ ok: true, content: await getFreshContent() });
 }
 
 export async function PUT(req: Request) {
@@ -21,6 +21,8 @@ export async function PUT(req: Request) {
   }
   try {
     const content = await saveSection(section as "tours" | "testimonials" | "settings", body.value);
+    // Expire immediately so the next visitor sees the change.
+    revalidateTag(CONTENT_TAG, { expire: 0 });
     revalidatePath("/", "layout");
     return NextResponse.json({ ok: true, content });
   } catch (error) {

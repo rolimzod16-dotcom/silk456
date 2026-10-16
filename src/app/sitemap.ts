@@ -27,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...STYLES.map((s) => page(`/travel-styles/${s.id}`, 0.6, "monthly", imagesFor((t) => tourMeta(t).styles.includes(s.id)))),
     page("/services", 0.6, "monthly"),
     page("/about", 0.6, "monthly", ["/images/about-bazaar.png"]),
+    page("/faq", 0.6, "monthly"),
     page("/contact", 0.6, "yearly"),
     page("/privacy", 0.2, "yearly"),
     page("/terms", 0.2, "yearly"),

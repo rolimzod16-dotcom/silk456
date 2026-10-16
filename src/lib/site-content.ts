@@ -23,10 +23,10 @@ export type SiteContent = {
 
 export const DEFAULT_SETTINGS: SiteSettings = {
   brandName: "Great Silk Trails",
-  phone: "+1 (415) 555-0142",
-  email: "hello@silkcaravan.tours",
-  address: "221 Samarkand St, Suite 5",
-  hours: "Mon–Sat, 10:00–20:00",
+  phone: "",
+  email: "",
+  address: "",
+  hours: "",
   instagram: "",
   facebook: "",
   youtube: "",
@@ -44,7 +44,7 @@ export const SETTINGS_FIELDS: { key: keyof SiteSettings; label: string; hint?: s
   { key: "facebook", label: "Facebook", hint: "Полная ссылка" },
   { key: "youtube", label: "YouTube", hint: "Полная ссылка" },
   { key: "telegram", label: "Telegram", hint: "Ссылка вида https://t.me/…" },
-  { key: "whatsapp", label: "WhatsApp", hint: "Ссылка вида https://wa.me/…" },
+  { key: "whatsapp", label: "WhatsApp", hint: "Ссылка вида https://wa.me/992XXXXXXXXX — включает кнопку WhatsApp на сайте" },
 ];
 
 export function phoneHref(phone: string) {

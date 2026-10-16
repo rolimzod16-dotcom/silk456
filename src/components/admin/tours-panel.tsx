@@ -34,7 +34,7 @@ function blankTour(): Tour {
     days: 7,
     price: 0,
     image: "",
-    rating: 5,
+    rating: 0,
     reviews: 0,
     groupSize: "up to 12 guests",
     difficulty: "Easy",
@@ -271,10 +271,10 @@ function TourEditor({
           <Field label="Сезон (текст)" hint="Например: April — October">
             <TextInput value={tour.season} onChange={(v) => set("season", v)} />
           </Field>
-          <Field label="Рейтинг">
-            <TextInput type="number" min={1} max={5} step={0.1} value={tour.rating} onChange={(v) => set("rating", Number(v))} />
+          <Field label="Рейтинг" hint="Только настоящий, например с TripAdvisor">
+            <TextInput type="number" min={0} max={5} step={0.1} value={tour.rating} onChange={(v) => set("rating", Number(v))} />
           </Field>
-          <Field label="Кол-во отзывов">
+          <Field label="Кол-во отзывов" hint="0 — рейтинг на сайте не показывается">
             <TextInput type="number" min={0} value={tour.reviews} onChange={(v) => set("reviews", Number(v))} />
           </Field>
         </div>

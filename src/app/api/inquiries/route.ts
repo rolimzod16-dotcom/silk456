@@ -1,41 +1,55 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
+import { getContent } from "@/lib/content";
+import { clientIp, inquirySchema, isBot, rateLimited } from "@/lib/forms";
 import { addInquiry } from "@/lib/leads";
+import { sendMail } from "@/lib/mailer";
 import { leadLine, notifyTelegram } from "@/lib/telegram";
 
 export async function POST(req: Request) {
+  if (rateLimited(`inquiry:${clientIp(req)}`)) {
+    return NextResponse.json({ ok: false, error: "Too many messages. Please try again later." }, { status: 429 });
+  }
+
+  const parsed = inquirySchema.safeParse(await req.json().catch(() => ({})));
+  if (!parsed.success) {
+    return NextResponse.json({ ok: false, error: "Please fill in all fields correctly." }, { status: 400 });
+  }
+  const input = parsed.data;
+  if (isBot(input)) return NextResponse.json({ ok: true });
+
   try {
-    const body = await req.json();
-    const { name, email, subject, message } = body;
-
-    if (!name || !email || !subject || !message) {
-      return NextResponse.json(
-        { ok: false, error: "Please fill in all fields." },
-        { status: 400 },
-      );
-    }
-
     const inquiry = await addInquiry({
-      name: String(name).slice(0, 120),
-      email: String(email).slice(0, 160),
-      subject: String(subject).slice(0, 200),
-      message: String(message).slice(0, 2000),
+      name: input.name,
+      email: input.email,
+      subject: input.subject,
+      message: input.message,
     });
 
-    if (!inquiry.email.endsWith("@example.com")) notifyTelegram([
-      "📩 <b>GREAT SILK TRAILS — message</b>",
-      "",
-      leadLine("Name", inquiry.name),
-      leadLine("Email", inquiry.email),
-      leadLine("Subject", inquiry.subject),
-      leadLine("Message", inquiry.message),
-    ]).catch((error) => console.error("[telegram] inquiry", error));
+    after(async () => {
+      const { settings } = await getContent();
+      await Promise.all([
+        notifyTelegram([
+          "📩 <b>GREAT SILK TRAILS — message</b>",
+          "",
+          leadLine("Name", inquiry.name),
+          leadLine("Email", inquiry.email),
+          leadLine("Subject", inquiry.subject),
+          leadLine("Message", inquiry.message),
+        ]).catch((error) => console.error("[telegram] inquiry", error)),
+        settings.email
+          ? sendMail({
+              to: settings.email,
+              replyTo: inquiry.email,
+              subject: `Website message: ${inquiry.subject}`,
+              text: `From: ${inquiry.name} <${inquiry.email}>\n\n${inquiry.message}`,
+            })
+          : null,
+      ]);
+    });
 
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[inquiries] create error", err);
-    return NextResponse.json(
-      { ok: false, error: "Could not send your message." },
-      { status: 500 },
-    );
+    return NextResponse.json({ ok: false, error: "Could not send your message." }, { status: 500 });
   }
 }

@@ -3,20 +3,28 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ChevronDown, MapPin, Star } from "lucide-react";
+import { ChevronDown, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TripFinder } from "@/components/site/trip-finder";
+import { STYLES, tourMeta } from "@/lib/catalog";
+import { useContent } from "@/lib/content-context";
+import { useLocale } from "@/lib/locale";
 import { useUiStore } from "@/lib/ui-store";
-
-const STATS = [
-  { value: "12", label: "years on the road" },
-  { value: "8", label: "Silk Road countries" },
-  { value: "4,200+", label: "travelers" },
-  { value: "4.9", label: "average rating" },
-];
 
 export function Hero() {
   const openBooking = useUiStore((s) => s.openBooking);
+  const { ui } = useLocale();
+  const { tours } = useContent();
+  const t = ui.hero;
+
+  // Figures come from the live catalogue, so they stay true as tours change.
+  const countries = new Set(tours.flatMap((tour) => tourMeta(tour).countries)).size;
+  const stats = [
+    { value: String(tours.length), label: t.statRoutes },
+    { value: String(countries), label: t.statCountries },
+    { value: String(STYLES.length), label: t.statStyles },
+    { value: "$0", label: t.statPrepay },
+  ];
 
   return (
     <section id="top" className="relative min-h-[100svh] w-full overflow-hidden scroll-mt-24">
@@ -39,48 +47,30 @@ export function Hero() {
         >
           <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
             <MapPin className="h-3.5 w-3.5 text-accent" />
-            <span className="text-xs font-medium uppercase tracking-[0.2em] text-white/90">
-              Boutique tours since 2013
-            </span>
+            <span className="text-xs font-medium uppercase tracking-[0.2em] text-white/90">{t.badge}</span>
           </div>
 
           <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            On the trails of the{" "}
-            <span className="text-gold-gradient">Great Silk Road</span>
+            {t.titleStart} <span className="text-gold-gradient">{t.titleAccent}</span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg md:text-xl">
-            From the turquoise domes of Samarkand to the high-altitude yurts of
-            the Tien Shan and the pink mosques of Isfahan. Small groups, expert
-            guides and caravan routes tested by twelve years on the road.
-          </p>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg md:text-xl">{t.text}</p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button asChild size="lg" className="text-base">
-              <Link href="#tours">View Tours</Link>
+              <Link href="/tours">{t.viewTours}</Link>
             </Button>
             <Button
               onClick={() => openBooking()}
               size="lg"
               variant="outline"
-              className="border-white/40 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 hover:text-white text-base"
+              className="border-white/40 bg-white/10 text-base text-white backdrop-blur-sm hover:bg-white/20 hover:text-white"
             >
-              Book Your Spot
+              {t.plan}
             </Button>
           </div>
 
           <TripFinder />
-
-          <div className="mt-6 flex items-center gap-3 text-white/80">
-            <div className="flex">
-              {[0, 1, 2, 3, 4].map((i) => (
-                <Star key={i} className="h-4 w-4 fill-accent text-accent" />
-              ))}
-            </div>
-            <span className="text-sm">
-              4.9 / 5 — over 800 reviews from travelers
-            </span>
-          </div>
         </motion.div>
 
         <motion.div
@@ -89,14 +79,10 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.25, ease: "easeOut" }}
           className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md sm:grid-cols-4"
         >
-          {STATS.map((s) => (
+          {stats.map((s) => (
             <div key={s.label} className="bg-white/5 px-5 py-5">
-              <div className="font-display text-3xl font-semibold text-white sm:text-4xl">
-                {s.value}
-              </div>
-              <div className="mt-1 text-xs uppercase tracking-wider text-white/70 sm:text-sm">
-                {s.label}
-              </div>
+              <div className="font-display text-3xl font-semibold text-white sm:text-4xl">{s.value}</div>
+              <div className="mt-1 text-xs uppercase tracking-wider text-white/70 sm:text-sm">{s.label}</div>
             </div>
           ))}
         </motion.div>
@@ -108,7 +94,7 @@ export function Hero() {
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           className="flex flex-col items-center gap-1 text-white/70"
         >
-          <span className="text-xs uppercase tracking-[0.2em]">Scroll</span>
+          <span className="text-xs uppercase tracking-[0.2em]">{t.scroll}</span>
           <ChevronDown className="h-4 w-4" />
         </motion.div>
       </div>

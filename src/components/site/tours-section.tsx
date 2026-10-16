@@ -27,15 +27,10 @@ type ToursSectionProps = {
   showHeading?: boolean;
 };
 
-const REGIONS = [
-  { value: "all", label: "All Routes" },
-  { value: "Central Asia", label: "Central Asia" },
-  { value: "West Asia", label: "Persia" },
-  { value: "East Asia", label: "China & Steppes" },
-];
+const REGIONS = ["all", "Central Asia", "West Asia", "East Asia"];
 
 export function ToursSection({ tours, showHeading = true }: ToursSectionProps) {
-  const { t } = useLocale();
+  const { t, ui } = useLocale();
   const filters = useUiStore((state) => state.filters);
   const setFilters = useUiStore((state) => state.setFilters);
   const clearFilters = useUiStore((state) => state.clearFilters);
@@ -61,15 +56,14 @@ export function ToursSection({ tours, showHeading = true }: ToursSectionProps) {
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
             <TrendingUp className="h-3.5 w-3.5 text-primary" />
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-primary">
-              Caravan Routes
+              {ui.tours.eyebrow}
             </span>
           </div>
           <h2 className="mt-5 font-display text-3xl font-semibold text-foreground sm:text-4xl md:text-5xl">
-            Silk Road Tour Packages
+            {ui.tours.title}
           </h2>
           <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-            Ready-made routes with accommodation, guides and all transfers.
-            Pick a destination — details and itinerary open on click.
+            {ui.tours.text}
           </p>
         </div>
         )}
@@ -89,11 +83,11 @@ export function ToursSection({ tours, showHeading = true }: ToursSectionProps) {
             <TabsList className="h-auto flex-wrap justify-center gap-1 bg-secondary/60 p-1.5">
               {REGIONS.map((r) => (
                 <TabsTrigger
-                  key={r.value}
-                  value={r.value}
+                  key={r}
+                  value={r}
                   className="rounded-md px-4 py-2 text-sm data-[state=active]:bg-background data-[state=active]:shadow-sm"
                 >
-                  {r.label}
+                  {ui.tours.regions[r] ?? r}
                 </TabsTrigger>
               ))}
             </TabsList>
@@ -137,6 +131,8 @@ export function TourCard({
   onBook: () => void;
 }) {
   const href = `/tours/${tour.slug}`;
+  const { ui } = useLocale();
+  const t = ui.tours;
   const discount = tour.oldPrice
     ? Math.round(((tour.oldPrice - tour.price) / tour.oldPrice) * 100)
     : 0;
@@ -163,7 +159,7 @@ export function TourCard({
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
           {tour.featured && (
             <Badge className="bg-accent text-accent-foreground hover:bg-accent">
-              Season Favorite
+              {t.favorite}
             </Badge>
           )}
           {discount > 0 && (
@@ -183,13 +179,15 @@ export function TourCard({
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Star className="h-3.5 w-3.5 fill-accent text-accent" />
-          <span className="font-medium text-foreground">{tour.rating}</span>
-          <span>· {tour.reviews} reviews</span>
-        </div>
+        {tour.reviews > 0 && (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Star className="h-3.5 w-3.5 fill-accent text-accent" />
+            <span className="font-medium text-foreground">{tour.rating}</span>
+            <span>· {t.reviews(tour.reviews)}</span>
+          </div>
+        )}
 
-        <h3 className="mt-2 font-display text-xl font-semibold leading-snug text-foreground">
+        <h3 className={cn("font-display text-xl font-semibold leading-snug text-foreground", tour.reviews > 0 && "mt-2")}>
           <Link href={href} className="hover:text-primary">
             {tour.title}
           </Link>
@@ -226,14 +224,14 @@ export function TourCard({
             <div className="font-display text-2xl font-semibold text-primary">
               ${tour.price}
             </div>
-            <div className="text-xs text-muted-foreground">per person</div>
+            <div className="text-xs text-muted-foreground">{t.perPerson}</div>
           </div>
           <div className="flex flex-col gap-2">
             <Button size="sm" variant="outline" asChild>
-              <Link href={href}>Details</Link>
+              <Link href={href}>{t.details}</Link>
             </Button>
             <Button size="sm" onClick={onBook} className={cn("gap-1")}>
-              Book <ArrowRight className="h-3.5 w-3.5" />
+              {t.book} <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
