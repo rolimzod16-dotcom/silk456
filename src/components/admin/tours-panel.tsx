@@ -202,6 +202,11 @@ function TourEditor({
     if (!slug) return setError("Адрес страницы должен содержать латинские буквы или цифры.");
     if (taken.includes(slug)) return setError("Тур с таким адресом уже есть — измените адрес страницы.");
     if (!tour.price) return setError("Укажите цену.");
+    // Filters, destination and style pages are built from these tags.
+    if (!tour.countries?.length) return setError("Отметьте хотя бы одну страну — иначе тур не попадёт в фильтр «Куда» и на страницы направлений.");
+    if (!tour.seasons?.length) return setError("Отметьте хотя бы один сезон — иначе тур не найдётся по фильтру «Сезон».");
+    if (!tour.styles?.length) return setError("Отметьте хотя бы один стиль путешествия.");
+    if (!tour.days || tour.days < 1) return setError("Укажите количество дней — по нему работает фильтр «Сколько дней».");
     setError("");
     onSubmit({
       ...tour,
@@ -284,7 +289,7 @@ function TourEditor({
         </label>
       </Card>
 
-      <Card title="Где и когда" hint="Отсюда работают фильтры и страницы направлений и стилей.">
+      <Card title="Где и когда (фильтры)" hint="Обязательно: по этим отметкам тур появляется в фильтрах поиска, на страницах стран и стилей. Длительность для фильтра берётся из поля «Дней».">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Страна (подпись на карточке)">
             <TextInput value={tour.country} onChange={(v) => set("country", v)} />
@@ -300,13 +305,13 @@ function TourEditor({
           </Field>
         </div>
         <div className="mt-4 space-y-4">
-          <Field label="Страны маршрута">
+          <Field label="Страны маршрута *">
             <Chips options={label(COUNTRIES)} value={tour.countries ?? []} onChange={(v) => set("countries", v)} />
           </Field>
-          <Field label="Сезоны">
+          <Field label="Сезоны *">
             <Chips options={label(SEASONS)} value={tour.seasons ?? []} onChange={(v) => set("seasons", v)} />
           </Field>
-          <Field label="Стили путешествия">
+          <Field label="Стили путешествия *">
             <Chips options={label(STYLES)} value={tour.styles ?? []} onChange={(v) => set("styles", v)} />
           </Field>
         </div>
