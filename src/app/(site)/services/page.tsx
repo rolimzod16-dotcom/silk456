@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import { SimplePage } from "@/components/site/inner-pages";
-import { ServicesSection } from "@/components/site/services-section";
+import { ServicesDetail } from "@/components/site/services-detail";
 import { ProcessSection } from "@/components/site/process-section";
 import { CtaSection } from "@/components/site/cta-section";
 
@@ -15,7 +15,7 @@ export const metadata: Metadata = pageMeta({
 export default function ServicesPage() {
   return (
     <SimplePage page="services">
-      <ServicesSection showHeading={false} />
+      <ServicesDetail />
       <ProcessSection />
       <CtaSection />
     </SimplePage>

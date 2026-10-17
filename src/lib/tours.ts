@@ -17,7 +17,7 @@ export type Tour = {
   difficulty: string
   season: string
   highlights: string[]
-  itinerary: { day: number; title: string; description: string }[]
+  itinerary: TourDay[]
   included: string[]
   excluded: string[]
   description: string
@@ -25,6 +25,31 @@ export type Tour = {
   countries?: CountryId[]
   seasons?: SeasonId[]
   styles?: StyleId[]
+  /** Extra photos for the gallery section. */
+  gallery?: string[]
+  /** Fixed departures; empty means dates on request. */
+  departures?: Departure[]
+  faq?: { q: string; a: string }[]
+  /** Drafts are visible only in the admin. */
+  published?: boolean
+}
+
+export type TourDay = {
+  day: number
+  title: string
+  description: string
+  overnight?: string
+  image?: string
+}
+
+export type DepartureStatus = "available" | "limited" | "full"
+
+export type Departure = {
+  start: string
+  end?: string
+  price?: number
+  status: DepartureStatus
+  note?: string
 }
 
 export const tours: Tour[] = [
@@ -37,7 +62,6 @@ export const tours: Tour[] = [
     duration: "7 days / 6 nights",
     days: 7,
     price: 1290,
-    oldPrice: 1590,
     image: "/images/tours/samarkand.png",
     rating: 0,
     reviews: 0,
@@ -55,9 +79,9 @@ export const tours: Tour[] = [
       { day: 1, title: "Arrival in Tashkent", description: "Airport transfer, welcome dinner with national cuisine, route briefing." },
       { day: 2, title: "Tashkent — Samarkand", description: "Morning Afrosiyob high-speed train. Guided tour of Registan and the madrasahs." },
       { day: 3, title: "Samarkand — Bukhara", description: "Gur-e-Amir Mausoleum, Shah-i-Zinda. Sunset drive to Bukhara." },
-      { day: 4, title: "Ancient Bukhara", description: "Kalan Minaret, Lyab-i Hauz, trading domes and the Ark Fortress." },
-      { day: 5, title: "Khiva", description: "Flight to Urgench, tour of Itchan Kala and the Kalta Minor Minaret." },
-      { day: 6, title: "Workshops", description: "Pottery in Gijduvan, silk weaving and handmade carpets." },
+      { day: 4, title: "Ancient Bukhara", description: "Kalan Minaret, Lyab-i Hauz, trading domes and the Ark Fortress. Afternoon visit to the potters of Gijduvan." },
+      { day: 5, title: "Bukhara — Khiva", description: "Train across the Kyzylkum desert to Khiva, evening walk in Itchan Kala." },
+      { day: 6, title: "Khiva", description: "Itchan Kala, the Kalta Minor Minaret, woodcarving and suzani embroidery workshops." },
       { day: 7, title: "Departure", description: "Free morning, transfer to Urgench airport." },
     ],
     included: [
@@ -76,7 +100,6 @@ export const tours: Tour[] = [
     ],
     description:
       "A journey through three great cities of the Silk Road — Samarkand, Bukhara and Khiva. Walk the same streets as the silk and spice caravans of a thousand years ago, see turquoise domes and hear the legends of the Timurids.",
-    featured: true,
   },
   {
     slug: "kashgar-caravan",
@@ -87,7 +110,6 @@ export const tours: Tour[] = [
     duration: "10 days / 9 nights",
     days: 10,
     price: 2190,
-    oldPrice: 2590,
     image: "/images/tours/kashgar.png",
     rating: 0,
     reviews: 0,
@@ -107,10 +129,10 @@ export const tours: Tour[] = [
       { day: 3, title: "Turpan — Kashgar", description: "Emin Minaret, overnight train to Kashgar." },
       { day: 4, title: "Old Kashgar", description: "Labyrinth of streets, Apak Khoja Mausoleum, the Grand Bazaar." },
       { day: 5, title: "Karakul Lake", description: "Drive to the high-altitude lake at 3,600 m, Kyrgyz yurts." },
-      { day: 6, title: "Torugart Pass", description: "Views of the Pamir, lunch with nomads." },
+      { day: 6, title: "Tashkurgan", description: "Stone fortress, Tajik villages and views of the Chinese Pamir." },
       { day: 7, title: "Workshops", description: "Uyghur cooking, carpets, handmade paper." },
       { day: 8, title: "Hotan", description: "Silk weaving and jade workshops." },
-      { day: 9, title: "Return", description: "Drive back to Urumqi, farewell dinner." },
+      { day: 9, title: "Hotan — Urumqi", description: "Flight back to Urumqi, farewell dinner." },
       { day: 10, title: "Departure", description: "Transfer to the airport." },
     ],
     included: [
@@ -128,18 +150,16 @@ export const tours: Tour[] = [
     ],
     description:
       "A route along the eastern arm of the Silk Road — from Turpan to Kashgar. See where China met Central Asia for millennia, taste Uyghur cuisine and climb up to the high-altitude Karakul Lake.",
-    featured: true,
   },
   {
     slug: "tianshan-nomads",
-    title: "Charyn & the Heavenly Mountains",
+    title: "Tien Shan & the Heavenly Lakes",
     subtitle: "Kyrgyzstan: canyons, lakes and nomads",
     country: "Kyrgyzstan",
     region: "Central Asia",
     duration: "8 days / 7 nights",
     days: 8,
     price: 1490,
-    oldPrice: 1790,
     image: "/images/tours/kyrgyzstan.png",
     rating: 0,
     reviews: 0,
@@ -148,20 +168,20 @@ export const tours: Tour[] = [
     season: "June — September",
     highlights: [
       "Issyk-Kul — the second-largest alpine lake on Earth",
-      "Charyn Canyon and the Fairy Tale rocks",
+      "Konorchek red canyons and the Fairy Tale (Skazka) canyon",
       "Son-Kul — a high-altitude pasture at 3,016 m",
       "Overnight in a real nomad yurt",
       "Horseback riding and traditional games",
     ],
     itinerary: [
       { day: 1, title: "Bishkek", description: "Arrival, city tour, Osh Bazaar." },
-      { day: 2, title: "Charyn Canyon", description: "Valley of Castles, trekking, overnight in a yurt." },
+      { day: 2, title: "Burana & Konorchek", description: "Burana Tower, hike in the red Konorchek canyons, drive to Issyk-Kul." },
       { day: 3, title: "Issyk-Kul", description: "Cholpon-Ata petroglyphs, evening by the lake." },
-      { day: 4, title: "Son-Kul", description: "Climb to 3,016 m, nomads and herds of horses." },
-      { day: 5, title: "Nomad life", description: "Horseback ride, mare-milking, traditional games." },
-      { day: 6, title: "Fairy Tale Rocks", description: "Otherworldly landscapes, sunset by the lake." },
-      { day: 7, title: "Karakol", description: "Dungan mosque, orthodox church, dinner with a local family." },
-      { day: 8, title: "Departure", description: "Return to Bishkek, transfer." },
+      { day: 4, title: "Karakol", description: "Dungan mosque, Orthodox church, dinner with a local family." },
+      { day: 5, title: "Fairy Tale Canyon", description: "The Skazka rock formations on the south shore, sunset by the lake." },
+      { day: 6, title: "Son-Kul", description: "Climb to the 3,016 m pasture, overnight in a yurt camp." },
+      { day: 7, title: "Nomad life", description: "Horseback ride, felt-making in Kochkor, drive to Bishkek." },
+      { day: 8, title: "Departure", description: "Transfer to Manas airport." },
     ],
     included: [
       "Hotels and yurt camps",
@@ -178,7 +198,6 @@ export const tours: Tour[] = [
     ],
     description:
       "Deep immersion into the world of Kyrgyz nomads amid the Tien Shan Heavenly Mountains. Sleep in a yurt at 3,000 meters, walk ancient caravan trails and see canyons that look like Mars.",
-    featured: true,
   },
   {
     slug: "persian-silk",
@@ -189,7 +208,6 @@ export const tours: Tour[] = [
     duration: "9 days / 8 nights",
     days: 9,
     price: 1890,
-    oldPrice: 2250,
     image: "/images/tours/isfahan.png",
     rating: 0,
     reviews: 0,
@@ -207,7 +225,7 @@ export const tours: Tour[] = [
       { day: 1, title: "Tehran", description: "Arrival, Iran National Museum." },
       { day: 2, title: "Shiraz", description: "Flight, Eram Garden, the pink Nasir ol Molk Mosque." },
       { day: 3, title: "Persepolis", description: "Ancient capital of the Achaemenids, Naqsh-e Rostam necropolis." },
-      { day: 4, title: "Pasargadae", description: "Tomb of Cyrus the Great, train to Isfahan." },
+      { day: 4, title: "Pasargadae", description: "Tomb of Cyrus the Great, scenic drive to Isfahan." },
       { day: 5, title: "Isfahan", description: "Naqsh-e Jahan Square, Sheikh Lotfollah Mosque." },
       { day: 6, title: "Armenian Quarter", description: "Vank Cathedral, bridges over the Zayandeh River." },
       { day: 7, title: "Yazd", description: "Clay city, wind towers, Zoroastrian fire temple." },
@@ -239,7 +257,6 @@ export const tours: Tour[] = [
     duration: "14 days / 13 nights",
     days: 14,
     price: 3490,
-    oldPrice: 4190,
     image: "/images/tours/khiva.png",
     rating: 0,
     reviews: 0,
@@ -249,9 +266,9 @@ export const tours: Tour[] = [
     highlights: [
       "5 countries in one route: Uzbekistan, Kazakhstan, Kyrgyzstan, Tajikistan, Turkmenistan",
       "All the jewels of the Silk Road",
-      "The Pamir Highway and the high mountains",
-      "Gas and the Darvaza Crater",
-      "VIP format: small group and premium hotels",
+      "Mountain roads of the Tien Shan and the Fann range",
+      "The burning Darvaza gas crater",
+      "Small group with guides in every country",
     ],
     itinerary: [
       { day: 1, title: "Tashkent", description: "Arrival, dinner, briefing." },
@@ -265,8 +282,8 @@ export const tours: Tour[] = [
       { day: 9, title: "Charyn & Issyk-Kul", description: "Canyon, crossing into Kyrgyzstan." },
       { day: 10, title: "Son-Kul", description: "Nomads and yurts." },
       { day: 11, title: "Osh", description: "Sacred Sulayman Mountain." },
-      { day: 12, title: "Pamir Highway", description: "A road above the clouds, Tajikistan." },
-      { day: 13, title: "Dushanbe", description: "Capital of Tajikistan, farewell dinner." },
+      { day: 12, title: "Fergana Valley — Khujand", description: "Across the Fergana valley into Tajikistan, old Khujand." },
+      { day: 13, title: "Anzob Pass — Dushanbe", description: "Over the Fann mountains to Dushanbe, farewell dinner." },
       { day: 14, title: "Departure", description: "Transfer to the airport." },
     ],
     included: [
@@ -283,15 +300,14 @@ export const tours: Tour[] = [
       "Travel insurance",
     ],
     description:
-      "An epic journey across all of Central Asia — from Khiva to the Pamirs, from the burning Darvaza Crater to the high-altitude Son-Kul. Our flagship route for those who want to see the entire Silk Road in a single trip.",
-    featured: true,
+      "An epic journey across Central Asia — from Khiva and the burning Darvaza crater to the high-altitude Son-Kul and the Fann mountains. Our flagship route for those who want to see the entire Silk Road in a single trip.",
   },
   {
     slug: "steppe-nomads",
     title: "Steppe Nomads",
-    subtitle: "Kyrgyzstan and Mongolia: life in a yurt",
-    country: "Kyrgyzstan / Mongolia",
-    region: "East Asia",
+    subtitle: "Kyrgyzstan: life in a yurt",
+    country: "Kyrgyzstan",
+    region: "Central Asia",
     duration: "6 days / 5 nights",
     days: 6,
     price: 990,
@@ -635,8 +651,8 @@ export const tours: Tour[] = [
     itinerary: [
       { day: 1, title: "Ashgabat", description: "Arrival and city tour." },
       { day: 2, title: "Nisa and the Tolkuchka bazaar", description: "Parthian fortress and the weekend market." },
-      { day: 3, title: "Ashgabat — Mary", description: "Flight to Mary and the ruins of Merv." },
-      { day: 4, title: "Darvaza", description: "Drive into the Karakum and camp by the crater." },
+      { day: 3, title: "Merv", description: "Day flight to Mary for the ruins of ancient Merv, return to Ashgabat." },
+      { day: 4, title: "Darvaza", description: "Drive north into the Karakum and camp by the burning crater." },
       { day: 5, title: "Kunya-Urgench", description: "Mausoleums and minarets of the old capital." },
       { day: 6, title: "Departure", description: "Border crossing to Khiva or flight home." },
     ],
@@ -728,8 +744,8 @@ export const tours: Tour[] = [
   },
   {
     slug: "mongolia-ice",
-    title: "Mongolia: Ice & Eagles",
-    subtitle: "Frozen Khövsgöl and the eagle hunters",
+    title: "Mongolia: Ice & Reindeer",
+    subtitle: "Frozen Lake Khövsgöl and the reindeer herders",
     country: "Mongolia",
     region: "East Asia",
     duration: "7 days / 6 nights",
@@ -745,23 +761,23 @@ export const tours: Tour[] = [
       "Lake Khövsgöl frozen solid",
       "Ice festival with horse sledges",
       "Nights in heated gers",
-      "Meeting eagle hunters",
+      "Visit to Tsaatan reindeer herders",
     ],
     itinerary: [
       { day: 1, title: "Ulaanbaatar", description: "Arrival and Gandan monastery." },
       { day: 2, title: "Ulaanbaatar — Mörön", description: "Flight north and drive to Khövsgöl." },
       { day: 3, title: "Khövsgöl", description: "Ice festival and horse sledges." },
       { day: 4, title: "Khövsgöl", description: "Walk on the ice and visit reindeer herders." },
-      { day: 5, title: "Eagle hunters", description: "Day with a family of eagle hunters." },
+      { day: 5, title: "Reindeer herders", description: "Day with a Tsaatan reindeer-herding family in the taiga." },
       { day: 6, title: "Return to Ulaanbaatar", description: "Flight back and farewell dinner." },
       { day: 7, title: "Departure", description: "Transfer to the airport." },
     ],
     included: ["Hotels and heated gers", "Domestic flights", "Guide", "All meals outside Ulaanbaatar"],
     excluded: ["International flights", "Winter clothing", "Travel insurance"],
-    description: "Mongolia in deep winter: the frozen Lake Khövsgöl, its ice festival and a day with eagle hunters.",
+    description: "Mongolia in deep winter: the frozen Lake Khövsgöl, its ice festival and a day with the reindeer herders of the northern taiga.",
     countries: ["mongolia"],
     seasons: ["winter", "spring"],
-    styles: ["photography", "horse-riding"],
+    styles: ["photography"],
   },
 ]
 

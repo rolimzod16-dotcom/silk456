@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CollectionDetail } from "@/components/site/inner-pages";
+import { DestinationPage as DestinationView } from "@/components/site/destination-page";
 import { getContent } from "@/lib/content";
 import { JsonLd } from "@/components/site/json-ld";
 import { breadcrumbLd, pageMeta, tourListLd } from "@/lib/seo";
+import type { CountryId } from "@/lib/catalog";
 import { countryCollection } from "@/lib/pages";
 
 type Props = { params: Promise<{ country: string }> };
@@ -14,15 +15,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const count = collection.tours.length;
   return pageMeta({
     title: `${collection.label.en} Tours & Travel Packages`,
-    description: `${collection.text.en}${count ? ` ${count} ready-made ${count === 1 ? "itinerary" : "itineraries"} with local guides.` : " Private routes built to order."}`,
+    description: `${((await getContent()).countries[collection.id as CountryId]?.overview.split(". ")[0] || collection.text.en).replace(/\.$/, "")}.${count ? ` ${count} ready-made ${count === 1 ? "itinerary" : "itineraries"} with local guides.` : " Private routes built to order."}`,
     path: `/destinations/${collection.id}`,
     image: collection.image,
   });
 }
 
 export default async function DestinationPage({ params }: Props) {
-  const collection = countryCollection((await params).country, (await getContent()).tours);
+  const content = await getContent();
+  const collection = countryCollection((await params).country, content.tours);
   if (!collection) notFound();
+  const country = content.countries[collection.id as CountryId];
   return (
     <>
       <JsonLd
@@ -34,7 +37,20 @@ export default async function DestinationPage({ params }: Props) {
           ]),
         ]}
       />
-      <CollectionDetail collection={collection} />
+      {country.faq.length > 0 && (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: country.faq.map((item) => ({
+              "@type": "Question",
+              name: item.q,
+              acceptedAnswer: { "@type": "Answer", text: item.a },
+            })),
+          }}
+        />
+      )}
+      <DestinationView collection={collection} content={country} />
     </>
   );
 }

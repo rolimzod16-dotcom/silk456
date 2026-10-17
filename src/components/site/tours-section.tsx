@@ -12,6 +12,7 @@ import {
   TrendingUp,
   ArrowRight,
   CheckCircle2,
+  RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -70,13 +71,13 @@ export function ToursSection({ tours, showHeading = true }: ToursSectionProps) {
 
         <div className={cn("flex flex-col items-center gap-3", showHeading && "mt-10")}>
           {filtersActive && (
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
               <span>
                 {t.finder.showing}: {filtered.length}
               </span>
-              <button type="button" onClick={clearFilters} className="font-semibold text-primary hover:underline">
-                {t.finder.clear}
-              </button>
+              <Button type="button" size="sm" variant="outline" onClick={clearFilters} className="gap-1.5">
+                <RotateCcw className="h-3.5 w-3.5" /> {ui.filters.reset}
+              </Button>
             </div>
           )}
           <Tabs value={region} onValueChange={(value) => setFilters({ region: value, country: null })}>
@@ -110,7 +111,7 @@ export function ToursSection({ tours, showHeading = true }: ToursSectionProps) {
             <p>{t.finder.empty}</p>
             <div className="flex flex-wrap justify-center gap-3">
               <Button variant="outline" onClick={clearFilters}>
-                {t.finder.clear}
+                {ui.filters.reset}
               </Button>
               <Button onClick={() => openBooking()}>{t.finder.request}</Button>
             </div>
@@ -179,24 +180,17 @@ export function TourCard({
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        {tour.reviews > 0 && (
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Star className="h-3.5 w-3.5 fill-accent text-accent" />
-            <span className="font-medium text-foreground">{tour.rating}</span>
-            <span>· {t.reviews(tour.reviews)}</span>
-          </div>
-        )}
-
-        <h3 className={cn("font-display text-xl font-semibold leading-snug text-foreground", tour.reviews > 0 && "mt-2")}>
+        {/* Fixed line counts keep titles, prices and buttons aligned across a row. */}
+        <h3 className="line-clamp-2 min-h-[3.5rem] font-display text-xl font-semibold leading-snug text-foreground">
           <Link href={href} className="hover:text-primary">
             {tour.title}
           </Link>
         </h3>
-        <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground line-clamp-2">
+        <p className="mt-1.5 line-clamp-2 min-h-[2.75rem] text-sm leading-relaxed text-muted-foreground">
           {tour.subtitle}
         </p>
 
-        <ul className="mt-4 space-y-1.5 text-sm text-foreground/80">
+        <ul className="mt-4 min-h-[3.25rem] space-y-1.5 text-sm text-foreground/80">
           {tour.highlights.slice(0, 2).map((h) => (
             <li key={h} className="flex items-start gap-2">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -205,16 +199,22 @@ export function TourCard({
           ))}
         </ul>
 
-        <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
+        <div className="mb-5 mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1">
             <Users className="h-3.5 w-3.5" /> {tour.groupSize}
           </span>
           <span className="inline-flex items-center gap-1">
             <TrendingUp className="h-3.5 w-3.5" /> {tour.difficulty}
           </span>
+          {tour.reviews > 0 && (
+            <span className="inline-flex items-center gap-1">
+              <Star className="h-3.5 w-3.5 fill-accent text-accent" />
+              <span className="font-medium text-foreground">{tour.rating}</span> ({tour.reviews})
+            </span>
+          )}
         </div>
 
-        <div className="mt-5 flex items-end justify-between border-t border-border pt-4">
+        <div className="mt-auto flex items-end justify-between border-t border-border pt-4">
           <div>
             {tour.oldPrice && (
               <div className="text-xs text-muted-foreground line-through">
@@ -222,7 +222,7 @@ export function TourCard({
               </div>
             )}
             <div className="font-display text-2xl font-semibold text-primary">
-              ${tour.price}
+              ${tour.price.toLocaleString("en-US")}
             </div>
             <div className="text-xs text-muted-foreground">{t.perPerson}</div>
           </div>

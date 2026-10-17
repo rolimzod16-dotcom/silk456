@@ -14,7 +14,7 @@ function chipClass(active: boolean) {
 }
 
 export function TripFinder() {
-  const { t } = useLocale();
+  const { t, ui } = useLocale();
   const filters = useUiStore((state) => state.filters);
   const setFilters = useUiStore((state) => state.setFilters);
   const clearFilters = useUiStore((state) => state.clearFilters);
@@ -99,7 +99,7 @@ export function TripFinder() {
         </button>
         {active && (
           <button type="button" onClick={clearFilters} className="text-sm font-semibold text-white/80 underline-offset-4 hover:text-white hover:underline">
-            {t.finder.clear}
+            {ui.filters.reset}
           </button>
         )}
       </div>

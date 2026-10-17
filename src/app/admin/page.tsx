@@ -11,8 +11,10 @@ import { BookingsPanel, InquiriesPanel } from "@/components/admin/leads-panel";
 import { ToursPanel } from "@/components/admin/tours-panel";
 import { TestimonialsPanel } from "@/components/admin/testimonials-panel";
 import { SettingsPanel } from "@/components/admin/settings-panel";
+import { CountriesPanel } from "@/components/admin/countries-panel";
+import { FaqPanel } from "@/components/admin/faq-panel";
 
-type Tab = "bookings" | "inquiries" | "tours" | "testimonials" | "settings";
+type Tab = "bookings" | "inquiries" | "tours" | "countries" | "faq" | "testimonials" | "settings";
 
 export default function AdminPage() {
   const { toast } = useToast();
@@ -125,6 +127,8 @@ export default function AdminPage() {
     { id: "bookings", label: "Заявки", badge: newCount },
     { id: "inquiries", label: "Сообщения", badge: inquiries.length },
     { id: "tours", label: "Туры" },
+    { id: "countries", label: "Страны" },
+    { id: "faq", label: "FAQ" },
     { id: "testimonials", label: "Отзывы" },
     { id: "settings", label: "Контакты" },
   ];
@@ -204,6 +208,10 @@ export default function AdminPage() {
               {content && tab === "tours" && (
                 <ToursPanel tours={content.tours} onSave={(value) => saveSection("tours", value)} />
               )}
+              {content && tab === "countries" && (
+                <CountriesPanel countries={content.countries} onSave={(value) => saveSection("countries", value)} />
+              )}
+              {content && tab === "faq" && <FaqPanel items={content.faq} onSave={(value) => saveSection("faq", value)} />}
               {content && tab === "testimonials" && (
                 <TestimonialsPanel
                   testimonials={content.testimonials}

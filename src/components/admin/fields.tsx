@@ -152,6 +152,16 @@ async function shrink(file: File, maxSide = 2000): Promise<Blob> {
   );
 }
 
+/** Shrinks a photo in the browser and uploads it; returns the public URL. */
+export async function uploadPhoto(file: File): Promise<string> {
+  const body = new FormData();
+  body.append("file", new File([await shrink(file)], "photo.jpg", { type: "image/jpeg" }));
+  const response = await fetch("/api/admin/upload", { method: "POST", body });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || "Не удалось загрузить.");
+  return data.url;
+}
+
 export function ImageField({ value, onChange }: { value: string; onChange: (url: string) => void }) {
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -161,12 +171,7 @@ export function ImageField({ value, onChange }: { value: string; onChange: (url:
     setBusy(true);
     setError("");
     try {
-      const body = new FormData();
-      body.append("file", new File([await shrink(file)], "photo.jpg", { type: "image/jpeg" }));
-      const response = await fetch("/api/admin/upload", { method: "POST", body });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Не удалось загрузить.");
-      onChange(data.url);
+      onChange(await uploadPhoto(file));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Не удалось загрузить.");
     } finally {
@@ -202,6 +207,121 @@ export function ImageField({ value, onChange }: { value: string; onChange: (url:
         <TextInput value={value} onChange={onChange} placeholder="или вставьте ссылку на фото" />
         {error && <p className="text-sm text-red-700">{error}</p>}
       </div>
+    </div>
+  );
+}
+
+/** Several photos: upload many at once, remove or reorder them. */
+export function GalleryField({ value, onChange }: { value: string[]; onChange: (urls: string[]) => void }) {
+  const input = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(0);
+  const [error, setError] = useState("");
+
+  async function upload(files: File[]) {
+    setError("");
+    setBusy(files.length);
+    const added: string[] = [];
+    for (const file of files) {
+      try {
+        added.push(await uploadPhoto(file));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Не удалось загрузить.");
+      }
+      setBusy((n) => n - 1);
+    }
+    onChange([...value, ...added]);
+    if (input.current) input.current.value = "";
+  }
+
+  const move = (index: number, delta: number) => {
+    const next = [...value];
+    const [item] = next.splice(index, 1);
+    next.splice(index + delta, 0, item);
+    onChange(next);
+  };
+
+  return (
+    <div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {value.map((url, index) => (
+          <div key={`${url}-${index}`} className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-[#d4a82a]/30">
+            <img src={url} alt="" className="h-full w-full object-cover" />
+            <div className="absolute inset-x-1 bottom-1 flex justify-between gap-1">
+              <button type="button" className={`${buttonClass.icon} bg-white`} disabled={index === 0} onClick={() => move(index, -1)} aria-label="Левее">
+                ←
+              </button>
+              <button type="button" className={`${buttonClass.icon} bg-white text-red-700`} onClick={() => onChange(value.filter((_, i) => i !== index))} aria-label="Удалить фото">
+                ×
+              </button>
+              <button type="button" className={`${buttonClass.icon} bg-white`} disabled={index === value.length - 1} onClick={() => move(index, 1)} aria-label="Правее">
+                →
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <input
+        ref={input}
+        type="file"
+        multiple
+        accept="image/jpeg,image/png,image/webp"
+        className="hidden"
+        onChange={(event) => {
+          const files = [...(event.target.files ?? [])];
+          if (files.length) void upload(files);
+        }}
+      />
+      <button type="button" className={`${buttonClass.ghost} mt-3`} disabled={busy > 0} onClick={() => input.current?.click()}>
+        {busy > 0 ? <Loader2 className="size-4 animate-spin" /> : <ImagePlus className="size-4" />}
+        {busy > 0 ? `Загружаем… осталось ${busy}` : "Добавить фото (можно несколько)"}
+      </button>
+      {error && <p className="mt-2 text-sm text-red-700">{error}</p>}
+    </div>
+  );
+}
+
+/** Repeatable rows (FAQ, facts, dates…) with add, remove and reorder. */
+export function RowsEditor<T>({
+  rows,
+  onChange,
+  blank,
+  addLabel,
+  render,
+}: {
+  rows: T[];
+  onChange: (rows: T[]) => void;
+  blank: () => T;
+  addLabel: string;
+  render: (row: T, update: (patch: Partial<T>) => void, index: number) => React.ReactNode;
+}) {
+  const move = (index: number, delta: number) => {
+    const next = [...rows];
+    const [item] = next.splice(index, 1);
+    next.splice(index + delta, 0, item);
+    onChange(next);
+  };
+  return (
+    <div className="space-y-3">
+      {rows.map((row, index) => (
+        <div key={index} className="rounded-xl border border-[#d4a82a]/25 p-3">
+          <div className="mb-2 flex items-center justify-end gap-1">
+            <span className="mr-auto text-xs font-semibold text-[#0f1225]/50">№ {index + 1}</span>
+            <button type="button" className={buttonClass.icon} disabled={index === 0} onClick={() => move(index, -1)} aria-label="Выше">
+              ↑
+            </button>
+            <button type="button" className={buttonClass.icon} disabled={index === rows.length - 1} onClick={() => move(index, 1)} aria-label="Ниже">
+              ↓
+            </button>
+            <button type="button" className={`${buttonClass.icon} text-red-700`} onClick={() => onChange(rows.filter((_, i) => i !== index))} aria-label="Удалить">
+              ×
+            </button>
+          </div>
+          {render(row, (patch) => onChange(rows.map((r, i) => (i === index ? { ...r, ...patch } : r))), index)}
+        </div>
+      ))}
+      <button type="button" className={buttonClass.ghost} onClick={() => onChange([...rows, blank()])}>
+        + {addLabel}
+      </button>
     </div>
   );
 }

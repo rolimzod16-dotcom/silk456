@@ -3,7 +3,7 @@ import { CtaSection } from "@/components/site/cta-section";
 import { FaqList } from "@/components/site/faq-list";
 import { SimplePage } from "@/components/site/inner-pages";
 import { JsonLd } from "@/components/site/json-ld";
-import { FAQ } from "@/lib/faq";
+import { getContent } from "@/lib/content";
 import { breadcrumbLd, pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
@@ -13,7 +13,8 @@ export const metadata: Metadata = pageMeta({
   path: "/faq",
 });
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  const { faq } = await getContent();
   return (
     <SimplePage page="faq">
       <JsonLd
@@ -21,7 +22,7 @@ export default function FaqPage() {
           {
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            mainEntity: FAQ.map((item) => ({
+            mainEntity: faq.map((item) => ({
               "@type": "Question",
               name: item.q.en,
               acceptedAnswer: { "@type": "Answer", text: item.a.en },
@@ -30,7 +31,7 @@ export default function FaqPage() {
           breadcrumbLd([{ name: "FAQ", path: "/faq" }]),
         ]}
       />
-      <FaqList />
+      <FaqList items={faq} />
       <CtaSection />
     </SimplePage>
   );

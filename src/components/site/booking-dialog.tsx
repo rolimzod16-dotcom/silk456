@@ -19,6 +19,7 @@ type Status = "idle" | "loading" | "success" | "error";
 export function BookingDialog() {
   const open = useUiStore((s) => s.bookingOpen);
   const presetSlug = useUiStore((s) => s.bookingTourSlug);
+  const presetDate = useUiStore((s) => s.bookingDate);
   const close = useUiStore((s) => s.closeBooking);
   const { ui } = useLocale();
 
@@ -30,13 +31,21 @@ export function BookingDialog() {
           <DialogDescription>{ui.booking.text}</DialogDescription>
         </DialogHeader>
         {/* Mounted only while open, so every opening starts with a fresh form. */}
-        {open && <BookingForm presetSlug={presetSlug} onDone={close} />}
+        {open && <BookingForm presetSlug={presetSlug} presetDate={presetDate} onDone={close} />}
       </DialogContent>
     </Dialog>
   );
 }
 
-function BookingForm({ presetSlug, onDone }: { presetSlug: string | null; onDone: () => void }) {
+function BookingForm({
+  presetSlug,
+  presetDate,
+  onDone,
+}: {
+  presetSlug: string | null;
+  presetDate: string | null;
+  onDone: () => void;
+}) {
   const { tours } = useContent();
   const { ui } = useLocale();
   const t = ui.booking;
@@ -44,7 +53,7 @@ function BookingForm({ presetSlug, onDone }: { presetSlug: string | null; onDone
 
   const [tourSlug, setTourSlug] = useState(presetSlug ?? tours[0]?.slug ?? "");
   const [travelers, setTravelers] = useState("2");
-  const [travelDate, setTravelDate] = useState("");
+  const [travelDate, setTravelDate] = useState(presetDate ?? "");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");

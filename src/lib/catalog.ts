@@ -74,7 +74,7 @@ const META: Record<string, TourMeta> = {
     styles: ["overland-4x4", "culture-cities"],
   },
   "steppe-nomads": {
-    countries: ["kyrgyzstan", "mongolia"],
+    countries: ["kyrgyzstan"],
     seasons: ["summer", "autumn"],
     styles: ["horse-riding"],
   },

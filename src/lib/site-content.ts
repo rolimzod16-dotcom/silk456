@@ -1,3 +1,6 @@
+import type { CountryId } from "@/lib/catalog";
+import type { CountryContent } from "@/lib/country-content";
+import type { Text } from "@/lib/locale";
 import type { Testimonial } from "@/lib/testimonials";
 import type { Tour } from "@/lib/tours";
 
@@ -15,10 +18,14 @@ export type SiteSettings = {
   whatsapp: string;
 };
 
+export type FaqItem = { q: Text; a: Text };
+
 export type SiteContent = {
   tours: Tour[];
   testimonials: Testimonial[];
   settings: SiteSettings;
+  countries: Record<CountryId, CountryContent>;
+  faq: FaqItem[];
 };
 
 export const DEFAULT_SETTINGS: SiteSettings = {

@@ -3,12 +3,15 @@
 import { useState } from "react";
 import { ArrowDown, ArrowUp, ExternalLink, Pencil, Plus, Star, Trash2, X } from "lucide-react";
 import { COUNTRIES, REGIONS, SEASONS, STYLES, tourMeta } from "@/lib/catalog";
-import type { Tour } from "@/lib/tours";
+import type { Departure, Tour } from "@/lib/tours";
 import {
   buttonClass,
   Chips,
   Field,
+  GalleryField,
   ImageField,
+  inputClass,
+  RowsEditor,
   LinesInput,
   TextArea,
   TextInput,
@@ -47,8 +50,19 @@ function blankTour(): Tour {
     countries: [],
     seasons: [],
     styles: [],
+    gallery: [],
+    departures: [],
+    faq: [],
+    // New tours start as drafts until the content is ready.
+    published: false,
   };
 }
+
+const STATUS_LABEL: Record<Departure["status"], string> = {
+  available: "Есть места",
+  limited: "Мало мест",
+  full: "Мест нет",
+};
 
 function slugify(value: string) {
   return value
@@ -122,6 +136,11 @@ export function ToursPanel({
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className="font-semibold">{tour.title}</h3>
+                {tour.published === false && (
+                  <span className="rounded-full bg-[#0f1225]/10 px-2 py-0.5 text-xs font-semibold text-[#0f1225]/70">
+                    Черновик — не виден на сайте
+                  </span>
+                )}
                 {tour.featured && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-[#d4a82a]/20 px-2 py-0.5 text-xs font-semibold">
                     <Star className="size-3" /> Хит сезона
@@ -201,12 +220,14 @@ function TourEditor({
     if (!tour.title.trim()) return setError("Укажите название тура.");
     if (!slug) return setError("Адрес страницы должен содержать латинские буквы или цифры.");
     if (taken.includes(slug)) return setError("Тур с таким адресом уже есть — измените адрес страницы.");
-    if (!tour.price) return setError("Укажите цену.");
+    // A draft can be saved half-finished; publishing needs everything visitors rely on.
+    const publishing = tour.published !== false;
+    if (publishing && !tour.price) return setError("Укажите цену.");
     // Filters, destination and style pages are built from these tags.
-    if (!tour.countries?.length) return setError("Отметьте хотя бы одну страну — иначе тур не попадёт в фильтр «Куда» и на страницы направлений.");
-    if (!tour.seasons?.length) return setError("Отметьте хотя бы один сезон — иначе тур не найдётся по фильтру «Сезон».");
-    if (!tour.styles?.length) return setError("Отметьте хотя бы один стиль путешествия.");
-    if (!tour.days || tour.days < 1) return setError("Укажите количество дней — по нему работает фильтр «Сколько дней».");
+    if (publishing && !tour.countries?.length) return setError("Отметьте хотя бы одну страну — иначе тур не попадёт в фильтр «Куда» и на страницы направлений.");
+    if (publishing && !tour.seasons?.length) return setError("Отметьте хотя бы один сезон — иначе тур не найдётся по фильтру «Сезон».");
+    if (publishing && !tour.styles?.length) return setError("Отметьте хотя бы один стиль путешествия.");
+    if (publishing && (!tour.days || tour.days < 1)) return setError("Укажите количество дней — по нему работает фильтр «Сколько дней».");
     setError("");
     onSubmit({
       ...tour,
@@ -227,6 +248,23 @@ function TourEditor({
         </button>
       </div>
 
+      <Card title="Публикация">
+        <label className="flex items-start gap-3 text-sm">
+          <input
+            type="checkbox"
+            className="mt-1 size-4"
+            checked={tour.published !== false}
+            onChange={(e) => set("published", e.target.checked)}
+          />
+          <span>
+            <span className="font-semibold">Опубликован на сайте</span>
+            <span className="block text-[#0f1225]/60">
+              Снимите галочку, чтобы сохранить тур как черновик: посетители его не увидят, пока программа, фото и цены не готовы.
+            </span>
+          </span>
+        </label>
+      </Card>
+
       <Card title="Основное">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Название">
@@ -238,14 +276,18 @@ function TourEditor({
           <Field label="Подзаголовок" className="sm:col-span-2">
             <TextInput value={tour.subtitle} onChange={(v) => set("subtitle", v)} />
           </Field>
-          <Field label="Описание" className="sm:col-span-2">
+          <Field label="Описание" className="sm:col-span-2" hint="Раздел Overview на странице тура. Пустая строка — новый абзац.">
             <TextArea value={tour.description} onChange={(v) => set("description", v)} rows={4} />
           </Field>
         </div>
       </Card>
 
-      <Card title="Фото">
+      <Card title="Главное фото" hint="Обложка карточки и страницы тура. Лучше горизонтальное, без надписей.">
         <ImageField value={tour.image} onChange={(v) => set("image", v)} />
+      </Card>
+
+      <Card title="Галерея" hint="Раздел Gallery на странице тура. Появляется, когда добавлено хотя бы одно фото.">
+        <GalleryField value={tour.gallery ?? []} onChange={(v) => set("gallery", v)} />
       </Card>
 
       <Card title="Цена и параметры">
@@ -317,7 +359,7 @@ function TourEditor({
         </div>
       </Card>
 
-      <Card title="Программа по дням">
+      <Card title="Программа по дням" hint="Номер дня ставится автоматически — в заголовке писать «Day 1» не нужно.">
         <ol className="space-y-3">
           {tour.itinerary.map((day, index) => (
             <li key={index} className="rounded-xl border border-[#d4a82a]/25 p-3">
@@ -333,8 +375,21 @@ function TourEditor({
                 </button>
               </div>
               <div className="mt-2 space-y-2">
-                <TextInput value={day.title} onChange={(v) => setDay(index, { title: v })} placeholder="Заголовок дня" />
-                <TextArea value={day.description} onChange={(v) => setDay(index, { description: v })} rows={2} />
+                <TextInput value={day.title} onChange={(v) => setDay(index, { title: v })} placeholder="Заголовок дня, например: Dushanbe Arrival" />
+                <TextArea value={day.description} onChange={(v) => setDay(index, { description: v })} rows={4} />
+                <TextInput
+                  value={day.overnight ?? ""}
+                  onChange={(v) => setDay(index, { overnight: v })}
+                  placeholder="Ночёвка (необязательно), например: Guesthouse in Khorog"
+                />
+                <details className="rounded-lg border border-[#d4a82a]/20 px-3 py-2">
+                  <summary className="cursor-pointer text-sm font-medium">
+                    Фото дня {day.image ? "· добавлено" : "(необязательно)"}
+                  </summary>
+                  <div className="mt-3">
+                    <ImageField value={day.image ?? ""} onChange={(v) => setDay(index, { image: v })} />
+                  </div>
+                </details>
               </div>
             </li>
           ))}
@@ -362,6 +417,67 @@ function TourEditor({
             <LinesInput value={tour.excluded} onChange={(v) => set("excluded", v)} rows={6} />
           </Field>
         </div>
+      </Card>
+
+      <Card
+        title="Даты и цены"
+        hint="Раздел Dates & Prices. Если дат нет, на сайте будет «выезд в ваши даты» с кнопкой запроса. Прошедшие даты скрываются сами."
+      >
+        <RowsEditor<Departure>
+          rows={tour.departures ?? []}
+          onChange={(v) => set("departures", v)}
+          blank={() => ({ start: "", status: "available" })}
+          addLabel="Добавить дату выезда"
+          render={(row, update) => (
+            <div className="grid gap-3 sm:grid-cols-5">
+              <Field label="Начало">
+                <input type="date" className={inputClass} value={row.start} onChange={(e) => update({ start: e.target.value })} />
+              </Field>
+              <Field label="Конец">
+                <input
+                  type="date"
+                  className={inputClass}
+                  value={row.end ?? ""}
+                  onChange={(e) => update({ end: e.target.value || undefined })}
+                />
+              </Field>
+              <Field label="Цена, $" hint="Пусто — базовая цена">
+                <TextInput type="number" min={0} value={row.price ?? ""} onChange={(v) => update({ price: Number(v) || undefined })} />
+              </Field>
+              <Field label="Места">
+                <select
+                  className={inputClass}
+                  value={row.status}
+                  onChange={(e) => update({ status: e.target.value as Departure["status"] })}
+                >
+                  {Object.entries(STATUS_LABEL).map(([value, text]) => (
+                    <option key={value} value={value}>
+                      {text}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="Примечание">
+                <TextInput value={row.note ?? ""} onChange={(v) => update({ note: v })} placeholder="напр. Guaranteed" />
+              </Field>
+            </div>
+          )}
+        />
+      </Card>
+
+      <Card title="Вопросы по туру (FAQ)" hint="Раздел FAQ на странице тура. Пишите на английском — для иностранных клиентов.">
+        <RowsEditor<{ q: string; a: string }>
+          rows={tour.faq ?? []}
+          onChange={(v) => set("faq", v)}
+          blank={() => ({ q: "", a: "" })}
+          addLabel="Добавить вопрос"
+          render={(row, update) => (
+            <div className="space-y-2">
+              <TextInput value={row.q} onChange={(v) => update({ q: v })} placeholder="Вопрос" />
+              <TextArea value={row.a} onChange={(v) => update({ a: v })} rows={3} />
+            </div>
+          )}
+        />
       </Card>
 
       <div className="sticky bottom-0 -mx-4 flex flex-wrap items-center gap-3 border-t border-[#d4a82a]/30 bg-[#faf5eb]/95 px-4 py-3 backdrop-blur">
