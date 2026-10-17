@@ -365,7 +365,7 @@ function Itinerary({ days }: { days: TourDay[] }) {
                 aria-controls={`day-${day.day}`}
                 className="flex w-full items-center gap-4 px-4 py-4 text-left transition-colors hover:bg-secondary/40 sm:px-5"
               >
-                <span className="shrink-0 rounded-full bg-primary/10 px-3 py-1 font-display text-sm font-semibold text-primary">
+                <span className="shrink-0 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
                   {ui.tour.day} {day.day}
                 </span>
                 <span className="min-w-0 flex-1 font-semibold text-foreground">{day.title}</span>
