@@ -158,7 +158,9 @@ function safeMapEmbed(value: unknown) {
   const src = raw.match(/src="([^"]+)"/)?.[1] ?? raw;
   try {
     const url = new URL(src);
-    const google = url.hostname === "www.google.com" && url.pathname.startsWith("/maps/");
+    const google =
+      url.hostname === "www.google.com" &&
+      (url.pathname.startsWith("/maps/") || (url.pathname === "/maps" && url.searchParams.get("output") === "embed"));
     return url.protocol === "https:" && google ? url.toString() : "";
   } catch {
     return "";
