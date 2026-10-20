@@ -9,6 +9,8 @@ export type CountryContent = {
   bestTime: { season: string; text: string }[];
   travelInfo: { title: string; text: string }[];
   faq: { q: string; a: string }[];
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export const EMPTY_COUNTRY: CountryContent = {

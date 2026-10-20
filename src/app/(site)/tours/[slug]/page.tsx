@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { TourPage } from "@/components/site/tour-page";
 import { tourMeta } from "@/lib/catalog";
-import { getContent, getTour } from "@/lib/content";
+import { getContent, getTour, getTourByAlias } from "@/lib/content";
 import { JsonLd } from "@/components/site/json-ld";
 import { breadcrumbLd, pageMeta, tourDescription, tourLd, tourTitle } from "@/lib/seo";
 
@@ -12,16 +12,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tour = await getTour((await params).slug);
   if (!tour) return {};
   return pageMeta({
-    title: tourTitle(tour),
-    description: tourDescription(tour),
+    title: tour.seoTitle || tourTitle(tour),
+    description: tour.seoDescription || tourDescription(tour),
     path: `/tours/${tour.slug}`,
     image: tour.image,
   });
 }
 
 export default async function TourDetailPage({ params }: Props) {
-  const tour = await getTour((await params).slug);
-  if (!tour) notFound();
+  const slug = (await params).slug;
+  const tour = await getTour(slug);
+  if (!tour) {
+    // Renamed tours keep working at their old address; removed ones lead to the catalogue.
+    const renamed = await getTourByAlias(slug);
+    permanentRedirect(renamed ? `/tours/${renamed.slug}` : "/tours");
+  }
 
   // Prefer tours that share a country, then fill up with the rest.
   const countries = tourMeta(tour).countries;

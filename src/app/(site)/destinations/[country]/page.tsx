@@ -13,9 +13,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const collection = countryCollection((await params).country, (await getContent()).tours);
   if (!collection) return {};
   const count = collection.tours.length;
+  const guide = (await getContent()).countries[collection.id as CountryId];
   return pageMeta({
-    title: `${collection.label.en} Tours & Travel Packages`,
-    description: `${((await getContent()).countries[collection.id as CountryId]?.overview.split(". ")[0] || collection.text.en).replace(/\.$/, "")}.${count ? ` ${count} ready-made ${count === 1 ? "itinerary" : "itineraries"} with local guides.` : " Private routes built to order."}`,
+    title: guide?.seoTitle || `${collection.label.en} Tours & Travel Packages`,
+    description: guide?.seoDescription || `${((await getContent()).countries[collection.id as CountryId]?.overview.split(". ")[0] || collection.text.en).replace(/\.$/, "")}.${count ? ` ${count} ready-made ${count === 1 ? "itinerary" : "itineraries"} with local guides.` : " Private routes built to order."}`,
     path: `/destinations/${collection.id}`,
     image: collection.image,
   });

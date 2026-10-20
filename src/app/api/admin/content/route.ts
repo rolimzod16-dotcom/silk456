@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { denyUnlessAdmin } from "@/lib/admin-guard";
 import { CONTENT_TAG, getFreshContent, saveSection } from "@/lib/content";
 
-const SECTIONS = new Set(["tours", "testimonials", "settings", "countries", "faq"]);
+const SECTIONS = new Set(["tours", "testimonials", "settings", "countries", "faq", "pages"]);
 
 export async function GET() {
   const denied = await denyUnlessAdmin();
@@ -20,7 +20,7 @@ export async function PUT(req: Request) {
     return NextResponse.json({ ok: false, error: "Некорректные данные." }, { status: 400 });
   }
   try {
-    const content = await saveSection(section as "tours" | "testimonials" | "settings" | "countries" | "faq", body.value);
+    const content = await saveSection(section as Parameters<typeof saveSection>[0], body.value);
     // Expire immediately so the next visitor sees the change.
     revalidateTag(CONTENT_TAG, { expire: 0 });
     revalidatePath("/", "layout");

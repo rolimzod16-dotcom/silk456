@@ -5,7 +5,7 @@ import { BedDouble, Car, CheckCircle2, FileCheck2, Route, ShieldCheck, Users } f
 import { Button } from "@/components/ui/button";
 import { SECTION_SCROLL, SectionNav } from "@/components/site/section-nav";
 import { useLocale, useText } from "@/lib/locale";
-import { SERVICES } from "@/lib/services";
+import { useContent } from "@/lib/content-context";
 import { cn } from "@/lib/utils";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -21,6 +21,8 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
 export function ServicesDetail() {
   const tx = useText();
   const { ui } = useLocale();
+  const { pages } = useContent();
+  const SERVICES = pages.services;
 
   return (
     <>

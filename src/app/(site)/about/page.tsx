@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { pageMeta } from "@/lib/seo";
+import { staticPageMeta } from "@/lib/seo";
 import { SimplePage } from "@/components/site/inner-pages";
 import { AboutSection } from "@/components/site/about-section";
 import { FeaturesSection } from "@/components/site/features-section";
@@ -7,12 +7,14 @@ import { TestimonialsSection } from "@/components/site/testimonials-section";
 import { CtaSection } from "@/components/site/cta-section";
 import { getContent } from "@/lib/content";
 
-export const metadata: Metadata = pageMeta({
+export async function generateMetadata(): Promise<Metadata> {
+  return staticPageMeta("about", {
   title: "About Us — Local Silk Road Tour Operator",
   description:
     "Boutique Silk Road tours with local guides, small groups and family guesthouses across Central Asia.",
   path: "/about",
 });
+}
 
 export default async function AboutPage() {
   const { testimonials } = await getContent();

@@ -57,12 +57,14 @@ export function TourPage({ tour, related }: { tour: Tour; related: Tour[] }) {
     : "";
 
   // Sections with nothing to show are left out of the page and the menu.
+  const hasMap = !!(tour.mapImage || tour.mapEmbed);
   const nav: SectionLink[] = [
     { id: "overview", label: ui.tourNav.overview },
     ...(tour.itinerary.length ? [{ id: "itinerary", label: ui.tourNav.itinerary }] : []),
     ...(tour.included.length || tour.excluded.length ? [{ id: "inclusions", label: ui.tourNav.inclusions }] : []),
-    { id: "dates", label: ui.tourNav.dates },
     ...(photos.length > 1 ? [{ id: "gallery", label: ui.tourNav.gallery }] : []),
+    ...(hasMap ? [{ id: "map", label: ui.tourNav.map }] : []),
+    { id: "dates", label: ui.tourNav.dates },
     ...(faq.length ? [{ id: "faq", label: ui.tourNav.faq }] : []),
   ];
 
@@ -136,6 +138,42 @@ export function TourPage({ tour, related }: { tour: Tour; related: Tour[] }) {
               </TourSection>
             )}
 
+            {photos.length > 1 && (
+              <TourSection id="gallery" title={t.galleryTitle}>
+                <Gallery photos={photos} title={tour.title} />
+              </TourSection>
+            )}
+
+            {hasMap && (
+              <TourSection id="map" title={t.mapTitle}>
+                <div className="space-y-4">
+                  {tour.mapImage && (
+                    <a href={tour.mapImage} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-2xl border border-border bg-card">
+                      <Image
+                        src={tour.mapImage}
+                        alt={`${tour.title} — ${t.mapTitle}`}
+                        width={1600}
+                        height={1000}
+                        sizes="(min-width: 1024px) 860px, 100vw"
+                        className="h-auto w-full"
+                      />
+                    </a>
+                  )}
+                  {tour.mapEmbed && (
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-border bg-card">
+                      <iframe
+                        src={tour.mapEmbed}
+                        title={`${tour.title} — ${t.mapTitle}`}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        className="absolute inset-0 h-full w-full border-0"
+                      />
+                    </div>
+                  )}
+                </div>
+              </TourSection>
+            )}
+
             <TourSection id="dates" title={t.datesTitle}>
               {departures.length > 0 ? (
                 <div className="overflow-hidden rounded-2xl border border-border bg-card">
@@ -199,11 +237,6 @@ export function TourPage({ tour, related }: { tour: Tour; related: Tour[] }) {
               <p className="mt-3 text-xs text-muted-foreground">{t.priceNote}</p>
             </TourSection>
 
-            {photos.length > 1 && (
-              <TourSection id="gallery" title={t.galleryTitle}>
-                <Gallery photos={photos} title={tour.title} />
-              </TourSection>
-            )}
 
             {faq.length > 0 && (
               <TourSection id="faq" title={t.faqTitle}>

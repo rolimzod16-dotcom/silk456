@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { tourMeta } from "@/lib/catalog";
 import { SITE_URL } from "@/lib/pages";
+import type { SeoPageKey } from "@/lib/pages-content";
 import type { SiteSettings } from "@/lib/site-content";
 import type { Tour } from "@/lib/tours";
 
@@ -54,6 +55,17 @@ export function pageMeta({
       images: [image],
     },
   };
+}
+
+/** Metadata for a fixed page, using the SEO texts set in the admin when present. */
+export async function staticPageMeta(key: SeoPageKey, fallback: Parameters<typeof pageMeta>[0]): Promise<Metadata> {
+  const { getContent } = await import("@/lib/content");
+  const seo = (await getContent()).pages.seo[key];
+  return pageMeta({
+    ...fallback,
+    title: seo?.title || fallback.title,
+    description: seo?.description || fallback.description,
+  });
 }
 
 export function tourTitle(tour: Tour) {

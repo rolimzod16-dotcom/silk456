@@ -9,7 +9,7 @@ import { styleCollection } from "@/lib/pages";
 type Props = { params: Promise<{ style: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const collection = styleCollection((await params).style, (await getContent()).tours);
+  const collection = styleCollection((await params).style, (await getContent()).tours, (await getContent()).pages.styles);
   if (!collection) return {};
   const count = collection.tours.length;
   return pageMeta({
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function TravelStylePage({ params }: Props) {
-  const collection = styleCollection((await params).style, (await getContent()).tours);
+  const collection = styleCollection((await params).style, (await getContent()).tours, (await getContent()).pages.styles);
   if (!collection) notFound();
   return (
     <>

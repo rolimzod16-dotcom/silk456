@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowDown, ArrowUp, ExternalLink, Pencil, Plus, Star, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowUp, ExternalLink, Home, Pencil, Plus, Star, Trash2, X } from "lucide-react";
 import { COUNTRIES, REGIONS, SEASONS, STYLES, tourMeta } from "@/lib/catalog";
 import type { Departure, Tour } from "@/lib/tours";
 import {
@@ -95,6 +95,10 @@ export function ToursPanel({
     void commit(next);
   }
 
+  function toggleHome(index: number) {
+    void commit(tours.map((tour, i) => (i === index ? { ...tour, showOnHome: !tour.showOnHome } : tour)));
+  }
+
   function remove(index: number) {
     if (!window.confirm(`Удалить тур «${tours[index].title}»? Это сразу отразится на сайте.`)) return;
     void commit(tours.filter((_, i) => i !== index));
@@ -127,7 +131,10 @@ export function ToursPanel({
           <Plus className="size-4" /> Добавить тур
         </button>
       </div>
-      <p className="mt-1 text-sm text-[#0f1225]/60">Порядок здесь — это порядок туров на сайте.</p>
+      <p className="mt-1 text-sm text-[#0f1225]/60">
+        Порядок здесь — это порядок туров на сайте. Кнопка с домиком добавляет тур в блок «Избранные туры» на главной
+        (сейчас: {tours.filter((t) => t.showOnHome).length}, рекомендуем 6).
+      </p>
 
       <div className="mt-4 space-y-3">
         {tours.map((tour, index) => (
@@ -136,6 +143,11 @@ export function ToursPanel({
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className="font-semibold">{tour.title}</h3>
+                {tour.showOnHome && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
+                    <Home className="size-3" /> На главной
+                  </span>
+                )}
                 {tour.published === false && (
                   <span className="rounded-full bg-[#0f1225]/10 px-2 py-0.5 text-xs font-semibold text-[#0f1225]/70">
                     Черновик — не виден на сайте
@@ -164,6 +176,16 @@ export function ToursPanel({
                 aria-label="Ниже"
               >
                 <ArrowDown className="size-4" />
+              </button>
+              <button
+                type="button"
+                className={`${buttonClass.icon} ${tour.showOnHome ? "border-emerald-600 bg-emerald-50 text-emerald-700" : ""}`}
+                disabled={busy}
+                onClick={() => toggleHome(index)}
+                aria-label={tour.showOnHome ? "Убрать с главной" : "Показать на главной"}
+                title={tour.showOnHome ? "Убрать с главной" : "Показать на главной"}
+              >
+                <Home className="size-4" />
               </button>
               <a href={`/tours/${tour.slug}`} target="_blank" className={buttonClass.icon} aria-label="Открыть на сайте">
                 <ExternalLink className="size-4" />
@@ -229,8 +251,12 @@ function TourEditor({
     if (publishing && !tour.styles?.length) return setError("Отметьте хотя бы один стиль путешествия.");
     if (publishing && (!tour.days || tour.days < 1)) return setError("Укажите количество дней — по нему работает фильтр «Сколько дней».");
     setError("");
+    // Remember the old address so existing links and Google results keep working.
+    const aliases = [...(tour.aliases ?? [])];
+    if (!isNew && initial.slug && initial.slug !== slug && !aliases.includes(initial.slug)) aliases.push(initial.slug);
     onSubmit({
       ...tour,
+      aliases: aliases.filter((alias) => alias !== slug),
       slug,
       days: tour.days || tour.itinerary.length,
       itinerary: tour.itinerary
@@ -263,6 +289,20 @@ function TourEditor({
             </span>
           </span>
         </label>
+        <label className="mt-4 flex items-start gap-3 text-sm">
+          <input
+            type="checkbox"
+            className="mt-1 size-4"
+            checked={!!tour.showOnHome}
+            onChange={(e) => set("showOnHome", e.target.checked)}
+          />
+          <span>
+            <span className="font-semibold">Показывать на главной</span>
+            <span className="block text-[#0f1225]/60">
+              Тур попадёт в блок «Избранные туры». Порядок — как в списке туров. В каталоге, странах и фильтрах тур есть в любом случае.
+            </span>
+          </span>
+        </label>
       </Card>
 
       <Card title="Основное">
@@ -270,7 +310,10 @@ function TourEditor({
           <Field label="Название">
             <TextInput value={tour.title} onChange={(v) => set("title", v)} required />
           </Field>
-          <Field label="Адрес страницы" hint={`/tours/${slugify(tour.slug || tour.title) || "…"} — латиница, без пробелов`}>
+          <Field
+            label="Адрес страницы"
+            hint={`/tours/${slugify(tour.slug || tour.title) || "…"} — латиница, без пробелов. Если поменять, старый адрес будет перенаправлять на новый.`}
+          >
             <TextInput value={tour.slug} onChange={(v) => set("slug", v)} placeholder="из названия" />
           </Field>
           <Field label="Подзаголовок" className="sm:col-span-2">
@@ -415,6 +458,37 @@ function TourEditor({
           </Field>
           <Field label="Не включено">
             <LinesInput value={tour.excluded} onChange={(v) => set("excluded", v)} rows={6} />
+          </Field>
+        </div>
+      </Card>
+
+      <Card
+        title="Карта маршрута"
+        hint="Раздел Map. Можно загрузить схему маршрута картинкой и/или вставить карту Google. Пусто — раздела не будет."
+      >
+        {/* Not a <label>: the image field has its own buttons. */}
+        <div>
+          <span className="text-xs font-semibold uppercase tracking-wide text-[#0f1225]/70">Схема маршрута (картинка)</span>
+          <div className="mt-1">
+            <ImageField value={tour.mapImage ?? ""} onChange={(v) => set("mapImage", v)} />
+          </div>
+        </div>
+        <Field
+          label="Карта Google (необязательно)"
+          hint="Google Maps → «Поделиться» → «Встраивание карт» → «Копировать HTML» и вставить сюда целиком. Подходят и карты из Google My Maps."
+          className="mt-4"
+        >
+          <TextInput value={tour.mapEmbed ?? ""} onChange={(v) => set("mapEmbed", v)} placeholder='<iframe src="https://www.google.com/maps/embed?..."' />
+        </Field>
+      </Card>
+
+      <Card title="SEO — как тур выглядит в Google" hint="Необязательно. Если пусто, заголовок и описание собираются автоматически из названия и подзаголовка.">
+        <div className="space-y-4">
+          <Field label={`SEO-заголовок · ${(tour.seoTitle ?? "").length}/60`} hint="До 60 символов, например: Pamir Highway Tour — 12 Days Across Tajikistan">
+            <TextInput value={tour.seoTitle ?? ""} onChange={(v) => set("seoTitle", v)} maxLength={70} />
+          </Field>
+          <Field label={`SEO-описание · ${(tour.seoDescription ?? "").length}/160`} hint="До 160 символов: о чём тур и почему стоит выбрать его.">
+            <TextArea value={tour.seoDescription ?? ""} onChange={(v) => set("seoDescription", v)} rows={2} />
           </Field>
         </div>
       </Card>

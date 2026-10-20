@@ -6,14 +6,16 @@ import { Award, Globe2, HeartHandshake } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { tourMeta } from "@/lib/catalog";
 import { useContent } from "@/lib/content-context";
-import { useLocale } from "@/lib/locale";
+import { useLocale, useText } from "@/lib/locale";
 
 const ICONS = [Globe2, Award, HeartHandshake];
 
 export function AboutSection() {
   const { ui } = useLocale();
-  const { tours } = useContent();
+  const { tours, pages } = useContent();
+  const tx = useText();
   const t = ui.about;
+  const about = pages.about;
   const countries = new Set(tours.flatMap((tour) => tourMeta(tour).countries)).size;
 
   return (
@@ -43,10 +45,10 @@ export function AboutSection() {
               {t.badge}
             </Badge>
             <h2 className="mt-4 font-display text-3xl font-semibold text-foreground sm:text-4xl md:text-5xl">
-              {t.titleStart} <span className="text-gold-gradient">{t.titleAccent}</span>
+              {tx(about.titleStart)} <span className="text-gold-gradient">{tx(about.titleAccent)}</span>
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">{t.p1}</p>
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground">{t.p2}</p>
+            <p className="mt-5 text-base leading-relaxed text-foreground/80 sm:text-lg">{tx(about.p1)}</p>
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground">{tx(about.p2)}</p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               {t.values.map((v, index) => {

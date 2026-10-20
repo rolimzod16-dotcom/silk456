@@ -9,7 +9,7 @@ const en = {
     titleAccent: "Great Silk Road",
     text: "From the turquoise domes of Samarkand to the high Pamir and the pink mosques of Isfahan. Small groups, local guides and ready-made routes across the old caravan lands.",
     viewTours: "View tours",
-    plan: "Plan my trip",
+    plan: "Plan my journey",
     statRoutes: "ready-made routes",
     statCountries: "Silk Road countries",
     statStyles: "travel styles",
@@ -183,6 +183,7 @@ const en = {
     inclusions: "Inclusions & Exclusions",
     dates: "Dates & Prices",
     gallery: "Gallery",
+    map: "Map",
     faq: "FAQ",
   },
   tourPage: {
@@ -203,6 +204,7 @@ const en = {
     requestQuote: "Request a quote",
     askQuestion: "Ask a question",
     galleryTitle: "Gallery",
+    mapTitle: "Route map",
     faqTitle: "Questions about this tour",
     close: "Close",
     prev: "Previous photo",
@@ -232,6 +234,12 @@ const en = {
   },
   filters: {
     reset: "Reset filters",
+  },
+  featured: {
+    eyebrow: "Signature journeys",
+    title: "Our featured tours",
+    text: "A hand-picked selection of our routes. Every tour is also listed in the full catalogue with filters by country, season and length.",
+    viewAll: (n: number) => `View all ${n} tours`,
   },
   whatsapp: "Chat on WhatsApp",
 };
@@ -419,6 +427,7 @@ const ru: UiText = {
     inclusions: "Включено / не включено",
     dates: "Даты и цены",
     gallery: "Галерея",
+    map: "Карта",
     faq: "Вопросы",
   },
   tourPage: {
@@ -439,6 +448,7 @@ const ru: UiText = {
     requestQuote: "Запросить стоимость",
     askQuestion: "Задать вопрос",
     galleryTitle: "Галерея",
+    mapTitle: "Карта маршрута",
     faqTitle: "Вопросы об этом туре",
     close: "Закрыть",
     prev: "Предыдущее фото",
@@ -468,6 +478,12 @@ const ru: UiText = {
   },
   filters: {
     reset: "Сбросить фильтры",
+  },
+  featured: {
+    eyebrow: "Авторские маршруты",
+    title: "Избранные туры",
+    text: "Подборка наших маршрутов. Все туры также есть в полном каталоге с фильтрами по стране, сезону и длительности.",
+    viewAll: (n: number) => `Все туры (${n})`,
   },
   whatsapp: "Написать в WhatsApp",
 };

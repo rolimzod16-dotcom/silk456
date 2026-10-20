@@ -1,6 +1,7 @@
 import type { CountryId } from "@/lib/catalog";
 import type { CountryContent } from "@/lib/country-content";
 import type { Text } from "@/lib/locale";
+import type { PagesContent } from "@/lib/pages-content";
 import type { Testimonial } from "@/lib/testimonials";
 import type { Tour } from "@/lib/tours";
 
@@ -26,6 +27,7 @@ export type SiteContent = {
   settings: SiteSettings;
   countries: Record<CountryId, CountryContent>;
   faq: FaqItem[];
+  pages: PagesContent;
 };
 
 export const DEFAULT_SETTINGS: SiteSettings = {

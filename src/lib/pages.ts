@@ -4,7 +4,7 @@ import type { Tour } from "@/lib/tours";
 
 export const SITE_URL = "https://www.greatsilktrails.com";
 
-type Intro = { tagline: Text; text: Text };
+export type Intro = { tagline: Text; text: Text };
 
 const COUNTRY_INTRO: Record<CountryId, Intro> = {
   uzbekistan: {
@@ -65,7 +65,7 @@ const COUNTRY_INTRO: Record<CountryId, Intro> = {
   },
 };
 
-const STYLE_INTRO: Record<StyleId, Intro> = {
+export const STYLE_INTRO: Record<StyleId, Intro> = {
   "overland-4x4": {
     tagline: { en: "Long roads, high passes", ru: "Длинные дороги, высокие перевалы" },
     text: {
@@ -134,7 +134,11 @@ export function countryCollection(id: string, tours: Tour[]): Collection | undef
   };
 }
 
-export function styleCollection(id: string, tours: Tour[]): Collection | undefined {
+export function styleCollection(
+  id: string,
+  tours: Tour[],
+  intros: Record<StyleId, Intro> = STYLE_INTRO,
+): Collection | undefined {
   const style = STYLES.find((item) => item.id === id);
   if (!style) return undefined;
   const list = tours.filter((tour) => tourMeta(tour).styles.includes(style.id));
@@ -142,7 +146,7 @@ export function styleCollection(id: string, tours: Tour[]): Collection | undefin
     kind: "travel-styles",
     id: style.id,
     label: { en: style.en, ru: style.ru },
-    ...STYLE_INTRO[style.id],
+    ...(intros[style.id] ?? STYLE_INTRO[style.id]),
     image: list[0]?.image ?? "/images/hero-silkroad.png",
     tours: list,
   };
@@ -151,8 +155,8 @@ export function styleCollection(id: string, tours: Tour[]): Collection | undefin
 export const countryCollections = (tours: Tour[]) =>
   COUNTRIES.map((item) => countryCollection(item.id, tours)!);
 
-export const styleCollections = (tours: Tour[]) =>
-  STYLES.map((item) => styleCollection(item.id, tours)!);
+export const styleCollections = (tours: Tour[], intros: Record<StyleId, Intro> = STYLE_INTRO) =>
+  STYLES.map((item) => styleCollection(item.id, tours, intros)!);
 
 /** Shared hero / heading copy for the inner pages. */
 export const PAGE_COPY = {

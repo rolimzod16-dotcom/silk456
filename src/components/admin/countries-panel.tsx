@@ -131,6 +131,17 @@ export function CountriesPanel({
         />
       </Card>
 
+      <Card title="SEO — как страница выглядит в Google" hint="Необязательно. Если пусто, собирается автоматически.">
+        <div className="space-y-4">
+          <Field label={`SEO-заголовок · ${(draft.seoTitle ?? "").length}/60`}>
+            <TextInput value={draft.seoTitle ?? ""} onChange={(v) => set("seoTitle", v)} maxLength={70} />
+          </Field>
+          <Field label={`SEO-описание · ${(draft.seoDescription ?? "").length}/160`}>
+            <TextArea value={draft.seoDescription ?? ""} onChange={(v) => set("seoDescription", v)} rows={2} />
+          </Field>
+        </div>
+      </Card>
+
       <Card title="FAQ страны">
         <RowsEditor
           rows={draft.faq}

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useContent } from "@/lib/content-context";
 import { useLocale, useText } from "@/lib/locale";
 import { COMMON } from "@/lib/pages";
 import { useUiStore } from "@/lib/ui-store";
@@ -14,6 +15,7 @@ import { cn } from "@/lib/utils";
 export function SiteHeader() {
   const { locale, setLocale, t, ui } = useLocale();
   const tx = useText();
+  const { pages } = useContent();
   const pathname = usePathname();
   const openBooking = useUiStore((state) => state.openBooking);
   const [open, setOpen] = useState(false);
@@ -77,9 +79,9 @@ export function SiteHeader() {
             <DropdownLink href="/travel-styles">{t.nav.viewAll}</DropdownLink>
           </Dropdown>
           <Dropdown label={t.nav.services} href="/services" active={isActive("/services")}>
-            {t.services.map((item) => (
+            {pages.services.map((item) => (
               <DropdownLink key={item.id} href={`/services#${item.id}`}>
-                {item.title}
+                {tx(item.title)}
               </DropdownLink>
             ))}
           </Dropdown>

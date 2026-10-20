@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { tourMatches } from "@/lib/catalog";
 import { useContent } from "@/lib/content-context";
 import { useLocale } from "@/lib/locale";
@@ -15,11 +16,24 @@ function chipClass(active: boolean) {
 
 export function TripFinder() {
   const { t, ui } = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
   const filters = useUiStore((state) => state.filters);
   const setFilters = useUiStore((state) => state.setFilters);
   const clearFilters = useUiStore((state) => state.clearFilters);
   const { tours } = useContent();
   const count = useMemo(() => tours.filter((tour) => tourMatches(tour, filters)).length, [tours, filters]);
+  // The home page shows only featured tours, so search opens the full catalogue.
+  function showResults() {
+    if (pathname === "/tours") return scrollToId("tours");
+    const query = new URLSearchParams();
+    if (filters.season) query.set("season", filters.season);
+    if (filters.duration) query.set("duration", filters.duration);
+    if (filters.country) query.set("country", filters.country);
+    const qs = query.toString();
+    router.push(`/tours${qs ? `?${qs}` : ""}#tours`);
+  }
+
   const active = filters.season !== null || filters.duration !== null || filters.country !== null;
 
   return (
@@ -92,7 +106,7 @@ export function TripFinder() {
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <button
           type="button"
-          onClick={() => scrollToId("tours")}
+          onClick={showResults}
           className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90"
         >
           {active ? t.finder.showN(count) : t.finder.explore}

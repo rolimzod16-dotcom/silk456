@@ -3,11 +3,11 @@ import { ToursCatalog } from "@/components/site/inner-pages";
 import { COUNTRIES, DURATIONS, SEASONS, STYLES, type TourFilters } from "@/lib/catalog";
 import { JsonLd } from "@/components/site/json-ld";
 import { getContent } from "@/lib/content";
-import { breadcrumbLd, pageMeta, tourListLd } from "@/lib/seo";
+import { breadcrumbLd, staticPageMeta, tourListLd } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { tours } = await getContent();
-  return pageMeta({
+  return staticPageMeta("tours", {
     title: "Silk Road Tour Packages & Itineraries",
     description: `${tours.length} Silk Road itineraries across Uzbekistan, Tajikistan, Kyrgyzstan, Kazakhstan, Turkmenistan, Iran, China and Mongolia. Hotels, guides and transfers included — filter by season, length or country.`,
     path: "/tours",

@@ -3,6 +3,7 @@ import { cache } from "react";
 import { COUNTRIES, REGIONS, SEASONS, STYLES, tourMeta, type CountryId } from "@/lib/catalog";
 import { DEFAULT_COUNTRIES, type CountryContent } from "@/lib/country-content";
 import { FAQ } from "@/lib/faq";
+import { DEFAULT_PAGES, SEO_PAGES, type PagesContent, type ServiceContent } from "@/lib/pages-content";
 import { DEFAULT_SETTINGS, type FaqItem, type SiteContent, type SiteSettings } from "@/lib/site-content";
 import { mutateDoc, readDoc } from "@/lib/store";
 import { testimonials as builtInTestimonials, type Testimonial } from "@/lib/testimonials";
@@ -14,13 +15,20 @@ export const CONTENT_TAG = "site-content";
 
 type StoredContent = Partial<SiteContent>;
 
+/** The client's six featured tours, in the order they appear on the home page. */
+const HOME_TOURS = ["pamir-highway", "fann-mountains-trek", "samarkand-gold", "tianshan-nomads", "pamir-moto", "almaty-charyn"];
+
 function defaults(): SiteContent {
+  const rank = (slug: string) => (HOME_TOURS.includes(slug) ? HOME_TOURS.indexOf(slug) : HOME_TOURS.length);
   return {
-    tours: builtInTours.map((tour) => ({ ...tour, ...tourMeta(tour), published: true })),
+    tours: [...builtInTours]
+      .sort((a, b) => rank(a.slug) - rank(b.slug))
+      .map((tour) => ({ ...tour, ...tourMeta(tour), published: true, showOnHome: HOME_TOURS.includes(tour.slug) })),
     testimonials: builtInTestimonials,
     settings: DEFAULT_SETTINGS,
     countries: DEFAULT_COUNTRIES,
     faq: FAQ,
+    pages: DEFAULT_PAGES,
   };
 }
 
@@ -132,7 +140,29 @@ export function normalizeTour(raw: unknown): Tour | null {
     departures: normalizeDepartures(t.departures),
     faq: normalizeQa(t.faq),
     published: t.published !== false,
+    showOnHome: t.showOnHome === true,
+    mapImage: str(t.mapImage, 600),
+    mapEmbed: safeMapEmbed(t.mapEmbed),
+    seoTitle: str(t.seoTitle, 70),
+    seoDescription: str(t.seoDescription, 170),
+    aliases: strList(t.aliases, 80).map(slugify).filter((alias) => alias && alias !== slug),
   };
+}
+
+/**
+ * Accepts a Google Maps embed URL, or the whole <iframe> code copied from
+ * Google Maps; anything else is dropped so no foreign page is embedded.
+ */
+function safeMapEmbed(value: unknown) {
+  const raw = str(value, 2000);
+  const src = raw.match(/src="([^"]+)"/)?.[1] ?? raw;
+  try {
+    const url = new URL(src);
+    const google = url.hostname === "www.google.com" && url.pathname.startsWith("/maps/");
+    return url.protocol === "https:" && google ? url.toString() : "";
+  } catch {
+    return "";
+  }
 }
 
 export function normalizeTestimonial(raw: unknown): Testimonial | null {
@@ -188,6 +218,8 @@ function normalizeCountry(raw: unknown): CountryContent {
       .map((i) => ({ title: str(i.title, 120), text: str(i.text, 2000) }))
       .filter((i) => i.title && i.text),
     faq: normalizeQa(t.faq),
+    seoTitle: str(t.seoTitle, 70),
+    seoDescription: str(t.seoDescription, 170),
   };
 }
 
@@ -208,6 +240,51 @@ function normalizeFaq(value: unknown): FaqItem[] {
   return objects(value)
     .map((item) => ({ q: text(item.q, 300), a: text(item.a, 3000) }))
     .filter((item) => item.q.en && item.a.en);
+}
+
+/** { en, ru } pair; an empty value keeps the built-in text so pages never go blank. */
+function textPair(value: unknown, fallback: { en: string; ru: string }, max = 2000) {
+  const o = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+  return { en: str(o.en, max) || fallback.en, ru: str(o.ru, max) || fallback.ru };
+}
+
+function normalizePages(raw: unknown): PagesContent {
+  const t = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+  const base = DEFAULT_PAGES;
+  const group = <K extends "home" | "about">(key: K) => {
+    const src = t[key] && typeof t[key] === "object" ? (t[key] as Record<string, unknown>) : {};
+    return Object.fromEntries(
+      Object.entries(base[key]).map(([field, fallback]) => [field, textPair(src[field], fallback as { en: string; ru: string })]),
+    ) as PagesContent[K];
+  };
+  const storedServices = objects(t.services);
+  const services: ServiceContent[] = base.services.map((service) => {
+    const s = storedServices.find((item) => item.id === service.id) ?? {};
+    const points = objects(s.points)
+      .map((point) => ({ en: str(point.en, 300), ru: str(point.ru, 300) }))
+      .filter((point) => point.en);
+    return {
+      id: service.id,
+      title: textPair(s.title, service.title, 120),
+      lead: textPair(s.lead, service.lead),
+      points: points.length ? points : service.points,
+    };
+  });
+  const storedStyles = t.styles && typeof t.styles === "object" ? (t.styles as Record<string, unknown>) : {};
+  const styles = Object.fromEntries(
+    STYLES.map(({ id }) => {
+      const s = storedStyles[id] && typeof storedStyles[id] === "object" ? (storedStyles[id] as Record<string, unknown>) : {};
+      return [id, { tagline: textPair(s.tagline, base.styles[id].tagline, 120), text: textPair(s.text, base.styles[id].text) }];
+    }),
+  ) as PagesContent["styles"];
+  const storedSeo = t.seo && typeof t.seo === "object" ? (t.seo as Record<string, unknown>) : {};
+  const seo = Object.fromEntries(
+    SEO_PAGES.map(({ key }) => {
+      const s = storedSeo[key] && typeof storedSeo[key] === "object" ? (storedSeo[key] as Record<string, unknown>) : {};
+      return [key, { title: str(s.title, 70), description: str(s.description, 170) }];
+    }),
+  ) as PagesContent["seo"];
+  return { home: group("home"), about: group("about"), services, styles, seo };
 }
 
 function normalizeTours(value: unknown): Tour[] {
@@ -232,6 +309,7 @@ function merge(stored: StoredContent | null): SiteContent {
     settings: stored.settings ? normalizeSettings(stored.settings) : base.settings,
     countries: stored.countries ? normalizeCountries(stored.countries, base.countries) : base.countries,
     faq: Array.isArray(stored.faq) ? normalizeFaq(stored.faq) : base.faq,
+    pages: stored.pages ? normalizePages(stored.pages) : base.pages,
   };
 }
 
@@ -265,6 +343,11 @@ export async function getTour(slug: string) {
   return (await getContent()).tours.find((tour) => tour.slug === slug);
 }
 
+/** A tour whose address used to be `slug` (renamed in the admin). */
+export async function getTourByAlias(slug: string) {
+  return (await getContent()).tours.find((tour) => tour.aliases?.includes(slug));
+}
+
 type Section = keyof SiteContent;
 
 export function saveSection(section: Section, value: unknown): Promise<SiteContent> {
@@ -284,6 +367,7 @@ export function saveSection(section: Section, value: unknown): Promise<SiteConte
         ...(section === "settings" && { settings: normalizeSettings(value) }),
         ...(section === "countries" && { countries: normalizeCountries(value, current.countries) }),
         ...(section === "faq" && { faq: normalizeFaq(value) }),
+        ...(section === "pages" && { pages: normalizePages(value) }),
       };
       return { store: next, result: next };
     },

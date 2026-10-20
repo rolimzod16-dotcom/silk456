@@ -32,6 +32,16 @@ export type Tour = {
   faq?: { q: string; a: string }[]
   /** Drafts are visible only in the admin. */
   published?: boolean
+  /** Shown in the featured block on the home page (in admin order). */
+  showOnHome?: boolean
+  /** Route map: an uploaded scheme and/or a Google Maps embed link. */
+  mapImage?: string
+  mapEmbed?: string
+  /** Optional overrides for search results; generated when empty. */
+  seoTitle?: string
+  seoDescription?: string
+  /** Previous page addresses; they redirect to the current one. */
+  aliases?: string[]
 }
 
 export type TourDay = {

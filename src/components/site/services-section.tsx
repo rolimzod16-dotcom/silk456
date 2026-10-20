@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useLocale } from "@/lib/locale";
+import { useContent } from "@/lib/content-context";
+import { useLocale, useText } from "@/lib/locale";
 
 export function ServicesSection({ showHeading = true }: { showHeading?: boolean }) {
   const { t } = useLocale();
+  const tx = useText();
+  const { pages } = useContent();
 
   return (
     <section id="services" className="scroll-mt-24 bg-[#faf5eb] py-20 sm:py-28">
@@ -18,14 +21,14 @@ export function ServicesSection({ showHeading = true }: { showHeading?: boolean 
         </div>
         )}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {t.services.map((item) => (
+          {pages.services.map((item) => (
             <Link
               key={item.id}
               href={`/services#${item.id}`}
               className="group rounded-2xl border border-[#d4a82a]/25 bg-white p-5 transition-colors hover:border-primary/40"
             >
-              <h3 className="font-display text-xl font-semibold text-[#0f1225] group-hover:text-primary">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.text}</p>
+              <h3 className="font-display text-xl font-semibold text-[#0f1225] group-hover:text-primary">{tx(item.title)}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{tx(item.lead)}</p>
             </Link>
           ))}
         </div>

@@ -8,14 +8,16 @@ import { Button } from "@/components/ui/button";
 import { TripFinder } from "@/components/site/trip-finder";
 import { STYLES, tourMeta } from "@/lib/catalog";
 import { useContent } from "@/lib/content-context";
-import { useLocale } from "@/lib/locale";
+import { useLocale, useText } from "@/lib/locale";
 import { useUiStore } from "@/lib/ui-store";
 
 export function Hero() {
   const openBooking = useUiStore((s) => s.openBooking);
   const { ui } = useLocale();
-  const { tours } = useContent();
+  const { tours, pages } = useContent();
+  const tx = useText();
   const t = ui.hero;
+  const home = pages.home;
 
   // Figures come from the live catalogue, so they stay true as tours change.
   const countries = new Set(tours.flatMap((tour) => tourMeta(tour).countries)).size;
@@ -47,14 +49,14 @@ export function Hero() {
         >
           <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
             <MapPin className="h-3.5 w-3.5 text-accent" />
-            <span className="text-xs font-medium uppercase tracking-[0.2em] text-white/90">{t.badge}</span>
+            <span className="text-xs font-medium uppercase tracking-[0.2em] text-white/90">{tx(home.badge)}</span>
           </div>
 
           <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            {t.titleStart} <span className="text-gold-gradient">{t.titleAccent}</span>
+            {tx(home.titleStart)} <span className="text-gold-gradient">{tx(home.titleAccent)}</span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg md:text-xl">{t.text}</p>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg md:text-xl">{tx(home.text)}</p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button asChild size="lg" className="text-base">

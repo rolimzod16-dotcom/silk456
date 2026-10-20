@@ -4,14 +4,16 @@ import { FaqList } from "@/components/site/faq-list";
 import { SimplePage } from "@/components/site/inner-pages";
 import { JsonLd } from "@/components/site/json-ld";
 import { getContent } from "@/lib/content";
-import { breadcrumbLd, pageMeta } from "@/lib/seo";
+import { breadcrumbLd, staticPageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = pageMeta({
+export async function generateMetadata(): Promise<Metadata> {
+  return staticPageMeta("faq", {
   title: "Silk Road Travel FAQ: Visas, Seasons, Booking & Safety",
   description:
     "Answers for travelers to Central Asia, Iran, China and Mongolia: visas and the GBAO permit, best time to travel, booking without prepayment, altitude, insurance and safety.",
   path: "/faq",
 });
+}
 
 export default async function FaqPage() {
   const { faq } = await getContent();
