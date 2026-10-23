@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { DestinationPage as DestinationView } from "@/components/site/destination-page";
 import { getContent } from "@/lib/content";
 import { JsonLd } from "@/components/site/json-ld";
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function DestinationPage({ params }: Props) {
   const content = await getContent();
   const collection = countryCollection((await params).country, content.tours);
-  if (!collection) notFound();
+  if (!collection) permanentRedirect("/destinations"); // unknown or old slug
   const country = content.countries[collection.id as CountryId];
   return (
     <>

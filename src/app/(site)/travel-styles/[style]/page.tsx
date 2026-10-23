@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { CollectionDetail } from "@/components/site/inner-pages";
 import { getContent } from "@/lib/content";
 import { JsonLd } from "@/components/site/json-ld";
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function TravelStylePage({ params }: Props) {
   const collection = styleCollection((await params).style, (await getContent()).tours, (await getContent()).pages.styles);
-  if (!collection) notFound();
+  if (!collection) permanentRedirect("/travel-styles"); // unknown or old slug
   return (
     <>
       <JsonLd
