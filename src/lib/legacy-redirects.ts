@@ -29,9 +29,34 @@ const services: Rule[] = Object.entries(SERVICE_SLUGS).flatMap(([slug, id]) => [
   { source: `/${slug}`, destination: `/services#${id}` },
 ]);
 
+/** Tour slugs of the previous site, mapped to the closest current tour or destination. */
+const OLD_TOURS: Record<string, string> = {
+  "pamir-silk-trail-tajikistan-flagship": "/tours/pamir-highway",
+  "nomads-mountains-silk-trail-kyrgyzstan": "/tours/tianshan-nomads",
+  "jailoo-horse-trail-kyrgyzstan": "/tours/tianshan-nomads",
+  "golden-cities-silk-trail-uzbekistan": "/tours/uzbekistan-classic",
+  "great-steppe-silk-trail-kazakhstan": "/tours/steppe-nomads",
+  "silk-road-origins-trail-china": "/tours/kashgar-caravan",
+  "karakoram-silk-trail-pakistan": "/tours/karakoram-highway",
+  "caravan-desert-silk-trail-turkmenistan": "/destinations/turkmenistan",
+  "persian-silk-trail-iran": "/destinations/iran",
+  "anatolian-silk-trail-turkey": "/destinations",
+};
+
+const tours: Rule[] = Object.entries(OLD_TOURS).flatMap(([slug, destination]) =>
+  ["journeys", "tours", "tour", "st_tour"].map((prefix) => ({ source: `/${prefix}/${slug}`, destination })),
+);
+
 const pages: Rule[] = [
   // previous Next.js site
   { source: "/journeys", destination: "/tours" },
+  { source: "/silk-trails", destination: "/tours" },
+  { source: "/plan-my-journey", destination: "/contact" },
+  { source: "/trekking", destination: "/travel-styles/trekking" },
+  { source: "/stories/pamir-highway-guide", destination: "/tours/pamir-highway" },
+  { source: "/stories/samarkand-blue-domes", destination: "/destinations/uzbekistan" },
+  { source: "/stories", destination: "/destinations" },
+  { source: "/stories/:path*", destination: "/destinations" },
   { source: "/journeys/:slug", destination: "/tours/:slug" },
   { source: "/tour/:slug", destination: "/tours/:slug" },
   { source: "/destination/:slug", destination: "/destinations/:slug" },
@@ -67,7 +92,7 @@ const pages: Rule[] = [
   { source: "/page/:n", destination: "/" },
 ];
 
-const LEGACY = [...services, ...pages];
+const LEGACY = [...services, ...tours, ...pages];
 
 /** Language prefixes used by the earlier sites; the current site has one URL per page. */
 const LANGS = ["en", "ru", "fr", "de", "es", "it", "zh", "tr", "ar"];
