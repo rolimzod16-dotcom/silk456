@@ -4,6 +4,9 @@ import { getContent } from "@/lib/content";
 import { SITE_URL } from "@/lib/pages";
 import { absolute } from "@/lib/seo";
 
+// Built on every request so tours added, renamed or removed in the admin show up at once.
+export const dynamic = "force-dynamic";
+
 type Entry = MetadataRoute.Sitemap[number];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
