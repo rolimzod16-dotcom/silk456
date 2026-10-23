@@ -49,7 +49,9 @@ const isoDate = (value: unknown) => {
   const s = str(value, 10);
   return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : "";
 };
-const STATUSES: DepartureStatus[] = ["available", "limited", "full"];
+const STATUSES: DepartureStatus[] = ["guaranteed", "open", "closed"];
+/** Statuses saved before availability details were added. */
+const OLD_STATUSES: Record<string, DepartureStatus> = { available: "open", limited: "open", full: "closed" };
 
 export function slugify(value: string) {
   return value
@@ -82,13 +84,19 @@ function normalizeDepartures(value: unknown): Departure[] {
       const start = isoDate(item.start);
       if (!start) return null;
       const end = isoDate(item.end);
-      const status = STATUSES.includes(item.status as DepartureStatus) ? (item.status as DepartureStatus) : "available";
+      const status = STATUSES.includes(item.status as DepartureStatus)
+        ? (item.status as DepartureStatus)
+        : (OLD_STATUSES[String(item.status)] ?? "open");
       const price = num(item.price);
+      const spotsLeft = item.spotsLeft === undefined || item.spotsLeft === "" ? undefined : Math.max(0, Math.round(num(item.spotsLeft)));
+      const toGuarantee = Math.max(0, Math.round(num(item.toGuarantee)));
       return {
         start,
         ...(end && end >= start && { end }),
         ...(price > 0 && { price }),
-        status,
+        status: spotsLeft === 0 ? "closed" : status,
+        ...(spotsLeft !== undefined && { spotsLeft }),
+        ...(toGuarantee > 0 && { toGuarantee }),
         ...(str(item.note, 200) && { note: str(item.note, 200) }),
       } satisfies Departure;
     })
@@ -138,6 +146,7 @@ export function normalizeTour(raw: unknown): Tour | null {
     styles: pickIds(t.styles, STYLES),
     gallery: strList(t.gallery, 600).slice(0, 24),
     departures: normalizeDepartures(t.departures),
+    ...(Math.round(num(t.guaranteedFrom)) > 0 && { guaranteedFrom: Math.round(num(t.guaranteedFrom)) }),
     faq: normalizeQa(t.faq),
     published: t.published !== false,
     showOnHome: t.showOnHome === true,

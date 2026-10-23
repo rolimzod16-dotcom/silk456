@@ -59,10 +59,12 @@ function blankTour(): Tour {
 }
 
 const STATUS_LABEL: Record<Departure["status"], string> = {
-  available: "Есть места",
-  limited: "Мало мест",
-  full: "Мест нет",
+  guaranteed: "Гарантирован",
+  open: "Идёт набор",
+  closed: "Набор закрыт",
 };
+
+const optionalCount = (v: string) => (v === "" ? undefined : Math.max(0, Math.round(Number(v)) || 0));
 
 function slugify(value: string) {
   return value
@@ -352,8 +354,11 @@ function TourEditor({
           <Field label="Длительность (текст)" hint="Например: 7 days / 6 nights">
             <TextInput value={tour.duration} onChange={(v) => set("duration", v)} />
           </Field>
-          <Field label="Группа">
+          <Field label="Группа" hint="Например: up to 15 travelers">
             <TextInput value={tour.groupSize} onChange={(v) => set("groupSize", v)} />
+          </Field>
+          <Field label="Гарантия от, чел." hint="«Guaranteed from 4 guests» над датами">
+            <TextInput type="number" min={0} value={tour.guaranteedFrom ?? ""} onChange={(v) => set("guaranteedFrom", optionalCount(v))} />
           </Field>
           <Field label="Сложность">
             <TextInput value={tour.difficulty} onChange={(v) => set("difficulty", v)} />
@@ -500,10 +505,10 @@ function TourEditor({
         <RowsEditor<Departure>
           rows={tour.departures ?? []}
           onChange={(v) => set("departures", v)}
-          blank={() => ({ start: "", status: "available" })}
+          blank={() => ({ start: "", status: "open" })}
           addLabel="Добавить дату выезда"
           render={(row, update) => (
-            <div className="grid gap-3 sm:grid-cols-5">
+            <div className="grid gap-3 sm:grid-cols-4">
               <Field label="Начало">
                 <input type="date" className={inputClass} value={row.start} onChange={(e) => update({ start: e.target.value })} />
               </Field>
@@ -518,7 +523,7 @@ function TourEditor({
               <Field label="Цена, $" hint="Пусто — базовая цена">
                 <TextInput type="number" min={0} value={row.price ?? ""} onChange={(v) => update({ price: Number(v) || undefined })} />
               </Field>
-              <Field label="Места">
+              <Field label="Статус">
                 <select
                   className={inputClass}
                   value={row.status}
@@ -531,9 +536,17 @@ function TourEditor({
                   ))}
                 </select>
               </Field>
-              <Field label="Примечание">
-                <TextInput value={row.note ?? ""} onChange={(v) => update({ note: v })} placeholder="напр. Guaranteed" />
+              <Field label="Осталось мест" hint="0 — набор закрыт. Пусто — не показывать">
+                <TextInput type="number" min={0} value={row.spotsLeft ?? ""} onChange={(v) => update({ spotsLeft: optionalCount(v) })} />
               </Field>
+              <Field label="До гарантии ещё, чел." hint="Для «Идёт набор»: «2 more to guarantee»">
+                <TextInput type="number" min={0} value={row.toGuarantee ?? ""} onChange={(v) => update({ toGuarantee: optionalCount(v) })} />
+              </Field>
+              <div className="sm:col-span-2">
+                <Field label="Примечание" hint="Мелкий текст под датами, необязательно">
+                  <TextInput value={row.note ?? ""} onChange={(v) => update({ note: v })} placeholder="напр. Start in Dushanbe" />
+                </Field>
+              </div>
             </div>
           )}
         />

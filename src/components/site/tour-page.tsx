@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  Ban,
   CalendarDays,
   CheckCircle2,
   ChevronDown,
@@ -176,46 +177,58 @@ export function TourPage({ tour, related }: { tour: Tour; related: Tour[] }) {
 
             <TourSection id="dates" title={t.datesTitle}>
               {departures.length > 0 ? (
-                <div className="overflow-hidden rounded-2xl border border-border bg-card">
-                  <div className="hidden grid-cols-[1.4fr_0.8fr_1fr_auto] gap-4 border-b border-border bg-secondary/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:grid">
-                    <span>{t.dates}</span>
-                    <span>{t.price}</span>
-                    <span>{t.availability}</span>
-                    <span className="w-24" />
-                  </div>
-                  {departures.map((d) => (
-                    <div
-                      key={`${d.start}-${d.end ?? ""}`}
-                      className="grid gap-2 border-b border-border px-5 py-4 last:border-0 sm:grid-cols-[1.4fr_0.8fr_1fr_auto] sm:items-center sm:gap-4"
-                    >
-                      <div>
-                        <div className="font-medium text-foreground">{formatRange(d, locale)}</div>
-                        {d.note && <div className="text-xs text-muted-foreground">{d.note}</div>}
-                      </div>
-                      <div className="font-display text-lg font-semibold text-primary">{money(d.price ?? tour.price)}</div>
-                      <div>
-                        <span
-                          className={cn(
-                            "inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold",
-                            d.status === "available" && "bg-emerald-100 text-emerald-800",
-                            d.status === "limited" && "bg-accent/25 text-[#7a5c00]",
-                            d.status === "full" && "bg-secondary text-muted-foreground",
-                          )}
-                        >
-                          {t.status[d.status]}
-                        </span>
-                      </div>
-                      <Button
-                        size="sm"
-                        className="w-full sm:w-24"
-                        disabled={d.status === "full"}
-                        onClick={() => openBooking(tour.slug, d.start)}
-                      >
-                        {t.enquire}
-                      </Button>
+                <>
+                  {(tour.groupSize || tour.guaranteedFrom) && (
+                    <p className="-mt-2 mb-5 text-muted-foreground">
+                      {[tour.groupSize && t.smallGroups(tour.groupSize), tour.guaranteedFrom && t.guaranteedFrom(tour.guaranteedFrom)]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+                  )}
+                  <div className="overflow-hidden rounded-2xl border border-border bg-card">
+                    <div className="hidden grid-cols-[1.5fr_0.8fr_1.2fr_9rem] gap-4 border-b border-border bg-secondary/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:grid">
+                      <span>{t.dates}</span>
+                      <span>{t.price}</span>
+                      <span>{t.availability}</span>
+                      <span />
                     </div>
-                  ))}
-                </div>
+                    {departures.map((d) => {
+                      const closed = d.status === "closed";
+                      const detail = closed
+                        ? t.fullyBooked
+                        : d.status === "open" && d.toGuarantee
+                          ? t.toGuarantee(d.toGuarantee)
+                          : d.spotsLeft !== undefined
+                            ? t.spotsLeft(d.spotsLeft)
+                            : "";
+                      return (
+                        <div
+                          key={`${d.start}-${d.end ?? ""}`}
+                          className="grid gap-3 border-b border-border px-5 py-4 last:border-0 sm:grid-cols-[1.5fr_0.8fr_1.2fr_9rem] sm:items-center sm:gap-4"
+                        >
+                          <div className="flex items-baseline justify-between gap-3 sm:contents">
+                            <div>
+                              <div className="font-display text-lg font-medium text-foreground">{formatRange(d, locale)}</div>
+                              {d.note && <div className="text-xs text-muted-foreground">{d.note}</div>}
+                            </div>
+                            <div className="font-display text-lg font-semibold text-primary">{money(d.price ?? tour.price)}</div>
+                          </div>
+                          <div>
+                            <DepartureBadge status={d.status} label={t.status[d.status]} />
+                            {detail && <div className="mt-1 text-sm text-muted-foreground">{detail}</div>}
+                          </div>
+                          <Button
+                            className={cn("w-full", closed && "bg-muted text-muted-foreground disabled:opacity-100")}
+                            disabled={closed}
+                            onClick={() => openBooking(tour.slug, d.start)}
+                          >
+                            {closed ? t.closed : t.enquire}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
               ) : (
                 <div className="rounded-2xl border border-border bg-card p-6">
                   <div className="flex flex-wrap items-end justify-between gap-4">
@@ -332,6 +345,21 @@ export function TourPage({ tour, related }: { tour: Tour; related: Tour[] }) {
         </section>
       )}
     </>
+  );
+}
+
+const BADGE = {
+  guaranteed: { icon: CheckCircle2, className: "bg-emerald-100 text-emerald-800" },
+  open: { icon: Clock, className: "bg-amber-100 text-amber-900" },
+  closed: { icon: Ban, className: "bg-red-100 text-red-800" },
+} as const;
+
+function DepartureBadge({ status, label }: { status: Departure["status"]; label: string }) {
+  const { icon: Icon, className } = BADGE[status];
+  return (
+    <span className={cn("inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold", className)}>
+      <Icon className="h-4 w-4" /> {label}
+    </span>
   );
 }
 

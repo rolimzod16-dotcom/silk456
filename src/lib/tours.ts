@@ -29,6 +29,8 @@ export type Tour = {
   gallery?: string[]
   /** Fixed departures; empty means dates on request. */
   departures?: Departure[]
+  /** Minimum guests for a guaranteed departure, shown above the dates. */
+  guaranteedFrom?: number
   faq?: { q: string; a: string }[]
   /** Drafts are visible only in the admin. */
   published?: boolean
@@ -52,13 +54,17 @@ export type TourDay = {
   image?: string
 }
 
-export type DepartureStatus = "available" | "limited" | "full"
+export type DepartureStatus = "guaranteed" | "open" | "closed"
 
 export type Departure = {
   start: string
   end?: string
   price?: number
   status: DepartureStatus
+  /** Places still free; 0 closes the departure. */
+  spotsLeft?: number
+  /** Guests still needed before the departure is guaranteed. */
+  toGuarantee?: number
   note?: string
 }
 
