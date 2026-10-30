@@ -16,7 +16,7 @@ export function CtaSection() {
   return (
     <section className="relative overflow-hidden">
       <div className="relative isolate">
-        <Image src="/images/hero-silkroad.png" alt="" fill sizes="100vw" className="object-cover" />
+        <Image src="/images/hero-silkroad.png" alt="Camel caravan on the Silk Road" fill sizes="100vw" className="object-cover" />
         <div className="absolute inset-0 bg-spice-dark/80" />
         <div className="relative z-10 mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 sm:py-28 lg:px-8">
           <motion.div

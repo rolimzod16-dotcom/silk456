@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const { tours } = await getContent();
   return staticPageMeta("tours", {
     title: "Silk Road Tour Packages & Itineraries",
-    description: `${tours.length} Silk Road itineraries across Uzbekistan, Tajikistan, Kyrgyzstan, Kazakhstan, Turkmenistan, Iran, China and Mongolia. Hotels, guides and transfers included — filter by season, length or country.`,
+    description: `${tours.length} Silk Road itineraries across Uzbekistan, Tajikistan, Kyrgyzstan, Kazakhstan and Western China. Hotels, guides and transfers included — filter by season, length or country.`,
     path: "/tours",
   });
 }

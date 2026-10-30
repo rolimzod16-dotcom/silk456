@@ -42,27 +42,6 @@ const COUNTRY_INTRO: Record<CountryId, Intro> = {
       ru: "Оазисы Синьцзяна, кашгарский базар и дорога к Памиру и озеру Каракуль.",
     },
   },
-  iran: {
-    tagline: { en: "Persian gardens and pink mosques", ru: "Персидские сады и розовые мечети" },
-    text: {
-      en: "Isfahan, Shiraz and Yazd — tilework, caravanserais and the poetry of ancient Persia.",
-      ru: "Исфахан, Шираз и Йезд — изразцы, караван-сараи и поэзия древней Персии.",
-    },
-  },
-  turkmenistan: {
-    tagline: { en: "Ancient Merv and desert fire", ru: "Древний Мерв и огонь пустыни" },
-    text: {
-      en: "Merv, Kunya-Urgench and the Karakum desert on the western stretch of the route.",
-      ru: "Мерв, Куня-Ургенч и пустыня Каракум на западном участке пути.",
-    },
-  },
-  mongolia: {
-    tagline: { en: "Nomad steppe on horseback", ru: "Кочевая степь верхом" },
-    text: {
-      en: "Gers, eagle hunters and days in the saddle across the open steppe.",
-      ru: "Юрты, беркутчи и дни в седле по открытой степи.",
-    },
-  },
 };
 
 export const STYLE_INTRO: Record<StyleId, Intro> = {
@@ -172,8 +151,8 @@ export const PAGE_COPY = {
     eyebrow: { en: "Where we travel", ru: "Куда мы ездим" },
     title: { en: "Destinations", ru: "Направления" },
     text: {
-      en: "Eight countries along the Great Silk Road — pick one to see its routes.",
-      ru: "Восемь стран на Великом Шёлковом пути — выберите страну, чтобы увидеть маршруты.",
+      en: "Five countries along the Great Silk Road — pick one to see its routes.",
+      ru: "Пять стран на Великом Шёлковом пути — выберите страну, чтобы увидеть маршруты.",
     },
   },
   "travel-styles": {

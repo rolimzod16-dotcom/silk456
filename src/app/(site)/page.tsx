@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
   title: "Silk Road Tours in Central Asia | Great Silk Trails",
   absoluteTitle: true,
   description:
-    "Small-group and private Silk Road tours: Samarkand and Bukhara, the Pamir Highway, Kyrgyz yurts, Persian cities and Kashgar. Local guides, all transfers, no prepayment.",
+    "Small-group and private Silk Road tours: Samarkand and Bukhara, the Pamir Highway, Kyrgyz yurts and Kashgar. Local guides, all transfers, no prepayment.",
   path: "/",
 });
 }

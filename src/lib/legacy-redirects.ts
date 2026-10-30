@@ -38,8 +38,8 @@ const OLD_TOURS: Record<string, string> = {
   "great-steppe-silk-trail-kazakhstan": "/tours/steppe-nomads",
   "silk-road-origins-trail-china": "/tours/kashgar-caravan",
   "karakoram-silk-trail-pakistan": "/tours/karakoram-highway",
-  "caravan-desert-silk-trail-turkmenistan": "/destinations/turkmenistan",
-  "persian-silk-trail-iran": "/destinations/iran",
+  "caravan-desert-silk-trail-turkmenistan": "/destinations",
+  "persian-silk-trail-iran": "/destinations",
   "anatolian-silk-trail-turkey": "/destinations",
 };
 

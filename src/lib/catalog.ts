@@ -23,9 +23,6 @@ export const COUNTRIES = [
   { id: "kyrgyzstan", en: "Kyrgyzstan", ru: "Кыргызстан" },
   { id: "kazakhstan", en: "Kazakhstan", ru: "Казахстан" },
   { id: "china", en: "China", ru: "Китай" },
-  { id: "iran", en: "Iran", ru: "Иран" },
-  { id: "turkmenistan", en: "Turkmenistan", ru: "Туркменистан" },
-  { id: "mongolia", en: "Mongolia", ru: "Монголия" },
 ] as const;
 
 export type CountryId = (typeof COUNTRIES)[number]["id"];
@@ -62,16 +59,6 @@ const META: Record<string, TourMeta> = {
     countries: ["kyrgyzstan"],
     seasons: ["summer", "autumn"],
     styles: ["trekking", "horse-riding", "overland-4x4"],
-  },
-  "persian-silk": {
-    countries: ["iran"],
-    seasons: ["spring", "autumn"],
-    styles: ["culture-cities", "photography"],
-  },
-  "great-turkestan": {
-    countries: ["uzbekistan", "kazakhstan", "kyrgyzstan", "tajikistan", "turkmenistan"],
-    seasons: ["spring", "summer", "autumn"],
-    styles: ["overland-4x4", "culture-cities"],
   },
   "steppe-nomads": {
     countries: ["kyrgyzstan"],
@@ -112,7 +99,7 @@ export function tourMeta(tour: Tour): TourMeta {
   };
 }
 
-export const REGIONS = ["Central Asia", "West Asia", "East Asia"] as const;
+export const REGIONS = ["Central Asia", "East Asia"] as const;
 
 export function tourMatches(tour: Tour, filters: TourFilters): boolean {
   const meta = tourMeta(tour);

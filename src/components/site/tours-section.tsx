@@ -28,7 +28,7 @@ type ToursSectionProps = {
   showHeading?: boolean;
 };
 
-const REGIONS = ["all", "Central Asia", "West Asia", "East Asia"];
+const REGIONS = ["all", "Central Asia", "East Asia"];
 
 export function ToursSection({ tours, showHeading = true }: ToursSectionProps) {
   const { t, ui } = useLocale();

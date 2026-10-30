@@ -17,6 +17,19 @@ export function snippet(text: string, max = 158) {
   return `${clean.slice(0, clean.lastIndexOf(" ", max - 1))}…`;
 }
 
+const TITLE_MAX = 60;
+const BRAND_SUFFIX = ` — ${SITE_NAME}`;
+
+/**
+ * Search title that fits the ~60-character snippet: drops a brand the admin text
+ * already carries ("… | Great Silk Trails"), then appends it only if it still fits.
+ * Google shows the site name above the result anyway.
+ */
+export function searchTitle(title: string) {
+  const bare = title.replace(new RegExp(`\\s*[|—–-]\\s*${SITE_NAME}\\s*$`), "").trim();
+  return bare.length + BRAND_SUFFIX.length <= TITLE_MAX ? bare + BRAND_SUFFIX : bare;
+}
+
 /**
  * Per-page metadata: canonical URL plus complete Open Graph / Twitter tags
  * (Next replaces the parent's openGraph object rather than merging it).
@@ -34,9 +47,9 @@ export function pageMeta({
   image?: string;
   absoluteTitle?: boolean;
 }): Metadata {
-  const fullTitle = absoluteTitle ? title : `${title} — ${SITE_NAME}`;
+  const fullTitle = absoluteTitle ? title : searchTitle(title);
   return {
-    title: absoluteTitle ? { absolute: title } : title,
+    title: { absolute: fullTitle },
     description: snippet(description),
     alternates: { canonical: path },
     openGraph: {
@@ -91,11 +104,11 @@ export function organizationLd(settings: SiteSettings) {
       logo: absolute("/brand/logo.png"),
       image: absolute(DEFAULT_IMAGE),
       description:
-        "Small-group and private Silk Road tours across Uzbekistan, Tajikistan, Kyrgyzstan, Kazakhstan, Turkmenistan, Iran, China and Mongolia.",
+        "Small-group and private Silk Road tours across Uzbekistan, Tajikistan, Kyrgyzstan, Kazakhstan and Western China.",
       ...(settings.phone && { telephone: settings.phone }),
       ...(settings.email && { email: settings.email }),
       ...(settings.address && { address: { "@type": "PostalAddress", streetAddress: settings.address } }),
-      areaServed: ["Uzbekistan", "Tajikistan", "Kyrgyzstan", "Kazakhstan", "Turkmenistan", "Iran", "China", "Mongolia"],
+      areaServed: ["Uzbekistan", "Tajikistan", "Kyrgyzstan", "Kazakhstan", "China"],
       knowsLanguage: ["en", "ru"],
       ...(sameAs.length && { sameAs }),
     },

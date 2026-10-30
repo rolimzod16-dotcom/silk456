@@ -31,7 +31,7 @@ export function PageHero({
 
   return (
     <section className="relative w-full overflow-hidden">
-      <Image src={image} alt="" fill priority sizes="100vw" className="object-cover" />
+      <Image src={image} alt={tx(title)} fill priority sizes="100vw" className="object-cover" />
       <div className="absolute inset-0 hero-overlay" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-32 pb-14 sm:px-6 sm:pt-40 sm:pb-20 lg:px-8">

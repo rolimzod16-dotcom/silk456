@@ -19,8 +19,7 @@ import {
 
 const REGION_LABEL: Record<(typeof REGIONS)[number], string> = {
   "Central Asia": "Центральная Азия",
-  "West Asia": "Персия",
-  "East Asia": "Китай и степи",
+  "East Asia": "Китай",
 };
 
 const label = <T extends string>(items: readonly { id: T; ru: string }[]) =>

@@ -8,12 +8,16 @@ import { styleCollection } from "@/lib/pages";
 
 type Props = { params: Promise<{ style: string }> };
 
+/** "Culture and cities" → "Culture and Cities" for the search title. */
+const titleCase = (text: string) =>
+  text.replace(/\b\w+/g, (word, i) => (i > 0 && /^(and|or|of|the|by|on)$/.test(word) ? word : word[0].toUpperCase() + word.slice(1)));
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const collection = styleCollection((await params).style, (await getContent()).tours, (await getContent()).pages.styles);
   if (!collection) return {};
   const count = collection.tours.length;
   return pageMeta({
-    title: `${collection.label.en} Tours on the Silk Road`,
+    title: `${titleCase(collection.label.en)} Tours on the Silk Road`,
     description: `${collection.text.en}${count ? ` ${count} ready-made ${count === 1 ? "itinerary" : "itineraries"} with local guides.` : " Private routes built to order."}`,
     path: `/travel-styles/${collection.id}`,
     image: collection.image,

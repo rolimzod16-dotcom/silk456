@@ -6,9 +6,9 @@ import { countryCollections } from "@/lib/pages";
 
 export async function generateMetadata(): Promise<Metadata> {
   return staticPageMeta("destinations", {
-  title: "Silk Road Destinations: Central Asia, Iran, China & Mongolia",
+  title: "Silk Road Destinations: Central Asia & Western China",
   description:
-    "Explore Silk Road destinations — Uzbekistan, Tajikistan, Kyrgyzstan, Kazakhstan, Turkmenistan, Iran, China and Mongolia — and the tours we run in each country.",
+    "Explore Silk Road destinations — Uzbekistan, Tajikistan, Kyrgyzstan, Kazakhstan and Western China — and the tours we run in each country.",
   path: "/destinations",
 });
 }

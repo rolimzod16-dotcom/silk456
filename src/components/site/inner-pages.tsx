@@ -22,7 +22,7 @@ export function ToursCatalog({ initial }: { initial: Partial<TourFilters> }) {
   const copy = PAGE_COPY.tours;
   const key = JSON.stringify(initial);
 
-  // Apply filters coming from the URL (e.g. /tours?country=iran).
+  // Apply filters coming from the URL (e.g. /tours?country=tajikistan).
   useEffect(() => {
     setFilters({ ...emptyFilters, ...JSON.parse(key) });
   }, [key, setFilters]);

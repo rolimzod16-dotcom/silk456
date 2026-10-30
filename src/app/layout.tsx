@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s — Great Silk Trails",
   },
   description:
-    "Small-group and private Silk Road tours in Uzbekistan, Tajikistan, Kyrgyzstan, Kazakhstan, Turkmenistan, Iran, China and Mongolia with local guides.",
+    "Small-group and private Silk Road tours in Uzbekistan, Tajikistan, Kyrgyzstan, Kazakhstan and Western China with local guides.",
   applicationName: "Great Silk Trails",
   authors: [{ name: "Great Silk Trails" }],
   formatDetection: { telephone: false },

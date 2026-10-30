@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return staticPageMeta("faq", {
   title: "Silk Road Travel FAQ: Visas, Seasons, Booking & Safety",
   description:
-    "Answers for travelers to Central Asia, Iran, China and Mongolia: visas and the GBAO permit, best time to travel, booking without prepayment, altitude, insurance and safety.",
+    "Answers for travelers to Central Asia and Western China: visas and the GBAO permit, best time to travel, booking without prepayment, altitude, insurance and safety.",
   path: "/faq",
 });
 }

@@ -4,8 +4,8 @@ export const FAQ: { q: Text; a: Text }[] = [
   {
     q: { en: "Do I need a visa for the Silk Road countries?", ru: "Нужна ли виза в страны Шёлкового пути?" },
     a: {
-      en: "It depends on your passport. Uzbekistan, Kyrgyzstan and Kazakhstan are visa-free for many nationalities, Tajikistan has an online e-visa, and Turkmenistan, Iran and China usually need a visa arranged in advance. Rules change often, so we check them for your passport with your quote and provide invitation letters where needed.",
-      ru: "Зависит от паспорта. В Узбекистан, Кыргызстан и Казахстан многие граждане въезжают без визы, в Таджикистан оформляется электронная виза, а для Туркменистана, Ирана и Китая визу обычно нужно получать заранее. Правила часто меняются, поэтому мы проверяем их под ваш паспорт вместе с расчётом тура и при необходимости готовим приглашения.",
+      en: "It depends on your passport. Uzbekistan, Kyrgyzstan and Kazakhstan are visa-free for many nationalities, Tajikistan has an online e-visa, and China usually needs a visa arranged in advance. Rules change often, so we check them for your passport with your quote and provide invitation letters where needed.",
+      ru: "Зависит от паспорта. В Узбекистан, Кыргызстан и Казахстан многие граждане въезжают без визы, в Таджикистан оформляется электронная виза, а для Китая визу обычно нужно получать заранее. Правила часто меняются, поэтому мы проверяем их под ваш паспорт вместе с расчётом тура и при необходимости готовим приглашения.",
     },
   },
   {
@@ -18,8 +18,8 @@ export const FAQ: { q: Text; a: Text }[] = [
   {
     q: { en: "When is the best time to travel?", ru: "Когда лучше ехать?" },
     a: {
-      en: "Spring (April–May) and autumn (September–October) are best for the great cities like Samarkand, Bukhara and Isfahan. June to September is the season for the mountains — the Pamir, the Tien Shan and Mongolia. Winter suits short city breaks and the desert cities of Iran.",
-      ru: "Весна (апрель–май) и осень (сентябрь–октябрь) — лучшее время для великих городов: Самарканда, Бухары, Исфахана. С июня по сентябрь — сезон гор: Памира, Тянь-Шаня и Монголии. Зимой хороши короткие поездки по городам и пустынные города Ирана.",
+      en: "Spring (April–May) and autumn (September–October) are best for the great cities like Samarkand, Bukhara and Khiva. June to September is the season for the mountains — the Pamir and the Tien Shan. Winter suits short city breaks and skiing near Almaty.",
+      ru: "Весна (апрель–май) и осень (сентябрь–октябрь) — лучшее время для великих городов: Самарканда, Бухары, Хивы. С июня по сентябрь — сезон гор: Памира и Тянь-Шаня. Зимой хороши короткие поездки по городам и горные лыжи под Алматы.",
     },
   },
   {
