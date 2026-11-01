@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useContent } from "@/lib/content-context";
 import { useLocale } from "@/lib/locale";
 import { phoneHref } from "@/lib/site-content";
+import { FooterPartners } from "@/components/site/partner-sites";
 
 export function SiteFooter() {
   const { tours, settings } = useContent();
@@ -142,7 +143,9 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
+        <FooterPartners />
+
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
           <p>
             © {new Date().getFullYear()} {settings.brandName}. {t.rights}
           </p>
