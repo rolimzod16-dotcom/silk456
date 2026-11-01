@@ -4,7 +4,7 @@ import { useLocale } from "@/lib/locale";
 
 const PARTNERS = [
   {
-    name: "Pamir Moto",
+    name: "Pamir Moto Adventure",
     href: { en: "https://pamirmoto.com/en", ru: "https://pamirmoto.com/ru" },
     text: {
       en: "Motorcycle and 4x4 rental in Tajikistan, plus guided rides on the Pamir Highway.",
