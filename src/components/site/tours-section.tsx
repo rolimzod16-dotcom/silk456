@@ -137,6 +137,8 @@ export function TourCard({
   const discount = tour.oldPrice
     ? Math.round(((tour.oldPrice - tour.price) / tour.oldPrice) * 100)
     : 0;
+  const groupSize = tour.groupSize.replace(/\s+if capacity confirmed$/i, "");
+  const [level, levelNote] = tour.difficulty.split(/\s+[—–]\s+/, 2);
 
   return (
     <motion.article
@@ -179,18 +181,18 @@ export function TourCard({
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-5">
-        {/* Fixed line counts keep titles, prices and buttons aligned across a row. */}
-        <h3 className="line-clamp-2 min-h-[3.5rem] font-display text-xl font-semibold leading-snug text-foreground">
+      <div className="flex flex-1 flex-col p-4">
+        {/* The price row sits at the bottom, so prices and buttons stay aligned across a row. */}
+        <h3 className="line-clamp-2 font-display text-xl font-semibold leading-snug text-foreground">
           <Link href={href} className="hover:text-primary">
             {tour.title}
           </Link>
         </h3>
-        <p className="mt-1.5 line-clamp-2 min-h-[2.75rem] text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-1 line-clamp-2 text-sm leading-snug text-muted-foreground">
           {tour.subtitle}
         </p>
 
-        <ul className="mt-4 min-h-[3.25rem] space-y-1.5 text-sm text-foreground/80">
+        <ul className="mt-3 space-y-1 text-sm text-foreground/80">
           {tour.highlights.slice(0, 2).map((h) => (
             <li key={h} className="flex items-start gap-2">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -199,35 +201,43 @@ export function TourCard({
           ))}
         </ul>
 
-        <div className="mb-5 mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1">
-            <Users className="h-3.5 w-3.5" /> {tour.groupSize}
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <TrendingUp className="h-3.5 w-3.5" /> {tour.difficulty}
-          </span>
-          {tour.reviews > 0 && (
+        <div className="mb-3 mt-3 space-y-1 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <span className="inline-flex items-center gap-1">
-              <Star className="h-3.5 w-3.5 fill-accent text-accent" />
-              <span className="font-medium text-foreground">{tour.rating}</span> ({tour.reviews})
+              <Users className="h-3.5 w-3.5" /> {groupSize}
             </span>
+            <span className="inline-flex items-center gap-1">
+              <TrendingUp className="h-3.5 w-3.5" /> {level}
+            </span>
+            {tour.reviews > 0 && (
+              <span className="inline-flex items-center gap-1">
+                <Star className="h-3.5 w-3.5 fill-accent text-accent" />
+                <span className="font-medium text-foreground">{tour.rating}</span> ({tour.reviews})
+              </span>
+            )}
+          </div>
+          {levelNote && (
+            <div className="flex items-center gap-1">
+              <TrendingUp className="h-3.5 w-3.5 shrink-0" />
+              <span className="line-clamp-1">{levelNote.charAt(0).toUpperCase() + levelNote.slice(1)}</span>
+            </div>
           )}
         </div>
 
-        <div className="mt-auto flex items-end justify-between border-t border-border pt-4">
-          <div>
-            {tour.oldPrice && (
-              <div className="text-xs text-muted-foreground line-through">
-                ${tour.oldPrice}
-              </div>
-            )}
-            <div className="font-display text-2xl font-semibold text-primary">
-              <span className="font-sans text-xs font-normal text-muted-foreground">{ui.tourPage.from}</span>{" "}
+        <div className="mt-auto flex items-end justify-between gap-3 border-t border-border pt-3">
+          <div className="min-w-0">
+            <div className="text-xs text-muted-foreground">
+              {ui.tourPage.from}
+              {tour.oldPrice && <span className="ml-1.5 line-through">${tour.oldPrice.toLocaleString("en-US")}</span>}
+            </div>
+            <div className="font-display text-2xl font-semibold leading-tight text-primary">
               ${tour.price.toLocaleString("en-US")}
             </div>
-            <div className="text-xs text-muted-foreground">{t.perPerson}</div>
+            <div className="text-xs text-muted-foreground">
+              {t.perPerson} · {t.twinSharing}
+            </div>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex shrink-0 flex-col gap-2">
             <Button size="sm" variant="outline" asChild>
               <Link href={href}>{t.details}</Link>
             </Button>
