@@ -222,7 +222,7 @@ export function TourCard({
               </div>
             )}
             <div className="font-display text-2xl font-semibold text-primary">
-              <span className="font-sans text-xs font-normal text-muted-foreground">{ui.tour.from}</span>{" "}
+              <span className="font-sans text-xs font-normal text-muted-foreground">{ui.tourPage.from}</span>{" "}
               ${tour.price.toLocaleString("en-US")}
             </div>
             <div className="text-xs text-muted-foreground">{t.perPerson}</div>
