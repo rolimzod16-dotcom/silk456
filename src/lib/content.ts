@@ -18,6 +18,17 @@ type StoredContent = Partial<SiteContent>;
 /** The client's six featured tours, in the order they appear on the home page. */
 const HOME_TOURS = ["pamir-highway", "fann-mountains-trek", "samarkand-gold", "tianshan-nomads", "pamir-moto", "almaty-charyn"];
 
+/** Shown until the team is edited in the admin; from then on the saved list is used. */
+const BUILT_IN_OWNER: TeamMember = {
+  id: "sultonsho-guliev",
+  name: "Sultonsho Guliev",
+  role: { en: "Owner, Executive Director", ru: "Владелец, исполнительный директор" },
+  bio: { en: "", ru: "" },
+  photo: "/images/team/sultonsho.jpeg",
+  languages: "",
+  instagram: "",
+};
+
 function defaults(): SiteContent {
   const rank = (slug: string) => (HOME_TOURS.includes(slug) ? HOME_TOURS.indexOf(slug) : HOME_TOURS.length);
   return {
@@ -29,7 +40,7 @@ function defaults(): SiteContent {
     countries: DEFAULT_COUNTRIES,
     faq: FAQ,
     pages: DEFAULT_PAGES,
-    team: [],
+    team: [BUILT_IN_OWNER],
   };
 }
 
