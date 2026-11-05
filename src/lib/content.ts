@@ -4,7 +4,7 @@ import { COUNTRIES, REGIONS, SEASONS, STYLES, tourMeta, type CountryId } from "@
 import { DEFAULT_COUNTRIES, type CountryContent } from "@/lib/country-content";
 import { FAQ } from "@/lib/faq";
 import { DEFAULT_PAGES, SEO_PAGES, type PagesContent, type ServiceContent } from "@/lib/pages-content";
-import { DEFAULT_SETTINGS, type FaqItem, type SiteContent, type SiteSettings } from "@/lib/site-content";
+import { DEFAULT_SETTINGS, type FaqItem, type SiteContent, type SiteSettings, type TeamMember } from "@/lib/site-content";
 import { mutateDoc, readDoc } from "@/lib/store";
 import { testimonials as builtInTestimonials, type Testimonial } from "@/lib/testimonials";
 import { tours as builtInTours, type Departure, type DepartureStatus, type Tour, type TourDay } from "@/lib/tours";
@@ -29,6 +29,7 @@ function defaults(): SiteContent {
     countries: DEFAULT_COUNTRIES,
     faq: FAQ,
     pages: DEFAULT_PAGES,
+    team: [],
   };
 }
 
@@ -309,6 +310,26 @@ function normalizeTours(value: unknown): Tour[] {
     });
 }
 
+/** One language may be left empty: the other fills in so a card is never blank. */
+function eitherLanguage(value: unknown, max: number) {
+  const o = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+  const en = str(o.en, max);
+  const ru = str(o.ru, max);
+  return { en: en || ru, ru: ru || en };
+}
+
+function normalizeTeam(value: unknown): TeamMember[] {
+  return objects(value)
+    .filter((member) => !!str(member.name, 120))
+    .map((member) => ({
+      id: str(member.id, 60) || crypto.randomUUID(),
+      name: str(member.name, 120),
+      role: eitherLanguage(member.role, 120),
+      bio: eitherLanguage(member.bio, 1000),
+      photo: str(member.photo, 600),
+    }));
+}
+
 function merge(stored: StoredContent | null): SiteContent {
   const base = defaults();
   if (!stored) return base;
@@ -321,6 +342,7 @@ function merge(stored: StoredContent | null): SiteContent {
     countries: stored.countries ? normalizeCountries(stored.countries, base.countries) : base.countries,
     faq: Array.isArray(stored.faq) ? normalizeFaq(stored.faq) : base.faq,
     pages: stored.pages ? normalizePages(stored.pages) : base.pages,
+    team: Array.isArray(stored.team) ? normalizeTeam(stored.team) : base.team,
   };
 }
 
@@ -379,6 +401,7 @@ export function saveSection(section: Section, value: unknown): Promise<SiteConte
         ...(section === "countries" && { countries: normalizeCountries(value, current.countries) }),
         ...(section === "faq" && { faq: normalizeFaq(value) }),
         ...(section === "pages" && { pages: normalizePages(value) }),
+        ...(section === "team" && { team: normalizeTeam(value) }),
       };
       return { store: next, result: next };
     },

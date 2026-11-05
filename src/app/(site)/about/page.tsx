@@ -6,6 +6,7 @@ import { FeaturesSection } from "@/components/site/features-section";
 import { TestimonialsSection } from "@/components/site/testimonials-section";
 import { CtaSection } from "@/components/site/cta-section";
 import { PartnerSection } from "@/components/site/partner-sites";
+import { TeamSection } from "@/components/site/team-section";
 import { getContent } from "@/lib/content";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -22,6 +23,7 @@ export default async function AboutPage() {
   return (
     <SimplePage page="about">
       <AboutSection />
+      <TeamSection />
       <FeaturesSection />
       <TestimonialsSection testimonials={testimonials} />
       <PartnerSection />

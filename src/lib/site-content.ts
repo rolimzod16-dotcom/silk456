@@ -21,6 +21,9 @@ export type SiteSettings = {
 
 export type FaqItem = { q: Text; a: Text };
 
+/** A person shown on the About page. */
+export type TeamMember = { id: string; name: string; role: Text; bio: Text; photo: string };
+
 export type SiteContent = {
   tours: Tour[];
   testimonials: Testimonial[];
@@ -28,6 +31,7 @@ export type SiteContent = {
   countries: Record<CountryId, CountryContent>;
   faq: FaqItem[];
   pages: PagesContent;
+  team: TeamMember[];
 };
 
 export const DEFAULT_SETTINGS: SiteSettings = {

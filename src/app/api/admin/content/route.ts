@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { denyUnlessAdmin } from "@/lib/admin-guard";
 import { CONTENT_TAG, getFreshContent, saveSection } from "@/lib/content";
 
-const SECTIONS = new Set(["tours", "testimonials", "settings", "countries", "faq", "pages"]);
+const SECTIONS = new Set(["tours", "testimonials", "settings", "countries", "faq", "pages", "team"]);
 
 export async function GET() {
   const denied = await denyUnlessAdmin();
