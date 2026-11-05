@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ChevronRight, MapPin } from "lucide-react";
+import { useContent } from "@/lib/content-context";
 import { useText, type Text } from "@/lib/locale";
 import { COMMON } from "@/lib/pages";
+import { isForeignPhoto } from "@/lib/utils";
 
 type Crumb = { label: Text; href?: string };
 
@@ -22,16 +24,18 @@ export function PageHero({
   eyebrow,
   title,
   text,
-  image = "/images/hero-silkroad.png",
+  image,
   crumbs = [],
   children,
 }: PageHeroProps) {
   const tx = useText();
+  const { pages } = useContent();
+  const photo = image || pages.photos.pageHero;
   const trail: Crumb[] = [{ label: COMMON.home, href: "/" }, ...crumbs];
 
   return (
     <section className="relative w-full overflow-hidden">
-      <Image src={image} alt={tx(title)} fill priority sizes="100vw" className="object-cover" />
+      <Image src={photo} unoptimized={isForeignPhoto(photo)} alt={tx(title)} fill priority sizes="100vw" className="object-cover" />
       <div className="absolute inset-0 hero-overlay" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-32 pb-14 sm:px-6 sm:pt-40 sm:pb-20 lg:px-8">

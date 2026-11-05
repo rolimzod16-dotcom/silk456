@@ -10,6 +10,7 @@ import { STYLES, tourMeta } from "@/lib/catalog";
 import { useContent } from "@/lib/content-context";
 import { useLocale, useText } from "@/lib/locale";
 import { useUiStore } from "@/lib/ui-store";
+import { isForeignPhoto } from "@/lib/utils";
 
 export function Hero() {
   const openBooking = useUiStore((s) => s.openBooking);
@@ -31,7 +32,8 @@ export function Hero() {
   return (
     <section id="top" className="relative min-h-[100svh] w-full overflow-hidden scroll-mt-24">
       <Image
-        src="/images/hero-silkroad.png"
+        src={pages.photos.hero}
+        unoptimized={isForeignPhoto(pages.photos.hero)}
         alt="Camel caravan at sunset along the Silk Road"
         fill
         priority

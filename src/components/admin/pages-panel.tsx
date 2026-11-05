@@ -5,12 +5,20 @@ import { ExternalLink } from "lucide-react";
 import { STYLES } from "@/lib/catalog";
 import type { Text } from "@/lib/locale";
 import { SEO_PAGES, type PagesContent } from "@/lib/pages-content";
-import { buttonClass, Field, inputClass, TextArea, TextInput } from "@/components/admin/fields";
+import { buttonClass, Field, ImageField, inputClass, TextArea, TextInput } from "@/components/admin/fields";
 import { Card } from "@/components/admin/tours-panel";
 
-type Section = "home" | "about" | "services" | "styles" | "seo";
+const PHOTO_FIELDS: { key: keyof PagesContent["photos"]; title: string; hint: string }[] = [
+  { key: "hero", title: "Главный экран", hint: "Большое фото в самом верху главной страницы. Лучше горизонтальное, от 1920 пикселей по ширине." },
+  { key: "about", title: "Блок «О нас»", hint: "Фото рядом с текстом на главной и на странице «О нас»." },
+  { key: "cta", title: "Блок с призывом внизу страниц", hint: "Широкое фото под тёмным затемнением." },
+  { key: "pageHero", title: "Шапка внутренних страниц", hint: "Страницы «Услуги», «О нас», «Контакты» и другие, где нет своего фото." },
+];
+
+type Section = "photos" | "home" | "about" | "services" | "styles" | "seo";
 
 const SECTIONS: { id: Section; label: string; link?: string }[] = [
+  { id: "photos", label: "Фото сайта", link: "/" },
   { id: "home", label: "Главная", link: "/" },
   { id: "about", label: "О нас", link: "/about" },
   { id: "services", label: "Услуги", link: "/services" },
@@ -20,7 +28,7 @@ const SECTIONS: { id: Section; label: string; link?: string }[] = [
 
 /** Texts of the fixed pages (home, about, services, travel styles) and their SEO. */
 export function PagesPanel({ pages, onSave }: { pages: PagesContent; onSave: (pages: PagesContent) => Promise<boolean> }) {
-  const [section, setSection] = useState<Section>("home");
+  const [section, setSection] = useState<Section>("photos");
   const [draft, setDraft] = useState(pages);
   const [busy, setBusy] = useState(false);
   const dirty = JSON.stringify(draft) !== JSON.stringify(pages);
@@ -62,6 +70,16 @@ export function PagesPanel({ pages, onSave }: { pages: PagesContent; onSave: (pa
           <ExternalLink className="size-4" /> Открыть страницу
         </a>
       )}
+
+      {section === "photos" &&
+        PHOTO_FIELDS.map((field) => (
+          <Card key={field.key} title={field.title} hint={field.hint}>
+            <ImageField
+              value={draft.photos[field.key]}
+              onChange={(url) => setDraft({ ...draft, photos: { ...draft.photos, [field.key]: url } })}
+            />
+          </Card>
+        ))}
 
       {section === "home" && (
         <Card title="Главный экран">

@@ -18,6 +18,7 @@ export const SEO_PAGES = [
 
 export type SeoPageKey = (typeof SEO_PAGES)[number]["key"];
 export type Seo = { title: string; description: string };
+export type SitePhotos = { hero: string; about: string; cta: string; pageHero: string };
 export type ServiceContent = { id: string; title: Text; lead: Text; points: Text[] };
 
 /** Editable texts of the fixed pages; empty fields fall back to the built-in copy. */
@@ -27,11 +28,20 @@ export type PagesContent = {
   services: ServiceContent[];
   styles: Record<StyleId, Intro>;
   seo: Record<SeoPageKey, Seo>;
+  photos: SitePhotos;
 };
 
 const pair = (en: string, ru: string): Text => ({ en, ru });
 
+export const DEFAULT_PHOTOS: SitePhotos = {
+  hero: "/images/hero-silkroad.png",
+  about: "/images/about-bazaar.png",
+  cta: "/images/hero-silkroad.png",
+  pageHero: "/images/hero-silkroad.png",
+};
+
 export const DEFAULT_PAGES: PagesContent = {
+  photos: DEFAULT_PHOTOS,
   home: {
     badge: pair(UI.en.hero.badge, UI.ru.hero.badge),
     titleStart: pair(UI.en.hero.titleStart, UI.ru.hero.titleStart),

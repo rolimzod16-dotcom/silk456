@@ -5,18 +5,21 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useContent } from "@/lib/content-context";
 import { useLocale } from "@/lib/locale";
 import { useUiStore } from "@/lib/ui-store";
+import { isForeignPhoto } from "@/lib/utils";
 
 export function CtaSection() {
   const openBooking = useUiStore((s) => s.openBooking);
   const { ui } = useLocale();
   const t = ui.cta;
+  const { pages } = useContent();
 
   return (
     <section className="relative overflow-hidden">
       <div className="relative isolate">
-        <Image src="/images/hero-silkroad.png" alt="Camel caravan on the Silk Road" fill sizes="100vw" className="object-cover" />
+        <Image src={pages.photos.cta} unoptimized={isForeignPhoto(pages.photos.cta)} alt="Camel caravan on the Silk Road" fill sizes="100vw" className="object-cover" />
         <div className="absolute inset-0 bg-spice-dark/80" />
         <div className="relative z-10 mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 sm:py-28 lg:px-8">
           <motion.div

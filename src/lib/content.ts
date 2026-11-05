@@ -296,7 +296,11 @@ function normalizePages(raw: unknown): PagesContent {
       return [key, { title: str(s.title, 70), description: str(s.description, 170) }];
     }),
   ) as PagesContent["seo"];
-  return { home: group("home"), about: group("about"), services, styles, seo };
+  const storedPhotos = t.photos && typeof t.photos === "object" ? (t.photos as Record<string, unknown>) : {};
+  const photos = Object.fromEntries(
+    Object.entries(base.photos).map(([key, fallback]) => [key, str(storedPhotos[key], 600) || fallback]),
+  ) as PagesContent["photos"];
+  return { photos, home: group("home"), about: group("about"), services, styles, seo };
 }
 
 function normalizeTours(value: unknown): Tour[] {
@@ -327,6 +331,8 @@ function normalizeTeam(value: unknown): TeamMember[] {
       role: eitherLanguage(member.role, 120),
       bio: eitherLanguage(member.bio, 1000),
       photo: str(member.photo, 600),
+      languages: str(member.languages, 200),
+      instagram: /^https:\/\//i.test(str(member.instagram, 300)) ? str(member.instagram, 300) : "",
     }));
 }
 

@@ -15,7 +15,7 @@ const ROLES = [
 ];
 
 function blank(): TeamMember {
-  return { id: "", name: "", role: { en: "", ru: "" }, bio: { en: "", ru: "" }, photo: "" };
+  return { id: "", name: "", role: { en: "", ru: "" }, bio: { en: "", ru: "" }, photo: "", languages: "", instagram: "" };
 }
 
 export function TeamPanel({
@@ -99,6 +99,14 @@ export function TeamPanel({
             </Field>
             <Field label="О человеке (EN)" hint="Необязательно">
               <TextArea value={editing.item.bio.en} onChange={(en) => set({ bio: { ...editing.item.bio, en } })} rows={3} />
+            </Field>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Языки" hint="Необязательно. Например: English, Русский">
+              <TextInput value={editing.item.languages} onChange={(languages) => set({ languages })} />
+            </Field>
+            <Field label="Instagram" hint="Необязательно. Полная ссылка, https://…">
+              <TextInput value={editing.item.instagram} onChange={(instagram) => set({ instagram })} />
             </Field>
           </div>
           <div>

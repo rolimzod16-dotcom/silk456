@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { tourMeta } from "@/lib/catalog";
 import { useContent } from "@/lib/content-context";
 import { useLocale, useText } from "@/lib/locale";
+import { isForeignPhoto } from "@/lib/utils";
 
 const ICONS = [Globe2, Award, HeartHandshake];
 
@@ -15,7 +16,7 @@ export function AboutSection() {
   const { tours, pages } = useContent();
   const tx = useText();
   const t = ui.about;
-  const about = pages.about;
+  const about = { ...pages.about, photo: pages.photos.about };
   const countries = new Set(tours.flatMap((tour) => tourMeta(tour).countries)).size;
 
   return (
@@ -25,7 +26,8 @@ export function AboutSection() {
           <div className="relative order-2 lg:order-1">
             <div className="relative aspect-[4/5] overflow-hidden rounded-3xl sm:aspect-[5/4] lg:aspect-[4/5]">
               <Image
-                src="/images/about-bazaar.png"
+                src={about.photo}
+                unoptimized={isForeignPhoto(about.photo)}
                 alt={t.imageAlt}
                 fill
                 sizes="(min-width: 1024px) 40vw, 100vw"

@@ -22,7 +22,7 @@ export type SiteSettings = {
 export type FaqItem = { q: Text; a: Text };
 
 /** A person shown on the About page. */
-export type TeamMember = { id: string; name: string; role: Text; bio: Text; photo: string };
+export type TeamMember = { id: string; name: string; role: Text; bio: Text; photo: string; languages: string; instagram: string };
 
 export type SiteContent = {
   tours: Tour[];
