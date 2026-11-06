@@ -18,7 +18,7 @@ export const SEO_PAGES = [
 
 export type SeoPageKey = (typeof SEO_PAGES)[number]["key"];
 export type Seo = { title: string; description: string };
-export type SitePhotos = { hero: string; about: string; cta: string; pageHero: string };
+export type SitePhotos = { hero: string; about: string; cta: string; pageHero: string; whyUs: string };
 export type ServiceContent = { id: string; title: Text; lead: Text; points: Text[] };
 
 /** Editable texts of the fixed pages; empty fields fall back to the built-in copy. */
@@ -38,6 +38,7 @@ export const DEFAULT_PHOTOS: SitePhotos = {
   about: "/images/about-bazaar.png",
   cta: "/images/hero-silkroad.png",
   pageHero: "/images/hero-silkroad.png",
+  whyUs: "/images/why-travel.jpg",
 };
 
 export const DEFAULT_PAGES: PagesContent = {

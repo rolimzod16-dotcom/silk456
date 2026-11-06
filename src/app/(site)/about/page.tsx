@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { staticPageMeta } from "@/lib/seo";
 import { SimplePage } from "@/components/site/inner-pages";
 import { AboutSection } from "@/components/site/about-section";
-import { FeaturesSection } from "@/components/site/features-section";
+import { ApproachSection, WhyUsSection } from "@/components/site/about-page-sections";
 import { TestimonialsSection } from "@/components/site/testimonials-section";
-import { CtaSection } from "@/components/site/cta-section";
 import { PartnerSection } from "@/components/site/partner-sites";
 import { TeamSection } from "@/components/site/team-section";
 import { getContent } from "@/lib/content";
@@ -22,12 +21,12 @@ export default async function AboutPage() {
   const { testimonials } = await getContent();
   return (
     <SimplePage page="about">
-      <AboutSection />
+      <AboutSection variant="page" />
       <TeamSection />
-      <FeaturesSection />
+      <ApproachSection />
+      <WhyUsSection />
       <TestimonialsSection testimonials={testimonials} />
       <PartnerSection />
-      <CtaSection />
     </SimplePage>
   );
 }
