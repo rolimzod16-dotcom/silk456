@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ChevronDown, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TripFinder } from "@/components/site/trip-finder";
 import { STYLES, tourMeta } from "@/lib/catalog";
@@ -40,27 +40,28 @@ export function Hero() {
         sizes="100vw"
         className="object-cover"
       />
-      <div className="absolute inset-0 hero-overlay" />
+      {/* Dark behind the text on the left, the photo stays clear on the right. */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/30 to-black/0" />
+      <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/50 to-black/0" />
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-center px-4 pt-24 pb-16 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl flex-col px-4 pt-28 pb-8 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          className="max-w-3xl"
         >
           <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
             <MapPin className="h-3.5 w-3.5 text-accent" />
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-white/90">{tx(home.badge)}</span>
           </div>
 
-          <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            {tx(home.titleStart)} <span className="text-gold-gradient">{tx(home.titleAccent)}</span>
+          <h1 className="mt-5 max-w-4xl font-display text-4xl font-semibold leading-[1.05] text-white sm:text-5xl md:text-6xl lg:text-7xl">
+            {tx(home.titleStart)} <span className="block text-gold-gradient">{tx(home.titleAccent)}</span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg md:text-xl">{tx(home.text)}</p>
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg">{tx(home.text)}</p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button asChild size="lg" className="text-base">
               <Link href="/tours">{t.viewTours}</Link>
             </Button>
@@ -81,25 +82,17 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.25, ease: "easeOut" }}
-          className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md sm:grid-cols-4"
+          className="mx-auto mt-auto grid w-full max-w-5xl grid-cols-2 overflow-hidden rounded-2xl border border-white/15 bg-[#3a2416]/55 pt-px backdrop-blur-md sm:grid-cols-4 lg:mt-10"
         >
-          {stats.map((s) => (
-            <div key={s.label} className="bg-white/5 px-5 py-5">
+          {stats.map((s, index) => (
+            <div
+              key={s.label}
+              className={`px-6 py-5 sm:px-8 ${index % 2 ? "border-l border-white/15" : ""} ${index > 1 ? "border-t border-white/15 sm:border-t-0" : ""} ${index === 2 ? "sm:border-l" : ""}`}
+            >
               <div className="font-display text-3xl font-semibold text-white sm:text-4xl">{s.value}</div>
-              <div className="mt-1 text-xs uppercase tracking-wider text-white/70 sm:text-sm">{s.label}</div>
+              <div className="mt-1 text-xs uppercase tracking-[0.15em] text-white/75">{s.label}</div>
             </div>
           ))}
-        </motion.div>
-      </div>
-
-      <div className="absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 md:block">
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-1 text-white/70"
-        >
-          <span className="text-xs uppercase tracking-[0.2em]">{t.scroll}</span>
-          <ChevronDown className="h-4 w-4" />
         </motion.div>
       </div>
     </section>

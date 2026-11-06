@@ -36,87 +36,62 @@ export function TripFinder() {
 
   const active = filters.season !== null || filters.duration !== null || filters.country !== null;
 
+  const groups = [
+    {
+      title: t.finder.season,
+      items: t.finder.seasons.map((item) => ({ id: item.id, label: item.label, on: filters.season === item.id })),
+      pick: (id: string, on: boolean) => setFilters({ season: on ? null : (id as typeof filters.season) }),
+    },
+    {
+      title: t.finder.howLong,
+      items: t.finder.durations.map((item) => ({ id: item.id, label: item.label, on: filters.duration === item.id })),
+      pick: (id: string, on: boolean) => setFilters({ duration: on ? null : (id as typeof filters.duration) }),
+    },
+    {
+      title: t.finder.where,
+      items: t.countries.map((item) => ({ id: item.id, label: item.label, on: filters.country === item.id })),
+      pick: (id: string, on: boolean) => setFilters({ country: on ? null : (id as typeof filters.country), region: "all" }),
+    },
+  ];
+
   return (
-    <div className="mt-8 w-full max-w-3xl rounded-2xl border border-white/20 bg-white/10 p-4 text-left text-white shadow-lg backdrop-blur-md sm:p-5">
-      <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/70">
-        {t.finder.season}
-      </p>
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        {t.finder.seasons.map((item) => {
-          const active = filters.season === item.id;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              aria-pressed={active}
-              onClick={() => setFilters({ season: active ? null : item.id })}
-              className={cn("rounded-full border px-3 py-1 text-xs transition", chipClass(active))}
-            >
-              {item.label}
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/70">
-            {t.finder.howLong}
-          </p>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {t.finder.durations.map((item) => {
-              const active = filters.duration === item.id;
-              return (
+    <div className="mt-8 w-full max-w-5xl rounded-2xl border border-white/20 bg-white/10 p-5 text-left text-white shadow-lg backdrop-blur-md sm:p-6">
+      <div className="grid gap-5 md:grid-cols-[auto_auto_1fr] md:gap-0">
+        {groups.map((group, index) => (
+          <div key={group.title} className={cn(index > 0 && "md:border-l md:border-white/20 md:pl-7", index < 2 && "md:pr-7")}>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">{group.title}</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {group.items.map((item) => (
                 <button
                   key={item.id}
                   type="button"
-                  aria-pressed={active}
-                  onClick={() => setFilters({ duration: active ? null : item.id })}
-                  className={cn("rounded-full border px-3 py-1.5 text-xs transition", chipClass(active))}
+                  aria-pressed={item.on}
+                  onClick={() => group.pick(item.id, item.on)}
+                  className={cn("rounded-full border px-3 py-1.5 text-[13px] transition", chipClass(item.on))}
                 >
                   {item.label}
                 </button>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </div>
-        <div>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/70">
-            {t.finder.where}
-          </p>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {t.countries.map((item) => {
-              const active = filters.country === item.id;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-pressed={active}
-                  onClick={() => setFilters({ country: active ? null : item.id, region: "all" })}
-                  className={cn("rounded-full border px-3 py-1.5 text-xs transition", chipClass(active))}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        ))}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-3">
-        <button
-          type="button"
-          onClick={showResults}
-          className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90"
-        >
-          {active ? t.finder.showN(count) : t.finder.explore}
-        </button>
-        {active && (
+      {/* The search button appears once something is picked, so the empty panel stays calm. */}
+      {active && (
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={showResults}
+            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90"
+          >
+            {t.finder.showN(count)}
+          </button>
           <button type="button" onClick={clearFilters} className="text-sm font-semibold text-white/80 underline-offset-4 hover:text-white hover:underline">
             {ui.filters.reset}
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
