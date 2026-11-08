@@ -44,6 +44,53 @@ export type Tour = {
   seoDescription?: string
   /** Previous page addresses; they redirect to the current one. */
   aliases?: string[]
+  /** German texts; an empty field shows the English one. Days and FAQ match by position. */
+  de?: TourDe
+}
+
+export type TourDe = {
+  title?: string
+  subtitle?: string
+  description?: string
+  country?: string
+  duration?: string
+  groupSize?: string
+  difficulty?: string
+  season?: string
+  highlights?: string[]
+  included?: string[]
+  excluded?: string[]
+  itinerary?: { title?: string; description?: string; overnight?: string }[]
+  faq?: { q?: string; a?: string }[]
+}
+
+/** The tour as a German visitor sees it: German where it is filled in, English elsewhere. */
+export function localizeTour(tour: Tour, locale: string): Tour {
+  const de = tour.de
+  if (locale !== "de" || !de) return tour
+  const pick = (value: string | undefined, fallback: string) => value?.trim() || fallback
+  const list = (value: string[] | undefined, fallback: string[]) => (value?.some((item) => item.trim()) ? value.filter((item) => item.trim()) : fallback)
+  return {
+    ...tour,
+    title: pick(de.title, tour.title),
+    subtitle: pick(de.subtitle, tour.subtitle),
+    description: pick(de.description, tour.description),
+    country: pick(de.country, tour.country),
+    duration: pick(de.duration, tour.duration),
+    groupSize: pick(de.groupSize, tour.groupSize),
+    difficulty: pick(de.difficulty, tour.difficulty),
+    season: pick(de.season, tour.season),
+    highlights: list(de.highlights, tour.highlights),
+    included: list(de.included, tour.included),
+    excluded: list(de.excluded, tour.excluded),
+    itinerary: tour.itinerary.map((day, i) => ({
+      ...day,
+      title: pick(de.itinerary?.[i]?.title, day.title),
+      description: pick(de.itinerary?.[i]?.description, day.description),
+      ...(day.overnight || de.itinerary?.[i]?.overnight ? { overnight: pick(de.itinerary?.[i]?.overnight, day.overnight ?? "") } : {}),
+    })),
+    faq: tour.faq?.map((item, i) => ({ q: pick(de.faq?.[i]?.q, item.q), a: pick(de.faq?.[i]?.a, item.a) })),
+  }
 }
 
 export type TourDay = {

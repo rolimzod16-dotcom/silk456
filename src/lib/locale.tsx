@@ -9,7 +9,7 @@ const listeners = new Set<() => void>();
 
 function readLocale(): Locale {
   try {
-    return window.localStorage.getItem(STORAGE_KEY) === "ru" ? "ru" : "en";
+    return window.localStorage.getItem(STORAGE_KEY) === "de" ? "de" : "en";
   } catch {
     return "en";
   }
@@ -59,10 +59,10 @@ export function useLocale() {
   return value;
 }
 
-export type Text = { en: string; ru: string };
+export type Text = { en: string; de: string };
 
-/** Picks the current-locale string from an { en, ru } pair. */
+/** Picks the current-locale string from an { en, de } pair. */
 export function useText() {
   const { locale } = useLocale();
-  return (text: Text) => text[locale];
+  return (text: Text) => text[locale] || text.en;
 }

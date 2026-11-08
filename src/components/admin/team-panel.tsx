@@ -6,16 +6,16 @@ import type { TeamMember } from "@/lib/site-content";
 import { buttonClass, Field, ImageField, TextArea, TextInput } from "@/components/admin/fields";
 
 const ROLES = [
-  { en: "Owner", ru: "Владелец" },
-  { en: "Co-owner", ru: "Совладелец" },
-  { en: "General Director", ru: "Генеральный директор" },
-  { en: "Assistant", ru: "Помощник" },
-  { en: "Manager", ru: "Менеджер" },
-  { en: "Guide", ru: "Гид" },
+  { label: "Владелец", en: "Owner", de: "Inhaber" },
+  { label: "Совладелец", en: "Co-owner", de: "Mitinhaber" },
+  { label: "Генеральный директор", en: "General Director", de: "Geschäftsführer" },
+  { label: "Помощник", en: "Assistant", de: "Assistent" },
+  { label: "Менеджер", en: "Manager", de: "Manager" },
+  { label: "Гид", en: "Guide", de: "Reiseleiter" },
 ];
 
 function blank(): TeamMember {
-  return { id: "", name: "", role: { en: "", ru: "" }, bio: { en: "", ru: "" }, photo: "", languages: "", instagram: "" };
+  return { id: "", name: "", role: { en: "", de: "" }, bio: { en: "", de: "" }, photo: "", languages: "", instagram: "" };
 }
 
 export function TeamPanel({
@@ -81,28 +81,28 @@ export function TeamPanel({
             <span className="text-xs font-semibold uppercase tracking-wide text-[#0f1225]/70">Быстрый выбор должности</span>
             <div className="mt-1 flex flex-wrap gap-2">
               {ROLES.map((role) => (
-                <button key={role.en} type="button" className={buttonClass.ghost} onClick={() => set({ role })}>
-                  {role.ru}
+                <button key={role.en} type="button" className={buttonClass.ghost} onClick={() => set({ role: { en: role.en, de: role.de } })}>
+                  {role.label}
                 </button>
               ))}
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Должность (RU)">
-              <TextInput value={editing.item.role.ru} onChange={(ru) => set({ role: { ...editing.item.role, ru } })} />
+            <Field label="Должность (DE)">
+              <TextInput value={editing.item.role.de} onChange={(de) => set({ role: { ...editing.item.role, de } })} />
             </Field>
             <Field label="Должность (EN)">
               <TextInput value={editing.item.role.en} onChange={(en) => set({ role: { ...editing.item.role, en } })} />
             </Field>
-            <Field label="О человеке (RU)" hint="Необязательно">
-              <TextArea value={editing.item.bio.ru} onChange={(ru) => set({ bio: { ...editing.item.bio, ru } })} rows={3} />
+            <Field label="О человеке (DE)" hint="Необязательно">
+              <TextArea value={editing.item.bio.de} onChange={(de) => set({ bio: { ...editing.item.bio, de } })} rows={3} />
             </Field>
             <Field label="О человеке (EN)" hint="Необязательно">
               <TextArea value={editing.item.bio.en} onChange={(en) => set({ bio: { ...editing.item.bio, en } })} rows={3} />
             </Field>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Языки" hint="Необязательно. Например: English, Русский">
+            <Field label="Языки" hint="Необязательно. Например: English, Deutsch">
               <TextInput value={editing.item.languages} onChange={(languages) => set({ languages })} />
             </Field>
             <Field label="Instagram" hint="Необязательно. Полная ссылка, https://…">
@@ -139,7 +139,7 @@ export function TeamPanel({
             )}
             <div className="min-w-0 flex-1">
               <h3 className="font-semibold">{member.name}</h3>
-              <p className="text-sm text-[#0f1225]/60">{member.role.ru}</p>
+              <p className="text-sm text-[#0f1225]/60">{member.role.en}</p>
             </div>
             <div className="flex gap-1.5">
               <button type="button" aria-label="Выше" className={buttonClass.ghost} disabled={busy || index === 0} onClick={() => move(index, -1)}>

@@ -29,25 +29,26 @@ import { TourCard } from "@/components/site/tours-section";
 import { useContent } from "@/lib/content-context";
 import { useLocale, useText } from "@/lib/locale";
 import { COMMON } from "@/lib/pages";
-import type { Departure, Tour, TourDay } from "@/lib/tours";
+import { localizeTour, type Departure, type Tour, type TourDay } from "@/lib/tours";
 import { useUiStore } from "@/lib/ui-store";
 import { cn } from "@/lib/utils";
 
 const money = (n: number) => `$${n.toLocaleString("en-US")}`;
 
 function formatRange(d: Departure, locale: string) {
-  const fmt = new Intl.DateTimeFormat(locale === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "short", year: "numeric" });
+  const fmt = new Intl.DateTimeFormat(locale === "de" ? "de-DE" : "en-GB", { day: "numeric", month: "short", year: "numeric" });
   const start = fmt.format(new Date(`${d.start}T00:00:00`));
   return d.end ? `${start} – ${fmt.format(new Date(`${d.end}T00:00:00`))}` : start;
 }
 
-export function TourPage({ tour, related }: { tour: Tour; related: Tour[] }) {
+export function TourPage({ tour: rawTour, related }: { tour: Tour; related: Tour[] }) {
   const tx = useText();
   const { ui, locale } = useLocale();
+  const tour = localizeTour(rawTour, locale);
   const { settings } = useContent();
   const openBooking = useUiStore((s) => s.openBooking);
   const t = ui.tourPage;
-  const plain = (value: string) => ({ en: value, ru: value });
+  const plain = (value: string) => ({ en: value, de: value });
 
   const today = new Date().toISOString().slice(0, 10);
   const departures = (tour.departures ?? []).filter((d) => (d.end ?? d.start) >= today);

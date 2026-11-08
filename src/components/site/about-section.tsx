@@ -11,7 +11,7 @@ import { isForeignPhoto } from "@/lib/utils";
 
 const ICONS = [Globe2, Award, HeartHandshake];
 
-const STORY = { en: "Our story", ru: "Наша история" };
+const STORY = { en: "Our story", de: "Unsere Geschichte" };
 
 /** `page` is the About page version: the story alone, without the value cards and the link. */
 export function AboutSection({ variant = "home" }: { variant?: "home" | "page" }) {

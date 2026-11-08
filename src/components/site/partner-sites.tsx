@@ -5,18 +5,18 @@ import { useLocale } from "@/lib/locale";
 const PARTNERS = [
   {
     name: "Pamir Moto Adventure",
-    href: { en: "https://pamirmoto.com/en", ru: "https://pamirmoto.com/ru" },
+    href: { en: "https://pamirmoto.com/en", de: "https://pamirmoto.com/de" },
     text: {
       en: "Motorcycle and 4x4 rental in Tajikistan, plus guided rides on the Pamir Highway.",
-      ru: "Аренда мотоциклов и 4x4 в Таджикистане и мототуры по Памирскому тракту.",
+      de: "Motorrad- und 4x4-Vermietung in Tadschikistan sowie geführte Touren auf dem Pamir Highway.",
     },
   },
   {
     name: "Pamir Ecotourism",
-    href: { en: "https://pamirecotourism.com/", ru: "https://pamirecotourism.com/" },
+    href: { en: "https://pamirecotourism.com/", de: "https://pamirecotourism.com/" },
     text: {
       en: "Treks, 4x4 routes and homestays in the Pamirs, planned by a local team from Rushan.",
-      ru: "Треки, маршруты на 4x4 и хоумстеи на Памире от местной команды из Рушана.",
+      de: "Trekking, 4x4-Routen und Gastfamilien im Pamir, geplant von einem lokalen Team aus Ruschan.",
     },
   },
 ];
@@ -26,9 +26,9 @@ const COPY = {
     title: "Our partners",
     intro: "Want to ride the Pamirs or spend longer in the mountains? These local teams cover the rest of the journey.",
   },
-  ru: {
-    title: "Наши партнёры",
-    intro: "Хотите проехать Памир на мотоцикле или задержаться в горах? Эти местные команды помогут с остальной частью путешествия.",
+  de: {
+    title: "Unsere Partner",
+    intro: "Mit dem Motorrad durch den Pamir oder länger in den Bergen bleiben? Diese lokalen Teams übernehmen den Rest Ihrer Reise.",
   },
 };
 

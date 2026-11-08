@@ -1,6 +1,6 @@
 import { COUNTRIES, DURATIONS, SEASONS, STYLES } from "@/lib/catalog";
 
-export type Locale = "en" | "ru";
+export type Locale = "en" | "de";
 
 const services = {
   en: [
@@ -11,49 +11,49 @@ const services = {
     { id: "stay", title: "Accommodation and logistics", text: "Hotels, yurts and family guesthouses." },
     { id: "tailor", title: "Tailor-made routes", text: "A private itinerary built around your dates." },
   ],
-  ru: [
-    { id: "transport", title: "Транспорт и аренда авто", text: "Машины, 4x4 и водители на весь маршрут." },
-    { id: "guides", title: "Водители и гиды", text: "Местные гиды, которые знают дорогу и людей." },
-    { id: "visa", title: "Визовая поддержка", text: "Приглашения и документы до поездки." },
-    { id: "permits", title: "Разрешения и спецдоступ", text: "ГБАО и другие разрешения заранее." },
-    { id: "stay", title: "Проживание и логистика", text: "Отели, юрты и семейные гостевые дома." },
-    { id: "tailor", title: "Индивидуальные маршруты", text: "Частный маршрут под ваши даты." },
+  de: [
+    { id: "transport", title: "Transport und Mietwagen", text: "Autos, Geländewagen und Fahrer für die ganze Route." },
+    { id: "guides", title: "Fahrer und Guides", text: "Lokale Guides, die Straße und Menschen kennen." },
+    { id: "visa", title: "Visa-Service", text: "Einladungen und Dokumente vor der Reise." },
+    { id: "permits", title: "Genehmigungen und Sonderzugang", text: "GBAO- und andere Genehmigungen im Voraus." },
+    { id: "stay", title: "Unterkunft und Logistik", text: "Hotels, Jurten und Familiengästehäuser." },
+    { id: "tailor", title: "Individuelle Routen", text: "Eine private Route zu Ihren Terminen." },
   ],
 } as const;
 
 export function copy(locale: Locale) {
-  const ru = locale === "ru";
+  const de = locale === "de";
   return {
-    plan: ru ? "Спланировать поездку" : "Plan my journey",
-    menu: ru ? "Меню" : "Menu",
-    close: ru ? "Закрыть" : "Close",
+    plan: de ? "Reise planen" : "Plan my journey",
+    menu: de ? "Menü" : "Menu",
+    close: de ? "Schließen" : "Close",
     nav: {
-      destinations: ru ? "Направления" : "Destinations",
-      travelStyles: ru ? "Стили путешествий" : "Travel styles",
-      services: ru ? "Услуги" : "Services",
-      about: ru ? "О нас" : "About",
-      contact: ru ? "Контакты" : "Contact",
-      viewAll: ru ? "Смотреть все" : "View all",
+      destinations: de ? "Reiseziele" : "Destinations",
+      travelStyles: de ? "Reisestile" : "Travel styles",
+      services: de ? "Leistungen" : "Services",
+      about: de ? "Über uns" : "About",
+      contact: de ? "Kontakt" : "Contact",
+      viewAll: de ? "Alle ansehen" : "View all",
     },
-    countries: COUNTRIES.map((item) => ({ id: item.id, label: ru ? item.ru : item.en })),
-    styles: STYLES.map((item) => ({ id: item.id, label: ru ? item.ru : item.en })),
+    countries: COUNTRIES.map((item) => ({ id: item.id, label: de ? item.de : item.en })),
+    styles: STYLES.map((item) => ({ id: item.id, label: de ? item.de : item.en })),
     services: services[locale],
     finder: {
-      season: ru ? "Сезон" : "Season",
-      howLong: ru ? "Сколько дней" : "How long",
-      where: ru ? "Куда" : "Where",
-      explore: ru ? "Смотреть маршруты" : "Show routes",
-      clear: ru ? "Сбросить" : "Clear",
-      empty: ru ? "Под эти фильтры маршрутов нет." : "No routes match these filters.",
-      showing: ru ? "Показано маршрутов" : "Routes shown",
-      showN: (n: number) => (ru ? `Показать маршруты: ${n}` : `Show ${n} ${n === 1 ? "route" : "routes"}`),
-      request: ru ? "Заказать свой маршрут" : "Request a custom route",
-      seasons: SEASONS.map((item) => ({ id: item.id, label: ru ? item.ru : item.en })),
-      durations: DURATIONS.map((item) => ({ id: item.id, label: ru ? item.ru : item.en })),
+      season: de ? "Saison" : "Season",
+      howLong: de ? "Wie lange" : "How long",
+      where: de ? "Wohin" : "Where",
+      explore: de ? "Routen ansehen" : "Show routes",
+      clear: de ? "Zurücksetzen" : "Clear",
+      empty: de ? "Keine Routen für diese Filter." : "No routes match these filters.",
+      showing: de ? "Angezeigte Routen" : "Routes shown",
+      showN: (n: number) => (de ? `${n} ${n === 1 ? "Route" : "Routen"} anzeigen` : `Show ${n} ${n === 1 ? "route" : "routes"}`),
+      request: de ? "Eigene Route anfragen" : "Request a custom route",
+      seasons: SEASONS.map((item) => ({ id: item.id, label: de ? item.de : item.en })),
+      durations: DURATIONS.map((item) => ({ id: item.id, label: de ? item.de : item.en })),
     },
-    servicesHeading: ru ? "Услуги" : "Services",
-    servicesText: ru
-      ? "То, что нужно на Шёлковом пути кроме самого маршрута: транспорт, гиды, визы и жильё."
+    servicesHeading: de ? "Leistungen" : "Services",
+    servicesText: de
+      ? "Was die Seidenstraße neben der Route braucht: Transport, Guides, Visa und Unterkunft."
       : "What the road needs besides the route itself: transport, guides, visas and a place to stay.",
   };
 }

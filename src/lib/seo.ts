@@ -109,7 +109,7 @@ export function organizationLd(settings: SiteSettings) {
       ...(settings.email && { email: settings.email }),
       ...(settings.address && { address: { "@type": "PostalAddress", streetAddress: settings.address } }),
       areaServed: ["Uzbekistan", "Tajikistan", "Kyrgyzstan", "Kazakhstan", "China"],
-      knowsLanguage: ["en", "ru"],
+      knowsLanguage: ["en", "de"],
       ...(sameAs.length && { sameAs }),
     },
     {

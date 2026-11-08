@@ -8,83 +8,83 @@ export type Intro = { tagline: Text; text: Text };
 
 const COUNTRY_INTRO: Record<CountryId, Intro> = {
   uzbekistan: {
-    tagline: { en: "Blue domes and caravan cities", ru: "Голубые купола и караванные города" },
+    tagline: { en: "Blue domes and caravan cities", de: "Blaue Kuppeln und Karawanenstädte" },
     text: {
       en: "Samarkand, Bukhara and Khiva — the heart of the Silk Road, where madrasahs, bazaars and workshops still live by the old trade rhythm.",
-      ru: "Самарканд, Бухара и Хива — сердце Шёлкового пути, где медресе, базары и мастерские до сих пор живут в ритме старой торговли.",
+      de: "Samarkand, Buchara und Chiwa – das Herz der Seidenstraße, wo Medresen, Basare und Werkstätten noch im Rhythmus des alten Handels leben.",
     },
   },
   tajikistan: {
-    tagline: { en: "The Pamir Highway and mountain valleys", ru: "Памирский тракт и горные долины" },
+    tagline: { en: "The Pamir Highway and mountain valleys", de: "Pamir Highway und Bergtäler" },
     text: {
       en: "High passes, the Wakhan corridor and Pamiri villages on one of the most spectacular roads in Asia.",
-      ru: "Высокие перевалы, Ваханский коридор и памирские кишлаки на одной из самых красивых дорог Азии.",
+      de: "Hohe Pässe, der Wachan-Korridor und Pamir-Dörfer an einer der spektakulärsten Straßen Asiens.",
     },
   },
   kyrgyzstan: {
-    tagline: { en: "Tien Shan, yurts and alpine lakes", ru: "Тянь-Шань, юрты и горные озёра" },
+    tagline: { en: "Tien Shan, yurts and alpine lakes", de: "Tian Shan, Jurten und Bergseen" },
     text: {
       en: "Nomad camps, horse treks and nights by Song-Kul — a country of open pastures and big mountains.",
-      ru: "Кочевые стоянки, конные маршруты и ночи у Сон-Куля — страна открытых пастбищ и больших гор.",
+      de: "Nomadencamps, Reittouren und Nächte am Song-Köl – ein Land weiter Weiden und großer Berge.",
     },
   },
   kazakhstan: {
-    tagline: { en: "Steppe, canyons and the Heavenly Mountains", ru: "Степь, каньоны и Небесные горы" },
+    tagline: { en: "Steppe, canyons and the Heavenly Mountains", de: "Steppe, Canyons und die Himmelsberge" },
     text: {
       en: "Charyn canyon, the northern Tien Shan and the endless steppe of the old caravan routes.",
-      ru: "Чарынский каньон, северный Тянь-Шань и бескрайняя степь старых караванных путей.",
+      de: "Der Scharyn-Canyon, der nördliche Tian Shan und die endlose Steppe der alten Karawanenwege.",
     },
   },
   china: {
-    tagline: { en: "Kashgar and the eastern gates", ru: "Кашгар и восточные ворота" },
+    tagline: { en: "Kashgar and the eastern gates", de: "Kaschgar und die östlichen Tore" },
     text: {
       en: "Xinjiang's oases, the Kashgar bazaar and the road to the Pamir and Karakul Lake.",
-      ru: "Оазисы Синьцзяна, кашгарский базар и дорога к Памиру и озеру Каракуль.",
+      de: "Die Oasen Xinjiangs, der Basar von Kaschgar und die Straße zum Pamir und zum Karakul-See.",
     },
   },
 };
 
 export const STYLE_INTRO: Record<StyleId, Intro> = {
   "overland-4x4": {
-    tagline: { en: "Long roads, high passes", ru: "Длинные дороги, высокие перевалы" },
+    tagline: { en: "Long roads, high passes", de: "Lange Straßen, hohe Pässe" },
     text: {
       en: "Multi-country routes by 4x4 with experienced drivers — the classic way to cross the Silk Road.",
-      ru: "Маршруты через несколько стран на 4x4 с опытными водителями — классический способ пройти Шёлковый путь.",
+      de: "Routen durch mehrere Länder im Geländewagen mit erfahrenen Fahrern – der klassische Weg über die Seidenstraße.",
     },
   },
   trekking: {
-    tagline: { en: "On foot through the mountains", ru: "Пешком через горы" },
+    tagline: { en: "On foot through the mountains", de: "Zu Fuß durch die Berge" },
     text: {
       en: "Trails in the Tien Shan and Pamir with guides, pack support and nights in yurts or tents.",
-      ru: "Тропы Тянь-Шаня и Памира с гидами, поддержкой и ночёвками в юртах или палатках.",
+      de: "Pfade im Tian Shan und Pamir mit Guides, Gepäcktransport und Nächten in Jurten oder Zelten.",
     },
   },
   motorcycle: {
-    tagline: { en: "The Pamir Highway on two wheels", ru: "Памирский тракт на двух колёсах" },
+    tagline: { en: "The Pamir Highway on two wheels", de: "Der Pamir Highway auf zwei Rädern" },
     text: {
       en: "Guided motorcycle routes with bike rental, backup vehicle and mechanic support.",
-      ru: "Мото-маршруты с гидом, арендой мотоцикла, машиной сопровождения и механиком.",
+      de: "Geführte Motorradrouten mit Mietmotorrad, Begleitfahrzeug und Mechaniker.",
     },
   },
   "culture-cities": {
-    tagline: { en: "Madrasahs, bazaars and workshops", ru: "Медресе, базары и мастерские" },
+    tagline: { en: "Madrasahs, bazaars and workshops", de: "Medresen, Basare und Werkstätten" },
     text: {
       en: "The great cities of the Silk Road with historians and art experts as your guides.",
-      ru: "Великие города Шёлкового пути с историками и искусствоведами в роли гидов.",
+      de: "Die großen Städte der Seidenstraße mit Historikern und Kunstexperten als Guides.",
     },
   },
   "horse-riding": {
-    tagline: { en: "In the saddle with nomads", ru: "В седле с кочевниками" },
+    tagline: { en: "In the saddle with nomads", de: "Im Sattel mit Nomaden" },
     text: {
       en: "Horse treks between summer pastures, lakes and herder camps.",
-      ru: "Конные переходы между летними пастбищами, озёрами и стоянками пастухов.",
+      de: "Ritte zwischen Sommerweiden, Seen und Hirtenlagern.",
     },
   },
   photography: {
-    tagline: { en: "Light, faces and landscapes", ru: "Свет, лица и пейзажи" },
+    tagline: { en: "Light, faces and landscapes", de: "Licht, Gesichter und Landschaften" },
     text: {
       en: "Routes timed for the best light, with time to stop and shoot.",
-      ru: "Маршруты под лучший свет, со временем, чтобы остановиться и снять.",
+      de: "Routen für das beste Licht, mit Zeit zum Anhalten und Fotografieren.",
     },
   },
 };
@@ -106,7 +106,7 @@ export function countryCollection(id: string, tours: Tour[]): Collection | undef
   return {
     kind: "destinations",
     id: country.id,
-    label: { en: country.en, ru: country.ru },
+    label: { en: country.en, de: country.de },
     ...COUNTRY_INTRO[country.id],
     image: list[0]?.image ?? "/images/hero-silkroad.png",
     tours: list,
@@ -124,7 +124,7 @@ export function styleCollection(
   return {
     kind: "travel-styles",
     id: style.id,
-    label: { en: style.en, ru: style.ru },
+    label: { en: style.en, de: style.de },
     ...(intros[style.id] ?? STYLE_INTRO[style.id]),
     image: list[0]?.image ?? "/images/hero-silkroad.png",
     tours: list,
@@ -140,91 +140,91 @@ export const styleCollections = (tours: Tour[], intros: Record<StyleId, Intro> =
 /** Shared hero / heading copy for the inner pages. */
 export const PAGE_COPY = {
   tours: {
-    eyebrow: { en: "Caravan routes", ru: "Караванные маршруты" },
-    title: { en: "Silk Road Tour Packages", ru: "Туры по Шёлковому пути" },
+    eyebrow: { en: "Caravan routes", de: "Karawanenrouten" },
+    title: { en: "Silk Road Tour Packages", de: "Seidenstraßen-Reisen" },
     text: {
       en: "Ready-made routes with accommodation, guides and all transfers. Filter by season, length or country.",
-      ru: "Готовые маршруты с проживанием, гидами и всеми трансферами. Фильтруйте по сезону, длительности или стране.",
+      de: "Fertige Routen mit Unterkunft, Guides und allen Transfers. Filtern Sie nach Saison, Dauer oder Land.",
     },
   },
   destinations: {
-    eyebrow: { en: "Where we travel", ru: "Куда мы ездим" },
-    title: { en: "Destinations", ru: "Направления" },
+    eyebrow: { en: "Where we travel", de: "Wohin wir reisen" },
+    title: { en: "Destinations", de: "Reiseziele" },
     text: {
       en: "Five countries along the Great Silk Road — pick one to see its routes.",
-      ru: "Пять стран на Великом Шёлковом пути — выберите страну, чтобы увидеть маршруты.",
+      de: "Fünf Länder an der Großen Seidenstraße – wählen Sie ein Land, um seine Routen zu sehen.",
     },
   },
   "travel-styles": {
-    eyebrow: { en: "How we travel", ru: "Как мы путешествуем" },
-    title: { en: "Travel styles", ru: "Стили путешествий" },
+    eyebrow: { en: "How we travel", de: "Wie wir reisen" },
+    title: { en: "Travel styles", de: "Reisestile" },
     text: {
       en: "By 4x4, on foot, on horseback or through the old cities — choose the pace that suits you.",
-      ru: "На 4x4, пешком, верхом или по старым городам — выберите свой темп.",
+      de: "Im Geländewagen, zu Fuß, zu Pferd oder durch die alten Städte – wählen Sie Ihr Tempo.",
     },
   },
   services: {
-    eyebrow: { en: "Beyond the route", ru: "Кроме маршрута" },
-    title: { en: "Services", ru: "Услуги" },
+    eyebrow: { en: "Beyond the route", de: "Mehr als die Route" },
+    title: { en: "Services", de: "Leistungen" },
     text: {
       en: "Transport, guides, visas, permits and accommodation — everything the road needs.",
-      ru: "Транспорт, гиды, визы, разрешения и проживание — всё, что нужно в дороге.",
+      de: "Transport, Guides, Visa, Genehmigungen und Unterkunft – alles, was die Reise braucht.",
     },
   },
   about: {
-    eyebrow: { en: "About us", ru: "О нас" },
-    title: { en: "Great Silk Trails", ru: "Great Silk Trails" },
+    eyebrow: { en: "About us", de: "Über uns" },
+    title: { en: "Great Silk Trails", de: "Great Silk Trails" },
     text: {
       en: "Boutique tours along the Silk Road with local guides and small groups.",
-      ru: "Авторские туры по Шёлковому пути с местными гидами и в небольших группах.",
+      de: "Besondere Reisen auf der Seidenstraße mit lokalen Guides und in kleinen Gruppen.",
     },
   },
   contact: {
-    eyebrow: { en: "Contact", ru: "Контакты" },
-    title: { en: "Get in touch", ru: "Связаться с нами" },
+    eyebrow: { en: "Contact", de: "Kontakt" },
+    title: { en: "Get in touch", de: "Kontakt aufnehmen" },
     text: {
       en: "Tell us your dates and wishes — we reply within one business day.",
-      ru: "Расскажите о датах и пожеланиях — ответим в течение рабочего дня.",
+      de: "Nennen Sie uns Termine und Wünsche – wir antworten innerhalb eines Werktags.",
     },
   },
   faq: {
-    eyebrow: { en: "Before you go", ru: "Перед поездкой" },
-    title: { en: "Questions & answers", ru: "Вопросы и ответы" },
+    eyebrow: { en: "Before you go", de: "Vor der Reise" },
+    title: { en: "Questions & answers", de: "Fragen & Antworten" },
     text: {
       en: "Visas, seasons, booking, altitude and safety — what travelers ask us most.",
-      ru: "Визы, сезоны, бронирование, высота и безопасность — о чём нас спрашивают чаще всего.",
+      de: "Visa, Reisezeiten, Buchung, Höhe und Sicherheit – was Reisende uns am häufigsten fragen.",
     },
   },
   privacy: {
-    eyebrow: { en: "Legal", ru: "Документы" },
-    title: { en: "Privacy Policy", ru: "Политика конфиденциальности" },
-    text: { en: "How we handle the details you send us.", ru: "Как мы обращаемся с вашими данными." },
+    eyebrow: { en: "Legal", de: "Rechtliches" },
+    title: { en: "Privacy Policy", de: "Datenschutzerklärung" },
+    text: { en: "How we handle the details you send us.", de: "Wie wir mit Ihren Daten umgehen." },
   },
   terms: {
-    eyebrow: { en: "Legal", ru: "Документы" },
-    title: { en: "Terms of Service", ru: "Условия использования" },
-    text: { en: "How booking requests work.", ru: "Как работают заявки на бронирование." },
+    eyebrow: { en: "Legal", de: "Rechtliches" },
+    title: { en: "Terms of Service", de: "Nutzungsbedingungen" },
+    text: { en: "How booking requests work.", de: "Wie Buchungsanfragen funktionieren." },
   },
 } satisfies Record<string, { eyebrow: Text; title: Text; text: Text }>;
 
 export const COMMON = {
-  home: { en: "Home", ru: "Главная" },
-  tours: { en: "Tours", ru: "Туры" },
-  routes: { en: "Routes", ru: "Маршрутов" },
-  seeRoutes: { en: "See routes", ru: "Смотреть маршруты" },
-  allTours: { en: "All tours", ru: "Все туры" },
-  noRoutesTitle: { en: "No ready-made routes yet", ru: "Готовых маршрутов пока нет" },
+  home: { en: "Home", de: "Startseite" },
+  tours: { en: "Tours", de: "Reisen" },
+  routes: { en: "Routes", de: "Routen" },
+  seeRoutes: { en: "See routes", de: "Routen ansehen" },
+  allTours: { en: "All tours", de: "Alle Reisen" },
+  noRoutesTitle: { en: "No ready-made routes yet", de: "Noch keine fertigen Routen" },
   noRoutesText: {
     en: "We build these trips to order. Tell us your dates and we'll design a private route.",
-    ru: "Такие поездки мы собираем под заказ. Напишите даты — составим индивидуальный маршрут.",
+    de: "Solche Reisen stellen wir auf Anfrage zusammen. Nennen Sie uns Ihre Termine – wir planen eine private Route.",
   },
-  requestRoute: { en: "Request a custom route", ru: "Заказать маршрут" },
-  related: { en: "You may also like", ru: "Вам может понравиться" },
-  perPerson: { en: "per person", ru: "за человека" },
-  bookThis: { en: "Book This Tour", ru: "Забронировать тур" },
-  askQuestion: { en: "Ask a question", ru: "Задать вопрос" },
+  requestRoute: { en: "Request a custom route", de: "Route anfragen" },
+  related: { en: "You may also like", de: "Das könnte Ihnen auch gefallen" },
+  perPerson: { en: "per person", de: "pro Person" },
+  bookThis: { en: "Book This Tour", de: "Reise buchen" },
+  askQuestion: { en: "Ask a question", de: "Frage stellen" },
   noPrepay: {
     en: "No prepayment — pay after a manager confirms the details.",
-    ru: "Без предоплаты — оплата после подтверждения деталей менеджером.",
+    de: "Ohne Anzahlung – Zahlung erst, nachdem ein Manager die Details bestätigt hat.",
   },
 } satisfies Record<string, Text>;

@@ -22,8 +22,8 @@ const HOME_TOURS = ["pamir-highway", "fann-mountains-trek", "samarkand-gold", "t
 const BUILT_IN_OWNER: TeamMember = {
   id: "sultonsho-guliev",
   name: "Sultonsho Guliev",
-  role: { en: "Owner, Executive Director", ru: "Владелец, исполнительный директор" },
-  bio: { en: "", ru: "" },
+  role: { en: "Owner, Executive Director", de: "Inhaber, Geschäftsführer" },
+  bio: { en: "", de: "" },
   photo: "/images/team/sultonsho.jpeg",
   languages: "",
   instagram: "",
@@ -75,7 +75,7 @@ export function slugify(value: string) {
 
 /** "Day 3 — Bukhara" and "3. Bukhara" become "Bukhara": the day number is shown separately. */
 function cleanDayTitle(title: string) {
-  return title.replace(/^\s*(day|день)?\s*\d+\s*[.:—–-]?\s*/i, "").trim() || title;
+  return title.replace(/^\s*(day|tag|день)?\s*\d+\s*[.:—–-]?\s*/i, "").trim() || title;
 }
 
 function normalizeDays(value: unknown): TourDay[] {
@@ -120,6 +120,33 @@ const normalizeQa = (value: unknown) =>
   objects(value)
     .map((item) => ({ q: str(item.q, 300), a: str(item.a, 3000) }))
     .filter((item) => item.q && item.a);
+
+function normalizeTourDe(value: unknown): Tour["de"] {
+  const d = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+  // Lists keep blank lines so German items stay next to their English ones.
+  const lines = (v: unknown, max = 400) => (Array.isArray(v) ? v.map((item) => str(item, max)) : []);
+  return {
+    title: str(d.title, 160),
+    subtitle: str(d.subtitle, 300),
+    description: str(d.description, 6000),
+    country: str(d.country, 120),
+    duration: str(d.duration, 80),
+    groupSize: str(d.groupSize, 80),
+    difficulty: str(d.difficulty, 80),
+    season: str(d.season, 120),
+    highlights: lines(d.highlights),
+    included: lines(d.included),
+    excluded: lines(d.excluded),
+    itinerary: (Array.isArray(d.itinerary) ? d.itinerary : []).map((day) => {
+      const x = day && typeof day === "object" ? (day as Record<string, unknown>) : {};
+      return { title: str(x.title, 200), description: str(x.description, 4000), overnight: str(x.overnight, 200) };
+    }),
+    faq: (Array.isArray(d.faq) ? d.faq : []).map((item) => {
+      const x = item && typeof item === "object" ? (item as Record<string, unknown>) : {};
+      return { q: str(x.q, 300), a: str(x.a, 3000) };
+    }),
+  };
+}
 
 export function normalizeTour(raw: unknown): Tour | null {
   if (!raw || typeof raw !== "object") return null;
@@ -167,6 +194,7 @@ export function normalizeTour(raw: unknown): Tour | null {
     seoTitle: str(t.seoTitle, 70),
     seoDescription: str(t.seoDescription, 170),
     aliases: strList(t.aliases, 80).map(slugify).filter((alias) => alias && alias !== slug),
+    de: normalizeTourDe(t.de),
   };
 }
 
@@ -258,17 +286,22 @@ function normalizeCountries(value: unknown, base: Record<CountryId, CountryConte
 function normalizeFaq(value: unknown): FaqItem[] {
   const text = (v: unknown, max: number) => {
     const o = v && typeof v === "object" ? (v as Record<string, unknown>) : {};
-    return { en: str(o.en, max), ru: str(o.ru, max) };
+    return { en: str(o.en, max), de: str(o.de, max) };
   };
   return objects(value)
     .map((item) => ({ q: text(item.q, 300), a: text(item.a, 3000) }))
     .filter((item) => item.q.en && item.a.en);
 }
 
-/** { en, ru } pair; an empty value keeps the built-in text so pages never go blank. */
-function textPair(value: unknown, fallback: { en: string; ru: string }, max = 2000) {
+/**
+ * { en, de } pair; an empty value keeps the built-in text so pages never go blank.
+ * If the English was rewritten but the German was not, the German page shows the new English
+ * rather than an old German text about something else.
+ */
+function textPair(value: unknown, fallback: { en: string; de: string }, max = 2000) {
   const o = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
-  return { en: str(o.en, max) || fallback.en, ru: str(o.ru, max) || fallback.ru };
+  const en = str(o.en, max) || fallback.en;
+  return { en, de: str(o.de, max) || (en === fallback.en ? fallback.de : en) };
 }
 
 function normalizePages(raw: unknown): PagesContent {
@@ -277,14 +310,14 @@ function normalizePages(raw: unknown): PagesContent {
   const group = <K extends "home" | "about">(key: K) => {
     const src = t[key] && typeof t[key] === "object" ? (t[key] as Record<string, unknown>) : {};
     return Object.fromEntries(
-      Object.entries(base[key]).map(([field, fallback]) => [field, textPair(src[field], fallback as { en: string; ru: string })]),
+      Object.entries(base[key]).map(([field, fallback]) => [field, textPair(src[field], fallback as { en: string; de: string })]),
     ) as PagesContent[K];
   };
   const storedServices = objects(t.services);
   const services: ServiceContent[] = base.services.map((service) => {
     const s = storedServices.find((item) => item.id === service.id) ?? {};
     const points = objects(s.points)
-      .map((point) => ({ en: str(point.en, 300), ru: str(point.ru, 300) }))
+      .map((point) => ({ en: str(point.en, 300), de: str(point.de, 300) }))
       .filter((point) => point.en);
     return {
       id: service.id,
@@ -329,8 +362,8 @@ function normalizeTours(value: unknown): Tour[] {
 function eitherLanguage(value: unknown, max: number) {
   const o = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
   const en = str(o.en, max);
-  const ru = str(o.ru, max);
-  return { en: en || ru, ru: ru || en };
+  const de = str(o.de, max);
+  return { en: en || de, de: de || en };
 }
 
 function normalizeTeam(value: unknown): TeamMember[] {

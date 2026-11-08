@@ -59,15 +59,18 @@ export function TextArea({
   value,
   onChange,
   rows = 3,
+  placeholder,
 }: {
   value: string;
   onChange: (value: string) => void;
   rows?: number;
+  placeholder?: string;
 }) {
   return (
     <textarea
       value={value}
       rows={rows}
+      placeholder={placeholder}
       onChange={(event) => onChange(event.target.value)}
       className={cn(inputClass, "resize-y")}
     />
@@ -79,16 +82,19 @@ export function LinesInput({
   value,
   onChange,
   rows = 4,
+  placeholder,
 }: {
   value: string[];
   onChange: (value: string[]) => void;
   rows?: number;
+  placeholder?: string;
 }) {
   const [text, setText] = useState(value.join("\n"));
   return (
     <textarea
       value={text}
       rows={rows}
+      placeholder={placeholder}
       onChange={(event) => {
         setText(event.target.value);
         onChange(

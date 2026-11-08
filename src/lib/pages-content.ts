@@ -6,14 +6,14 @@ import { UI } from "@/lib/ui-text";
 
 /** Static pages whose search title and description can be set in the admin. */
 export const SEO_PAGES = [
-  { key: "home", label: "Главная", path: "/" },
+  { key: "home", label: "Startseite", path: "/" },
   { key: "tours", label: "Каталог туров", path: "/tours" },
-  { key: "destinations", label: "Направления", path: "/destinations" },
-  { key: "travelStyles", label: "Стили путешествий", path: "/travel-styles" },
-  { key: "services", label: "Услуги", path: "/services" },
-  { key: "about", label: "О нас", path: "/about" },
-  { key: "contact", label: "Контакты", path: "/contact" },
-  { key: "faq", label: "Вопросы и ответы", path: "/faq" },
+  { key: "destinations", label: "Reiseziele", path: "/destinations" },
+  { key: "travelStyles", label: "Reisestile", path: "/travel-styles" },
+  { key: "services", label: "Leistungen", path: "/services" },
+  { key: "about", label: "Über uns", path: "/about" },
+  { key: "contact", label: "Kontakt", path: "/contact" },
+  { key: "faq", label: "Fragen & Antworten", path: "/faq" },
 ] as const;
 
 export type SeoPageKey = (typeof SEO_PAGES)[number]["key"];
@@ -31,7 +31,7 @@ export type PagesContent = {
   photos: SitePhotos;
 };
 
-const pair = (en: string, ru: string): Text => ({ en, ru });
+const pair = (en: string, de: string): Text => ({ en, de });
 
 export const DEFAULT_PHOTOS: SitePhotos = {
   hero: "/images/hero-silkroad.png",
@@ -44,16 +44,16 @@ export const DEFAULT_PHOTOS: SitePhotos = {
 export const DEFAULT_PAGES: PagesContent = {
   photos: DEFAULT_PHOTOS,
   home: {
-    badge: pair(UI.en.hero.badge, UI.ru.hero.badge),
-    titleStart: pair(UI.en.hero.titleStart, UI.ru.hero.titleStart),
-    titleAccent: pair(UI.en.hero.titleAccent, UI.ru.hero.titleAccent),
-    text: pair(UI.en.hero.text, UI.ru.hero.text),
+    badge: pair(UI.en.hero.badge, UI.de.hero.badge),
+    titleStart: pair(UI.en.hero.titleStart, UI.de.hero.titleStart),
+    titleAccent: pair(UI.en.hero.titleAccent, UI.de.hero.titleAccent),
+    text: pair(UI.en.hero.text, UI.de.hero.text),
   },
   about: {
-    titleStart: pair(UI.en.about.titleStart, UI.ru.about.titleStart),
-    titleAccent: pair(UI.en.about.titleAccent, UI.ru.about.titleAccent),
-    p1: pair(UI.en.about.p1, UI.ru.about.p1),
-    p2: pair(UI.en.about.p2, UI.ru.about.p2),
+    titleStart: pair(UI.en.about.titleStart, UI.de.about.titleStart),
+    titleAccent: pair(UI.en.about.titleAccent, UI.de.about.titleAccent),
+    p1: pair(UI.en.about.p1, UI.de.about.p1),
+    p2: pair(UI.en.about.p2, UI.de.about.p2),
   },
   services: SERVICES,
   styles: STYLE_INTRO,

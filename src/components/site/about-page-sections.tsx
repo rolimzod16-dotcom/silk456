@@ -19,14 +19,14 @@ const APPROACH = {
       { title: "Small Groups & Personal Care", text: "Flexible, friendly and more meaningful travel experiences." },
     ],
   },
-  ru: {
-    eyebrow: "Наш подход",
-    title: "Как мы путешествуем",
+  de: {
+    eyebrow: "Unser Ansatz",
+    title: "Wie wir reisen",
     items: [
-      { title: "Настоящие впечатления", text: "Знакомство с местными жителями и настоящей жизнью региона." },
-      { title: "Ответственный туризм", text: "Поддерживаем местные сообщества и бережём природу." },
-      { title: "Продуманные маршруты", text: "Хорошо спланированные маршруты, надёжная логистика и местный опыт." },
-      { title: "Малые группы и внимание", text: "Гибкие, дружелюбные и более осмысленные путешествия." },
+      { title: "Echte Erlebnisse", text: "Lernen Sie Einheimische und das echte Leben in der Region kennen." },
+      { title: "Verantwortungsvolles Reisen", text: "Wir unterstützen lokale Gemeinschaften und schützen die Natur." },
+      { title: "Sorgfältig geplante Reisen", text: "Durchdachte Routen mit verlässlicher Logistik und lokaler Erfahrung." },
+      { title: "Kleine Gruppen & persönliche Betreuung", text: "Flexible, herzliche und bedeutungsvollere Reiseerlebnisse." },
     ],
   },
 };
@@ -44,15 +44,15 @@ const WHY = {
     ],
     button: "Plan My Journey",
   },
-  ru: {
-    title: "Почему с нами",
+  de: {
+    title: "Warum mit uns reisen",
     points: [
-      "Знание региона и местный опыт",
-      "Индивидуальные поездки и малые группы",
-      "Прозрачные условия и честные цены",
-      "Личная поддержка на каждом этапе",
+      "Ortskenntnis und regionale Erfahrung",
+      "Private Reisen und kleine Gruppen",
+      "Transparente Leistungen und faire Preise",
+      "Persönliche Betreuung bei jedem Schritt",
     ],
-    button: "Спланировать поездку",
+    button: "Reise planen",
   },
 };
 

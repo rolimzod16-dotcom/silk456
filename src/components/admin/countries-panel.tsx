@@ -30,7 +30,7 @@ export function CountriesPanel({
     setBusy(false);
   }
 
-  const name = COUNTRIES.find((c) => c.id === selected)?.ru ?? selected;
+  const name = COUNTRIES.find((c) => c.id === selected)?.en ?? selected;
 
   return (
     <section className="space-y-6">
@@ -42,7 +42,7 @@ export function CountriesPanel({
       </div>
 
       <Chips
-        options={COUNTRIES.map((c) => ({ id: c.id, label: c.ru }))}
+        options={COUNTRIES.map((c) => ({ id: c.id, label: c.en }))}
         value={[selected]}
         onChange={(ids) => {
           const next = ids.find((id) => id !== selected);

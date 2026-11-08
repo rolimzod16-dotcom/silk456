@@ -16,13 +16,13 @@ const COPY = {
     more: "Read more",
     less: "Show less",
   },
-  ru: {
-    eyebrow: "Наша команда",
-    title: "Люди, которые стоят за вашим путешествием",
-    intro: "Команда специалистов по путешествиям, гидов и партнёров, благодаря которым каждая поездка проходит легко, безопасно и запоминается.",
-    languages: "Языки",
-    more: "Подробнее",
-    less: "Свернуть",
+  de: {
+    eyebrow: "Unser Team",
+    title: "Die Menschen hinter Ihrer Reise",
+    intro: "Ein engagiertes Team aus Reiseprofis, Guides und Partnern, das jede Reise reibungslos, sicher und unvergesslich macht.",
+    languages: "Sprachen",
+    more: "Mehr lesen",
+    less: "Weniger anzeigen",
   },
 };
 

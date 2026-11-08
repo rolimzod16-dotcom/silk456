@@ -95,7 +95,7 @@ export function SiteHeader() {
             role="group"
             aria-label="Language"
           >
-            {(["en", "ru"] as const).map((code) => (
+            {(["en", "de"] as const).map((code) => (
               <button
                 key={code}
                 type="button"

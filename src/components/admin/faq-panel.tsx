@@ -21,13 +21,13 @@ export function FaqPanel({ items, onSave }: { items: FaqItem[]; onSave: (items: 
       <div>
         <h2 className="font-display text-2xl font-semibold">Вопросы и ответы · {items.length}</h2>
         <p className="mt-1 text-sm text-[#0f1225]/60">
-          Страница /faq. Английский обязателен, русский — для русской версии сайта (если пусто, покажется английский).
+          Страница /faq. Английский обязателен, немецкий — для немецкой версии сайта (если пусто, покажется английский).
         </p>
       </div>
       <RowsEditor<FaqItem>
         rows={draft}
         onChange={setDraft}
-        blank={() => ({ q: { en: "", ru: "" }, a: { en: "", ru: "" } })}
+        blank={() => ({ q: { en: "", de: "" }, a: { en: "", de: "" } })}
         addLabel="Добавить вопрос"
         render={(row, update) => (
           <div className="grid gap-3 lg:grid-cols-2">
@@ -40,11 +40,11 @@ export function FaqPanel({ items, onSave }: { items: FaqItem[]; onSave: (items: 
               </Field>
             </div>
             <div className="space-y-2">
-              <Field label="Вопрос (RU)">
-                <TextInput value={row.q.ru} onChange={(v) => update({ q: { ...row.q, ru: v } })} />
+              <Field label="Вопрос (DE)">
+                <TextInput value={row.q.de} onChange={(v) => update({ q: { ...row.q, de: v } })} />
               </Field>
-              <Field label="Ответ (RU)">
-                <TextArea value={row.a.ru} onChange={(v) => update({ a: { ...row.a, ru: v } })} rows={4} />
+              <Field label="Ответ (DE)">
+                <TextArea value={row.a.de} onChange={(v) => update({ a: { ...row.a, de: v } })} rows={4} />
               </Field>
             </div>
           </div>

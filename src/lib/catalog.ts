@@ -1,39 +1,39 @@
 import type { Tour } from "@/lib/tours";
 
 export const SEASONS = [
-  { id: "spring", months: [3, 4, 5], en: "Spring", ru: "Весна" },
-  { id: "summer", months: [6, 7, 8], en: "Summer", ru: "Лето" },
-  { id: "autumn", months: [9, 10, 11], en: "Autumn", ru: "Осень" },
-  { id: "winter", months: [12, 1, 2], en: "Winter", ru: "Зима" },
+  { id: "spring", months: [3, 4, 5], en: "Spring", de: "Frühling" },
+  { id: "summer", months: [6, 7, 8], en: "Summer", de: "Sommer" },
+  { id: "autumn", months: [9, 10, 11], en: "Autumn", de: "Herbst" },
+  { id: "winter", months: [12, 1, 2], en: "Winter", de: "Winter" },
 ] as const;
 
 export type SeasonId = (typeof SEASONS)[number]["id"];
 
 export const DURATIONS = [
-  { id: "short", en: "1–7 days", ru: "1–7 дней" },
-  { id: "medium", en: "8–12 days", ru: "8–12 дней" },
-  { id: "long", en: "13+ days", ru: "13+ дней" },
+  { id: "short", en: "1–7 days", de: "1–7 Tage" },
+  { id: "medium", en: "8–12 days", de: "8–12 Tage" },
+  { id: "long", en: "13+ days", de: "13+ Tage" },
 ] as const;
 
 export type DurationId = (typeof DURATIONS)[number]["id"];
 
 export const COUNTRIES = [
-  { id: "tajikistan", en: "Tajikistan", ru: "Таджикистан" },
-  { id: "uzbekistan", en: "Uzbekistan", ru: "Узбекистан" },
-  { id: "kyrgyzstan", en: "Kyrgyzstan", ru: "Кыргызстан" },
-  { id: "kazakhstan", en: "Kazakhstan", ru: "Казахстан" },
-  { id: "china", en: "China", ru: "Китай" },
+  { id: "tajikistan", en: "Tajikistan", de: "Tadschikistan" },
+  { id: "uzbekistan", en: "Uzbekistan", de: "Usbekistan" },
+  { id: "kyrgyzstan", en: "Kyrgyzstan", de: "Kirgistan" },
+  { id: "kazakhstan", en: "Kazakhstan", de: "Kasachstan" },
+  { id: "china", en: "China", de: "China" },
 ] as const;
 
 export type CountryId = (typeof COUNTRIES)[number]["id"];
 
 export const STYLES = [
-  { id: "overland-4x4", en: "Overland and 4x4", ru: "Оверленд и 4x4" },
-  { id: "trekking", en: "Trekking", ru: "Треккинг" },
-  { id: "motorcycle", en: "Motorcycle", ru: "Мото" },
-  { id: "culture-cities", en: "Culture and cities", ru: "Культура и города" },
-  { id: "horse-riding", en: "Horse riding", ru: "Верховая езда" },
-  { id: "photography", en: "Photography", ru: "Фото-путешествия" },
+  { id: "overland-4x4", en: "Overland and 4x4", de: "Overland und 4x4" },
+  { id: "trekking", en: "Trekking", de: "Trekking" },
+  { id: "motorcycle", en: "Motorcycle", de: "Motorrad" },
+  { id: "culture-cities", en: "Culture and cities", de: "Kultur und Städte" },
+  { id: "horse-riding", en: "Horse riding", de: "Reiten" },
+  { id: "photography", en: "Photography", de: "Fotoreisen" },
 ] as const;
 
 export type StyleId = (typeof STYLES)[number]["id"];

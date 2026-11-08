@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ArrowDown, ArrowUp, ExternalLink, Home, Pencil, Plus, Star, Trash2, X } from "lucide-react";
 import { COUNTRIES, REGIONS, SEASONS, STYLES, tourMeta } from "@/lib/catalog";
-import type { Departure, Tour } from "@/lib/tours";
+import type { Departure, Tour, TourDe } from "@/lib/tours";
 import {
   buttonClass,
   Chips,
@@ -22,8 +22,8 @@ const REGION_LABEL: Record<(typeof REGIONS)[number], string> = {
   "East Asia": "Китай",
 };
 
-const label = <T extends string>(items: readonly { id: T; ru: string }[]) =>
-  items.map((item) => ({ id: item.id, label: item.ru }));
+const label = <T extends string>(items: readonly { id: T; en: string }[]) =>
+  items.map((item) => ({ id: item.id, label: item.en }));
 
 function blankTour(): Tour {
   return {
@@ -228,7 +228,34 @@ function TourEditor({
 }) {
   const [tour, setTour] = useState<Tour>(initial);
   const [error, setError] = useState("");
+  // Texts are typed in English or German; prices, dates, photos and filters are shared.
+  const [lang, setLang] = useState<"en" | "de">("en");
   const set = <K extends keyof Tour>(key: K, value: Tour[K]) => setTour((t) => ({ ...t, [key]: value }));
+  const de: TourDe = tour.de ?? {};
+  const setDe = (patch: Partial<TourDe>) => setTour((t) => ({ ...t, de: { ...(t.de ?? {}), ...patch } }));
+  type TextKey = "title" | "subtitle" | "description" | "country" | "duration" | "groupSize" | "difficulty" | "season";
+  /** Value and setter for a text field in the language being edited; German shows the English as a hint. */
+  const text = (key: TextKey) =>
+    lang === "en"
+      ? { value: tour[key], onChange: (v: string) => set(key, v) }
+      : { value: de[key] ?? "", onChange: (v: string) => setDe({ [key]: v }), placeholder: tour[key] || undefined };
+  type ListKey = "highlights" | "included" | "excluded";
+  const lines = (key: ListKey) =>
+    lang === "en"
+      ? { value: tour[key], onChange: (v: string[]) => set(key, v) }
+      : { value: de[key] ?? [], onChange: (v: string[]) => setDe({ [key]: v }), placeholder: tour[key].join("\n") || undefined };
+  function setDeDay(index: number, patch: { title?: string; description?: string; overnight?: string }) {
+    const days = [...(de.itinerary ?? [])];
+    while (days.length <= index) days.push({});
+    days[index] = { ...days[index], ...patch };
+    setDe({ itinerary: days });
+  }
+  function setDeFaq(index: number, patch: { q?: string; a?: string }) {
+    const items = [...(de.faq ?? [])];
+    while (items.length <= index) items.push({});
+    items[index] = { ...items[index], ...patch };
+    setDe({ faq: items });
+  }
 
   function setDay(index: number, patch: Partial<Tour["itinerary"][number]>) {
     set(
@@ -275,6 +302,27 @@ function TourEditor({
         </button>
       </div>
 
+      <div className="sticky top-0 z-20 -mx-4 flex flex-wrap items-center gap-3 border-b border-[#d4a82a]/30 bg-[#faf5eb]/95 px-4 py-3 backdrop-blur">
+        <span className="text-sm font-semibold">Язык текстов:</span>
+        <div className="flex rounded-full bg-white p-1 shadow-sm">
+          {(["en", "de"] as const).map((code) => (
+            <button
+              key={code}
+              type="button"
+              onClick={() => setLang(code)}
+              className={`rounded-full px-4 py-1.5 text-sm font-semibold ${lang === code ? "bg-[#0f1225] text-white" : "text-[#0f1225]/70"}`}
+            >
+              {code === "en" ? "English" : "Deutsch"}
+            </button>
+          ))}
+        </div>
+        <span className="text-xs text-[#0f1225]/60">
+          {lang === "en"
+            ? "Цены, даты, фото и фильтры общие для обоих языков."
+            : "Немецкие тексты. Пустое поле — на немецкой версии сайта будет английский текст (он виден серым внутри поля)."}
+        </span>
+      </div>
+
       <Card title="Публикация">
         <label className="flex items-start gap-3 text-sm">
           <input
@@ -308,8 +356,8 @@ function TourEditor({
 
       <Card title="Основное">
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Название">
-            <TextInput value={tour.title} onChange={(v) => set("title", v)} required />
+          <Field label={lang === "en" ? "Название" : "Название (DE)"}>
+            <TextInput {...text("title")} required={lang === "en"} />
           </Field>
           <Field
             label="Адрес страницы"
@@ -318,10 +366,10 @@ function TourEditor({
             <TextInput value={tour.slug} onChange={(v) => set("slug", v)} placeholder="из названия" />
           </Field>
           <Field label="Подзаголовок" className="sm:col-span-2">
-            <TextInput value={tour.subtitle} onChange={(v) => set("subtitle", v)} />
+            <TextInput {...text("subtitle")} />
           </Field>
           <Field label="Описание" className="sm:col-span-2" hint="Раздел Overview на странице тура. Пустая строка — новый абзац.">
-            <TextArea value={tour.description} onChange={(v) => set("description", v)} rows={4} />
+            <TextArea {...text("description")} rows={4} />
           </Field>
         </div>
       </Card>
@@ -350,20 +398,20 @@ function TourEditor({
           <Field label="Дней">
             <TextInput type="number" min={1} value={tour.days} onChange={(v) => set("days", Number(v))} />
           </Field>
-          <Field label="Длительность (текст)" hint="Например: 7 days / 6 nights">
-            <TextInput value={tour.duration} onChange={(v) => set("duration", v)} />
+          <Field label="Длительность (текст)" hint={lang === "en" ? "Например: 7 days / 6 nights" : "Например: 7 Tage / 6 Nächte"}>
+            <TextInput {...text("duration")} />
           </Field>
-          <Field label="Группа" hint="Например: up to 15 travelers">
-            <TextInput value={tour.groupSize} onChange={(v) => set("groupSize", v)} />
+          <Field label="Группа" hint={lang === "en" ? "Например: up to 15 travelers" : "Например: bis zu 15 Reisende"}>
+            <TextInput {...text("groupSize")} />
           </Field>
           <Field label="Гарантия от, чел." hint="«Guaranteed from 4 guests» над датами">
             <TextInput type="number" min={0} value={tour.guaranteedFrom ?? ""} onChange={(v) => set("guaranteedFrom", optionalCount(v))} />
           </Field>
           <Field label="Сложность">
-            <TextInput value={tour.difficulty} onChange={(v) => set("difficulty", v)} />
+            <TextInput {...text("difficulty")} />
           </Field>
-          <Field label="Сезон (текст)" hint="Например: April — October">
-            <TextInput value={tour.season} onChange={(v) => set("season", v)} />
+          <Field label="Сезон (текст)" hint={lang === "en" ? "Например: April — October" : "Например: April — Oktober"}>
+            <TextInput {...text("season")} />
           </Field>
           <Field label="Рейтинг" hint="Только настоящий, например с TripAdvisor">
             <TextInput type="number" min={0} max={5} step={0.1} value={tour.rating} onChange={(v) => set("rating", Number(v))} />
@@ -381,7 +429,7 @@ function TourEditor({
       <Card title="Где и когда (фильтры)" hint="Обязательно: по этим отметкам тур появляется в фильтрах поиска, на страницах стран и стилей. Длительность для фильтра берётся из поля «Дней».">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Страна (подпись на карточке)">
-            <TextInput value={tour.country} onChange={(v) => set("country", v)} />
+            <TextInput {...text("country")} />
           </Field>
           <Field label="Регион (вкладка в каталоге)">
             <select value={tour.region} onChange={(e) => set("region", e.target.value)} className="w-full rounded-xl border border-[#d4a82a]/40 bg-white px-3 py-2 text-sm">
@@ -406,6 +454,27 @@ function TourEditor({
         </div>
       </Card>
 
+      {lang === "de" ? (
+        <Card title="Программа по дням (DE)" hint="Дни добавляются и удаляются на английской вкладке. Здесь только немецкий текст для каждого дня.">
+          {tour.itinerary.length === 0 && <p className="text-sm text-[#0f1225]/60">Сначала добавьте дни на английской вкладке.</p>}
+          <ol className="space-y-3">
+            {tour.itinerary.map((day, index) => (
+              <li key={index} className="rounded-xl border border-[#d4a82a]/25 p-3">
+                <span className="text-sm font-semibold">День {index + 1}</span>
+                <div className="mt-2 space-y-2">
+                  <TextInput value={de.itinerary?.[index]?.title ?? ""} onChange={(v) => setDeDay(index, { title: v })} placeholder={day.title} />
+                  <TextArea value={de.itinerary?.[index]?.description ?? ""} onChange={(v) => setDeDay(index, { description: v })} rows={4} placeholder={day.description} />
+                  <TextInput
+                    value={de.itinerary?.[index]?.overnight ?? ""}
+                    onChange={(v) => setDeDay(index, { overnight: v })}
+                    placeholder={day.overnight || "Übernachtung (optional)"}
+                  />
+                </div>
+              </li>
+            ))}
+          </ol>
+        </Card>
+      ) : (
       <Card title="Программа по дням" hint="Номер дня ставится автоматически — в заголовке писать «Day 1» не нужно.">
         <ol className="space-y-3">
           {tour.itinerary.map((day, index) => (
@@ -415,7 +484,11 @@ function TourEditor({
                 <button
                   type="button"
                   className={buttonClass.icon}
-                  onClick={() => set("itinerary", tour.itinerary.filter((_, i) => i !== index))}
+                  onClick={() => {
+                    set("itinerary", tour.itinerary.filter((_, i) => i !== index));
+                    // Keep the German days lined up with the English ones.
+                    if (de.itinerary) setDe({ itinerary: de.itinerary.filter((_, i) => i !== index) });
+                  }}
                   aria-label="Удалить день"
                 >
                   <X className="size-4" />
@@ -451,17 +524,18 @@ function TourEditor({
           <Plus className="size-4" /> Добавить день
         </button>
       </Card>
+      )}
 
-      <Card title="Списки" hint="Каждый пункт с новой строки.">
+      <Card title={lang === "en" ? "Списки" : "Списки (DE)"} hint="Каждый пункт с новой строки.">
         <div className="grid gap-4 sm:grid-cols-3">
           <Field label="Что увидите">
-            <LinesInput value={tour.highlights} onChange={(v) => set("highlights", v)} rows={6} />
+            <LinesInput key={`highlights-${lang}`} {...lines("highlights")} rows={6} />
           </Field>
           <Field label="Включено">
-            <LinesInput value={tour.included} onChange={(v) => set("included", v)} rows={6} />
+            <LinesInput key={`included-${lang}`} {...lines("included")} rows={6} />
           </Field>
           <Field label="Не включено">
-            <LinesInput value={tour.excluded} onChange={(v) => set("excluded", v)} rows={6} />
+            <LinesInput key={`excluded-${lang}`} {...lines("excluded")} rows={6} />
           </Field>
         </div>
       </Card>
@@ -551,7 +625,20 @@ function TourEditor({
         />
       </Card>
 
-      <Card title="Вопросы по туру (FAQ)" hint="Раздел FAQ на странице тура. Пишите на английском — для иностранных клиентов.">
+      {lang === "de" ? (
+        <Card title="Вопросы по туру (FAQ, DE)" hint="Вопросы добавляются на английской вкладке. Здесь немецкий текст для каждого вопроса.">
+          {(tour.faq ?? []).length === 0 && <p className="text-sm text-[#0f1225]/60">Вопросов пока нет.</p>}
+          <div className="space-y-3">
+            {(tour.faq ?? []).map((item, index) => (
+              <div key={index} className="space-y-2 rounded-xl border border-[#d4a82a]/25 p-3">
+                <TextInput value={de.faq?.[index]?.q ?? ""} onChange={(v) => setDeFaq(index, { q: v })} placeholder={item.q} />
+                <TextArea value={de.faq?.[index]?.a ?? ""} onChange={(v) => setDeFaq(index, { a: v })} rows={3} placeholder={item.a} />
+              </div>
+            ))}
+          </div>
+        </Card>
+      ) : (
+      <Card title="Вопросы по туру (FAQ)" hint="Раздел FAQ на странице тура. Если удаляете вопрос, проверьте немецкую вкладку: переводы идут по порядку.">
         <RowsEditor<{ q: string; a: string }>
           rows={tour.faq ?? []}
           onChange={(v) => set("faq", v)}
@@ -565,6 +652,7 @@ function TourEditor({
           )}
         />
       </Card>
+      )}
 
       <div className="sticky bottom-0 -mx-4 flex flex-wrap items-center gap-3 border-t border-[#d4a82a]/30 bg-[#faf5eb]/95 px-4 py-3 backdrop-blur">
         <button type="submit" className={buttonClass.primary} disabled={busy}>

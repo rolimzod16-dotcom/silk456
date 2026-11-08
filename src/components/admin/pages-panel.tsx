@@ -47,7 +47,7 @@ export function PagesPanel({ pages, onSave }: { pages: PagesContent; onSave: (pa
       <div>
         <h2 className="font-display text-2xl font-semibold">Страницы</h2>
         <p className="mt-1 text-sm text-[#0f1225]/60">
-          Тексты постоянных страниц на английском и русском. Если поле оставить пустым, вернётся стандартный текст.
+          Тексты постоянных страниц на английском и немецком. Если поле оставить пустым, вернётся стандартный текст.
         </p>
       </div>
 
@@ -109,7 +109,7 @@ export function PagesPanel({ pages, onSave }: { pages: PagesContent; onSave: (pa
           const update = (patch: Partial<typeof service>) =>
             setDraft({ ...draft, services: draft.services.map((s, i) => (i === index ? { ...s, ...patch } : s)) });
           return (
-            <Card key={service.id} title={`Услуга ${index + 1}: ${service.title.ru || service.title.en}`} hint={`Раздел /services#${service.id} и пункт меню «Services».`}>
+            <Card key={service.id} title={`Услуга ${index + 1}: ${service.title.de || service.title.en}`} hint={`Раздел /services#${service.id} и пункт меню «Services».`}>
               <div className="space-y-4">
                 <Pair label="Название" value={service.title} onChange={(v) => update({ title: v })} />
                 <Pair label="Описание" value={service.lead} onChange={(v) => update({ lead: v })} multiline />
@@ -125,7 +125,7 @@ export function PagesPanel({ pages, onSave }: { pages: PagesContent; onSave: (pa
           const update = (patch: Partial<typeof value>) =>
             setDraft({ ...draft, styles: { ...draft.styles, [style.id]: { ...value, ...patch } } });
           return (
-            <Card key={style.id} title={style.ru} hint={`Страница /travel-styles/${style.id}`}>
+            <Card key={style.id} title={style.en} hint={`Страница /travel-styles/${style.id}`}>
               <div className="space-y-4">
                 <Pair label="Подзаголовок" value={value.tagline} onChange={(v) => update({ tagline: v })} />
                 <Pair label="Описание" value={value.text} onChange={(v) => update({ text: v })} multiline />
@@ -176,7 +176,7 @@ export function PagesPanel({ pages, onSave }: { pages: PagesContent; onSave: (pa
 }
 
 function Pair({ label, value, onChange, multiline = false }: { label: string; value: Text; onChange: (v: Text) => void; multiline?: boolean }) {
-  const input = (lang: "en" | "ru") =>
+  const input = (lang: "en" | "de") =>
     multiline ? (
       <TextArea value={value[lang]} onChange={(v) => onChange({ ...value, [lang]: v })} rows={3} />
     ) : (
@@ -185,7 +185,7 @@ function Pair({ label, value, onChange, multiline = false }: { label: string; va
   return (
     <div className="grid gap-2 lg:grid-cols-2">
       <Field label={`${label} · EN`}>{input("en")}</Field>
-      <Field label={`${label} · RU`}>{input("ru")}</Field>
+      <Field label={`${label} · DE`}>{input("de")}</Field>
     </div>
   );
 }
@@ -193,13 +193,13 @@ function Pair({ label, value, onChange, multiline = false }: { label: string; va
 /** Bullet points as two aligned line lists: English left, Russian right. */
 function PointsPair({ points, onChange }: { points: Text[]; onChange: (points: Text[]) => void }) {
   const [en, setEn] = useState(points.map((p) => p.en).join("\n"));
-  const [ru, setRu] = useState(points.map((p) => p.ru).join("\n"));
-  const combine = (enText: string, ruText: string) => {
-    const ruLines = ruText.split("\n");
+  const [de, setDe] = useState(points.map((p) => p.de).join("\n"));
+  const combine = (enText: string, deText: string) => {
+    const deLines = deText.split("\n");
     onChange(
       enText
         .split("\n")
-        .map((line, i) => ({ en: line.trim(), ru: (ruLines[i] ?? "").trim() }))
+        .map((line, i) => ({ en: line.trim(), de: (deLines[i] ?? "").trim() }))
         .filter((p) => p.en),
     );
   };
@@ -213,18 +213,18 @@ function PointsPair({ points, onChange }: { points: Text[]; onChange: (points: T
           value={en}
           onChange={(e) => {
             setEn(e.target.value);
-            combine(e.target.value, ru);
+            combine(e.target.value, de);
           }}
         />
       </label>
       <label className="block">
-        <span className="text-xs font-semibold uppercase tracking-wide text-[#0f1225]/70">Что входит · RU (в том же порядке)</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-[#0f1225]/70">Что входит · DE (в том же порядке)</span>
         <textarea
           className={`${inputClass} mt-1 resize-y`}
           rows={5}
-          value={ru}
+          value={de}
           onChange={(e) => {
-            setRu(e.target.value);
+            setDe(e.target.value);
             combine(en, e.target.value);
           }}
         />

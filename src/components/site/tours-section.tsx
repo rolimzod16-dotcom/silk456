@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { tourMatches } from "@/lib/catalog";
 import { useLocale } from "@/lib/locale";
-import { Tour } from "@/lib/tours";
+import { localizeTour, Tour } from "@/lib/tours";
 import { useUiStore } from "@/lib/ui-store";
 import { cn } from "@/lib/utils";
 
@@ -123,7 +123,7 @@ export function ToursSection({ tours, showHeading = true }: ToursSectionProps) {
 }
 
 export function TourCard({
-  tour,
+  tour: rawTour,
   index,
   onBook,
 }: {
@@ -131,8 +131,9 @@ export function TourCard({
   index: number;
   onBook: () => void;
 }) {
+  const { ui, locale } = useLocale();
+  const tour = localizeTour(rawTour, locale);
   const href = `/tours/${tour.slug}`;
-  const { ui } = useLocale();
   const t = ui.tours;
   const discount = tour.oldPrice
     ? Math.round(((tour.oldPrice - tour.price) / tour.oldPrice) * 100)
