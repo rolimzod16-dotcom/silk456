@@ -1,4 +1,5 @@
 import type { CountryId, SeasonId, StyleId } from "@/lib/catalog"
+import { germanFor } from "@/lib/translations-de"
 
 export type Tour = {
   slug: string
@@ -66,10 +67,12 @@ export type TourDe = {
 
 /** The tour as a German visitor sees it: German where it is filled in, English elsewhere. */
 export function localizeTour(tour: Tour, locale: string): Tour {
-  const de = tour.de
-  if (locale !== "de" || !de) return tour
-  const pick = (value: string | undefined, fallback: string) => value?.trim() || fallback
-  const list = (value: string[] | undefined, fallback: string[]) => (value?.some((item) => item.trim()) ? value.filter((item) => item.trim()) : fallback)
+  if (locale !== "de") return tour
+  const de = tour.de ?? {}
+  // German typed in the admin first, then the shipped translation of the same English text.
+  const pick = (value: string | undefined, fallback: string) => value?.trim() || germanFor(fallback) || fallback
+  const list = (value: string[] | undefined, fallback: string[]) =>
+    value?.some((item) => item.trim()) ? value.filter((item) => item.trim()) : fallback.map((item) => germanFor(item) || item)
   return {
     ...tour,
     title: pick(de.title, tour.title),

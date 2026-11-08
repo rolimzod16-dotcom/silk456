@@ -1,4 +1,5 @@
 import type { CountryId } from "@/lib/catalog";
+import { germanFor } from "@/lib/translations-de";
 
 /** Editable guide content for a destination page; empty sections are hidden. */
 export type CountryContent = {
@@ -26,9 +27,10 @@ export type CountryDe = {
 
 /** The destination page as a German visitor sees it: German where filled in, English elsewhere. */
 export function localizeCountry(content: CountryContent, locale: string): CountryContent {
-  const de = content.de;
-  if (locale !== "de" || !de) return content;
-  const pick = (value: string | undefined, fallback: string) => value?.trim() || fallback;
+  if (locale !== "de") return content;
+  const de = content.de ?? {};
+  // German typed in the admin first, then the shipped translation of the same English text.
+  const pick = (value: string | undefined, fallback: string) => value?.trim() || germanFor(fallback) || fallback;
   return {
     ...content,
     overview: pick(de.overview, content.overview),

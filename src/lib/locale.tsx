@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 import { copy, type Locale } from "@/lib/messages";
 import { UI, type UiText } from "@/lib/ui-text";
+import { germanFor } from "@/lib/translations-de";
 
 const STORAGE_KEY = "gst-locale";
 const listeners = new Set<() => void>();
@@ -64,5 +65,10 @@ export type Text = { en: string; de: string };
 /** Picks the current-locale string from an { en, de } pair. */
 export function useText() {
   const { locale } = useLocale();
-  return (text: Text) => text[locale] || text.en;
+  return (text: Text) => {
+    if (locale === "en") return text.en;
+    // An admin text without its own German shows the shipped translation of the English.
+    const typed = text.de && text.de !== text.en ? text.de : "";
+    return typed || germanFor(text.en) || text.de || text.en;
+  };
 }

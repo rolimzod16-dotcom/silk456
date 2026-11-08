@@ -6,6 +6,7 @@ import { Globe, Instagram } from "lucide-react";
 import { useContent } from "@/lib/content-context";
 import { useLocale, useText } from "@/lib/locale";
 import { isForeignPhoto } from "@/lib/utils";
+import { germanFor } from "@/lib/translations-de";
 
 const COPY = {
   en: {
@@ -89,7 +90,7 @@ export function TeamSection() {
                   {member.languages && (
                     <p className="inline-flex items-center gap-1.5 text-xs text-foreground/80">
                       <Globe className="h-3.5 w-3.5 text-primary" />
-                      <span className="font-semibold">{t.languages}:</span> {member.languages}
+                      <span className="font-semibold">{t.languages}:</span> {(locale === "de" && germanFor(member.languages)) || member.languages}
                     </p>
                   )}
                   {member.instagram && (
