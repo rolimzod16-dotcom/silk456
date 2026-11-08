@@ -11,7 +11,34 @@ export type CountryContent = {
   faq: { q: string; a: string }[];
   seoTitle?: string;
   seoDescription?: string;
+  /** German texts; an empty field shows the English one. Lists match the English items by position. */
+  de?: CountryDe;
 };
+
+export type CountryDe = {
+  overview?: string;
+  facts?: { label?: string; value?: string }[];
+  highlights?: { title?: string; text?: string }[];
+  bestTime?: { season?: string; text?: string }[];
+  travelInfo?: { title?: string; text?: string }[];
+  faq?: { q?: string; a?: string }[];
+};
+
+/** The destination page as a German visitor sees it: German where filled in, English elsewhere. */
+export function localizeCountry(content: CountryContent, locale: string): CountryContent {
+  const de = content.de;
+  if (locale !== "de" || !de) return content;
+  const pick = (value: string | undefined, fallback: string) => value?.trim() || fallback;
+  return {
+    ...content,
+    overview: pick(de.overview, content.overview),
+    facts: content.facts.map((f, i) => ({ label: pick(de.facts?.[i]?.label, f.label), value: pick(de.facts?.[i]?.value, f.value) })),
+    highlights: content.highlights.map((h, i) => ({ ...h, title: pick(de.highlights?.[i]?.title, h.title), text: pick(de.highlights?.[i]?.text, h.text) })),
+    bestTime: content.bestTime.map((b, i) => ({ season: pick(de.bestTime?.[i]?.season, b.season), text: pick(de.bestTime?.[i]?.text, b.text) })),
+    travelInfo: content.travelInfo.map((x, i) => ({ title: pick(de.travelInfo?.[i]?.title, x.title), text: pick(de.travelInfo?.[i]?.text, x.text) })),
+    faq: content.faq.map((x, i) => ({ q: pick(de.faq?.[i]?.q, x.q), a: pick(de.faq?.[i]?.a, x.a) })),
+  };
+}
 
 export const EMPTY_COUNTRY: CountryContent = {
   overview: "",

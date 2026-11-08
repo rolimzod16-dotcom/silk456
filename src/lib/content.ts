@@ -2,6 +2,7 @@ import { unstable_rethrow } from "next/navigation";
 import { cache } from "react";
 import { COUNTRIES, REGIONS, SEASONS, STYLES, tourMeta, type CountryId } from "@/lib/catalog";
 import { DEFAULT_COUNTRIES, type CountryContent } from "@/lib/country-content";
+import { DEFAULT_COUNTRIES_DE } from "@/lib/country-content-de";
 import { FAQ } from "@/lib/faq";
 import { DEFAULT_PAGES, SEO_PAGES, type PagesContent, type ServiceContent } from "@/lib/pages-content";
 import { DEFAULT_SETTINGS, type FaqItem, type SiteContent, type SiteSettings, type TeamMember } from "@/lib/site-content";
@@ -37,7 +38,9 @@ function defaults(): SiteContent {
       .map((tour) => ({ ...tour, ...tourMeta(tour), published: true, showOnHome: HOME_TOURS.includes(tour.slug) })),
     testimonials: builtInTestimonials,
     settings: DEFAULT_SETTINGS,
-    countries: DEFAULT_COUNTRIES,
+    countries: Object.fromEntries(
+      COUNTRIES.map(({ id }) => [id, { ...DEFAULT_COUNTRIES[id], de: DEFAULT_COUNTRIES_DE[id] }]),
+    ) as Record<CountryId, CountryContent>,
     faq: FAQ,
     pages: DEFAULT_PAGES,
     team: [BUILT_IN_OWNER],
@@ -271,14 +274,50 @@ function normalizeCountry(raw: unknown): CountryContent {
     faq: normalizeQa(t.faq),
     seoTitle: str(t.seoTitle, 70),
     seoDescription: str(t.seoDescription, 170),
+    de: normalizeCountryDe(t.de),
   };
+}
+
+function normalizeCountryDe(value: unknown): CountryContent["de"] {
+  if (!value || typeof value !== "object") return undefined;
+  const d = value as Record<string, unknown>;
+  // Pairs keep their position so each German item stays next to its English one.
+  const pairs = <A extends string, B extends string>(v: unknown, a: A, b: B, max = 2000) =>
+    (Array.isArray(v) ? v : []).map((item) => {
+      const x = item && typeof item === "object" ? (item as Record<string, unknown>) : {};
+      return { [a]: str(x[a], max), [b]: str(x[b], max) } as Record<A | B, string>;
+    });
+  return {
+    overview: str(d.overview, 6000),
+    facts: pairs(d.facts, "label", "value", 160),
+    highlights: pairs(d.highlights, "title", "text", 1500),
+    bestTime: pairs(d.bestTime, "season", "text", 1000),
+    travelInfo: pairs(d.travelInfo, "title", "text"),
+    faq: pairs(d.faq, "q", "a", 3000),
+  };
+}
+
+/** The English parts only, to tell whether a saved country still has the built-in texts. */
+function englishOf(content: CountryContent) {
+  return JSON.stringify([
+    content.overview,
+    content.facts,
+    content.highlights.map((h) => [h.title, h.text]),
+    content.bestTime,
+    content.travelInfo,
+    content.faq,
+  ]);
 }
 
 function normalizeCountries(value: unknown, base: Record<CountryId, CountryContent>) {
   const t = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
   const result = { ...base };
   for (const country of COUNTRIES) {
-    if (t[country.id] !== undefined) result[country.id] = normalizeCountry(t[country.id]);
+    if (t[country.id] === undefined) continue;
+    const saved = normalizeCountry(t[country.id]);
+    // Saved before German existed but with unchanged English: the built-in German still fits.
+    if (!saved.de && englishOf(saved) === englishOf(base[country.id])) saved.de = base[country.id].de;
+    result[country.id] = saved;
   }
   return result;
 }

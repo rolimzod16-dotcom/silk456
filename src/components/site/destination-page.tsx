@@ -7,14 +7,15 @@ import { CtaSection } from "@/components/site/cta-section";
 import { PageHero } from "@/components/site/page-hero";
 import { SECTION_SCROLL, SectionNav, type SectionLink } from "@/components/site/section-nav";
 import { TourCard } from "@/components/site/tours-section";
-import type { CountryContent } from "@/lib/country-content";
+import { localizeCountry, type CountryContent } from "@/lib/country-content";
 import { useLocale, useText } from "@/lib/locale";
 import { PAGE_COPY, type Collection } from "@/lib/pages";
 import { useUiStore } from "@/lib/ui-store";
 
-export function DestinationPage({ collection, content }: { collection: Collection; content: CountryContent }) {
+export function DestinationPage({ collection, content: rawContent }: { collection: Collection; content: CountryContent }) {
   const tx = useText();
-  const { ui } = useLocale();
+  const { ui, locale } = useLocale();
+  const content = localizeCountry(rawContent, locale);
   const openBooking = useUiStore((s) => s.openBooking);
   const t = ui.destPage;
   const name = tx(collection.label);
