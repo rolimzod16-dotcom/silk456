@@ -297,16 +297,25 @@ function normalizeCountryDe(value: unknown): CountryContent["de"] {
   };
 }
 
-/** The English parts only, to tell whether a saved country still has the built-in texts. */
-function englishOf(content: CountryContent) {
-  return JSON.stringify([
-    content.overview,
-    content.facts,
-    content.highlights.map((h) => [h.title, h.text]),
-    content.bestTime,
-    content.travelInfo,
-    content.faq,
-  ]);
+/**
+ * German for a country saved before German existed: every text whose English still matches
+ * the built-in one gets the built-in German; edited texts stay English until translated.
+ */
+function builtInGerman(saved: CountryContent, base: CountryContent): CountryContent["de"] {
+  const de = base.de ?? {};
+  const match = <T, D>(items: T[], baseItems: T[], deItems: D[] | undefined, same: (a: T, b: T) => boolean) =>
+    items.map((item) => {
+      const index = baseItems.findIndex((b) => same(item, b));
+      return index >= 0 ? (deItems?.[index] ?? {}) : {};
+    });
+  return {
+    overview: saved.overview === base.overview ? de.overview : "",
+    facts: match(saved.facts, base.facts, de.facts, (a, b) => a.label === b.label && a.value === b.value),
+    highlights: match(saved.highlights, base.highlights, de.highlights, (a, b) => a.title === b.title && a.text === b.text),
+    bestTime: match(saved.bestTime, base.bestTime, de.bestTime, (a, b) => a.season === b.season && a.text === b.text),
+    travelInfo: match(saved.travelInfo, base.travelInfo, de.travelInfo, (a, b) => a.title === b.title && a.text === b.text),
+    faq: match(saved.faq, base.faq, de.faq, (a, b) => a.q === b.q && a.a === b.a),
+  };
 }
 
 function normalizeCountries(value: unknown, base: Record<CountryId, CountryContent>) {
@@ -315,8 +324,7 @@ function normalizeCountries(value: unknown, base: Record<CountryId, CountryConte
   for (const country of COUNTRIES) {
     if (t[country.id] === undefined) continue;
     const saved = normalizeCountry(t[country.id]);
-    // Saved before German existed but with unchanged English: the built-in German still fits.
-    if (!saved.de && englishOf(saved) === englishOf(base[country.id])) saved.de = base[country.id].de;
+    if (!saved.de) saved.de = builtInGerman(saved, base[country.id]);
     result[country.id] = saved;
   }
   return result;
