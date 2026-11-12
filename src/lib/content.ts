@@ -47,7 +47,29 @@ function defaults(): SiteContent {
   };
 }
 
-const str = (value: unknown, max = 2000) => (typeof value === "string" ? value.trim().slice(0, max) : "");
+// "Bold" Unicode letters (𝗗𝗶𝘀𝘁𝗮𝗻𝗰𝗲) pasted into the admin read as junk to search engines and screen readers;
+// map that block back to plain letters and digits. Other characters (km², ½) are left alone.
+const plainLetters = (value: string) => value.replace(/[\u{1D400}-\u{1D7FF}]/gu, (char) => char.normalize("NFKC"));
+const str = (value: unknown, max = 2000) => (typeof value === "string" ? plainLetters(value).trim().slice(0, max) : "");
+
+const SMALL_WORDS = new Set(["a", "an", "and", "as", "at", "by", "for", "in", "of", "on", "or", "the", "to", "via", "with"]);
+const SPELLING: Record<string, string> = { motorcyle: "motorcycle" };
+
+/** Titles typed in capitals ("THE PAMIR HIGHWAY") become title case; normal titles are returned unchanged. */
+export function fixCapsTitle(title: string) {
+  const letters = title.replace(/[^\p{L}]/gu, "");
+  const upper = letters.replace(/[^\p{Lu}]/gu, "");
+  if (letters.length < 8 || upper.length / letters.length < 0.7) return title;
+  return title
+    .split(/(\s+)/)
+    .map((word, index) => {
+      if (/^\s+$/.test(word) || /\d/.test(word)) return word;
+      const lower = SPELLING[word.toLowerCase()] ?? word.toLowerCase();
+      if (index > 0 && SMALL_WORDS.has(lower)) return lower;
+      return lower.replace(/^(\P{L}*)(\p{L})/u, (_, lead: string, first: string) => lead + first.toUpperCase());
+    })
+    .join("");
+}
 const num = (value: unknown) => {
   const n = Number(value);
   return Number.isFinite(n) && n >= 0 ? n : 0;
@@ -154,8 +176,8 @@ function normalizeTourDe(value: unknown): Tour["de"] {
 export function normalizeTour(raw: unknown): Tour | null {
   if (!raw || typeof raw !== "object") return null;
   const t = raw as Record<string, unknown>;
-  const title = str(t.title, 160);
-  const slug = slugify(str(t.slug) || title);
+  const title = fixCapsTitle(str(t.title, 160));
+  const slug = slugify(str(t.slug) || str(t.title, 160));
   if (!title || !slug) return null;
   const oldPrice = num(t.oldPrice);
   const region = str(t.region);
@@ -249,7 +271,11 @@ export function normalizeSettings(raw: unknown): SiteSettings {
   const t = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
   const result = { ...DEFAULT_SETTINGS };
   for (const key of Object.keys(DEFAULT_SETTINGS) as (keyof SiteSettings)[]) {
-    if (typeof t[key] === "string") result[key] = str(t[key], 300);
+    if (typeof t[key] !== "string") continue;
+    const value = str(t[key], 300);
+    // Keep the known social profiles when the admin field was left empty: they feed the footer and schema sameAs.
+    if (!value && (key === "instagram" || key === "facebook")) continue;
+    result[key] = value;
   }
   return result;
 }

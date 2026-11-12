@@ -328,6 +328,21 @@ export function TourPage({ tour: rawTour, related }: { tour: Tour; related: Tour
         </Button>
       </div>
 
+      {partnerFor(tour.slug) && (() => {
+        const partner = partnerFor(tour.slug)!;
+        return (
+          <section className="border-t border-border bg-muted/40 py-10">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <p className="text-xs font-semibold uppercase tracking-widest text-primary">{tx({ en: "Partner in the Pamirs", de: "Partner im Pamir" })}</p>
+              <p className="mt-2 max-w-3xl text-base text-foreground">
+                {tx(partner.text)}{" "}
+                <a href={partner.href} className="font-semibold text-primary hover:underline">{partner.name} →</a>
+              </p>
+            </div>
+          </section>
+        );
+      })()}
+
       {related.length > 0 && (
         <section className="border-t border-border bg-background py-14 pb-28 sm:py-20 lg:pb-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -566,4 +581,30 @@ function InfoTile({
       <div className="mt-1 text-sm font-semibold text-foreground">{value}</div>
     </div>
   );
+}
+
+// Sister companies cover these routes in more depth: a contextual link sends riders and trekkers to the
+// specialist site instead of three sites competing for the same Pamir searches.
+function partnerFor(slug: string) {
+  if (/moto/.test(slug)) {
+    return {
+      name: "Pamir Moto Adventure",
+      href: "https://pamirmoto.com/en/motorcycles",
+      text: {
+        en: "Riding it yourself? Our partner in Dushanbe rents Honda CRF300L motorcycles and runs guided Pamir Highway rides with a mechanic and support 4x4.",
+        de: "Lieber selbst fahren? Unser Partner in Duschanbe vermietet Honda CRF300L und führt geführte Touren auf dem Pamir Highway mit Mechaniker und Begleitfahrzeug.",
+      },
+    };
+  }
+  if (/pamir-(mountain|trek)|sarez|bartang/.test(slug)) {
+    return {
+      name: "Pamir Ecotourism",
+      href: "https://pamirecotourism.com/destinations/sarez",
+      text: {
+        en: "Our partner team lives in the Bartang Valley at the start of the Lake Sarez trail and runs Sarez, Bartang and Pamir lakes treks.",
+        de: "Unser Partnerteam lebt im Bartang-Tal am Beginn des Sarez-Pfads und führt Trekkingtouren zum Sarez-See, im Bartang und zu den Pamir-Seen.",
+      },
+    };
+  }
+  return null;
 }

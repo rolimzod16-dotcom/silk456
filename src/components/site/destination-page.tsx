@@ -33,7 +33,7 @@ export function DestinationPage({ collection, content: rawContent }: { collectio
     <>
       <PageHero
         eyebrow={collection.tagline}
-        title={collection.label}
+        title={{ en: `${collection.label.en} Tours`, de: `${collection.label.de} Reisen` }}
         text={collection.text}
         image={content.image || collection.image}
         crumbs={[{ label: PAGE_COPY.destinations.title, href: "/destinations" }, { label: collection.label }]}

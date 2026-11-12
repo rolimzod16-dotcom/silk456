@@ -40,8 +40,9 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   email: "",
   address: "",
   hours: "",
-  instagram: "",
-  facebook: "",
+  // The company's public profiles; an empty field in the admin falls back to these (see normalizeSettings).
+  instagram: "https://www.instagram.com/greatsilktrails",
+  facebook: "https://www.facebook.com/greatsilktrails",
   youtube: "",
   telegram: "",
   whatsapp: "",
